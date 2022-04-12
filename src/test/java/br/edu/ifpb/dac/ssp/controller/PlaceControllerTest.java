@@ -41,7 +41,7 @@ class PlaceControllerTest {
 	@BeforeEach
 	public void dtoLauncher() {
 		dto = new PlaceDTO();
-		dto.
+		dto.set
 		// realizar sets no dto
 	}
 	
