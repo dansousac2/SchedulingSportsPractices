@@ -23,7 +23,7 @@ import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
 import br.edu.ifpb.dac.ssp.service.PlaceService;
 
 class PlaceControllerTest {
-
+/*
 	@InjectMocks
 	private PlaceController controller = new PlaceController();
 	@Mock
@@ -41,7 +41,7 @@ class PlaceControllerTest {
 	@BeforeEach
 	public void dtoLauncher() {
 		dto = new PlaceDTO();
-		dto.set
+		dto
 		// realizar sets no dto
 	}
 	
@@ -52,6 +52,8 @@ class PlaceControllerTest {
 	 * 3-dto não passa dados sensíveis
 	 * são individuais oriundas do mesmo "save" por isso acredito que possam estar no mesmo teste
 	 */
+	
+	/*
 	@Test
 	public void saveOK() {
 		Mockito.verify(service).save(capPlace.capture());
@@ -66,5 +68,6 @@ class PlaceControllerTest {
 		assertEquals(null,respEntity.getBody().getDadosSensiveis01());
 		assertEquals(null,respEntity.getBody().getDadosSensiveis02());
 	}
+	*/
 
 }

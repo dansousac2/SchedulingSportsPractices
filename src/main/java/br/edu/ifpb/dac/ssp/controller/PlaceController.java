@@ -72,7 +72,7 @@ public class PlaceController {
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable Integer id, @RequestBody PlaceDTO dto) {
 		
-		if (placeService.existsById(id)) {
+		if (!placeService.existsById(id)) {
 			return ResponseEntity.badRequest().body("Place not found!");
 		}
 		
