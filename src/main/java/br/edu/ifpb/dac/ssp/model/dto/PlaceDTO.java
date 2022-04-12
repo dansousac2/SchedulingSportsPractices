@@ -9,8 +9,18 @@ public class PlaceDTO {
 	private int maximumCapacityParticipants;
 	private boolean isPublic;
 	
+	public PlaceDTO() {
+		
+	}
+	
+	public PlaceDTO(String name, String reference, int maximumCapacityParticipants, boolean isPublic) {
+		this.name = name;
+		this.reference = reference;
+		this.maximumCapacityParticipants = maximumCapacityParticipants;
+		this.isPublic = isPublic;
+	}
+	
 	public PlaceDTO(Integer id, String name, String reference, int maximumCapacityParticipants, boolean isPublic) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.reference = reference;
