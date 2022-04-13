@@ -9,4 +9,8 @@ public class MissingFieldException extends Exception {
 	public MissingFieldException(String fieldName) {
 		super("Could not complete action, the field " + fieldName + " is missing!");
 	}
+	
+	public MissingFieldException(String fieldName, String typeOfRequest) {
+		super("Could not " + typeOfRequest + ", the field " + fieldName + " is missing!");
+	}
 }

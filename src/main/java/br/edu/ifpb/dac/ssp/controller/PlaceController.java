@@ -44,14 +44,15 @@ public class PlaceController {
 	@GetMapping("/{id}")
 	public ResponseEntity findById(@PathVariable Integer id) {
 		
-		if (!placeService.existsById(id)) {
-			return ResponseEntity.badRequest().body("Place not found!");
+		try {
+			Place entity = placeService.findById(id);
+			PlaceDTO dto = converterService.placeToDto(entity);
+			
+			return ResponseEntity.ok().body(dto);
+		
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
-		Place entity = placeService.findById(id);
-		PlaceDTO dto = converterService.placeToDto(entity);
-		
-		return ResponseEntity.ok().body(dto);
 	}
 	
 	@PostMapping
@@ -72,10 +73,6 @@ public class PlaceController {
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable Integer id, @RequestBody PlaceDTO dto) {
 		
-		if (!placeService.existsById(id)) {
-			return ResponseEntity.badRequest().body("Place not found!");
-		}
-		
 		try {
 			dto.setId(id);
 			Place entity = converterService.dtoToPlace(dto);
@@ -91,10 +88,6 @@ public class PlaceController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {
-		
-		if (!placeService.existsById(id)) {
-			return ResponseEntity.badRequest().body("Place not found!");
-		}
 		
 		try {
 			placeService.deleteById(id);
