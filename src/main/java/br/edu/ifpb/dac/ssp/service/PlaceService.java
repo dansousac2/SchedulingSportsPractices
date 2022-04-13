@@ -14,8 +14,6 @@ import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
 @Service
 public class PlaceService {
 	
-	// Falta terminar de incluir as validações e exceções correspondentes
-	
 	@Autowired
 	private PlaceRepository placeRepository;
 	

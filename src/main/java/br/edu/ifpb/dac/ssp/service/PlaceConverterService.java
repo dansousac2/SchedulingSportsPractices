@@ -12,44 +12,61 @@ import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
 public class PlaceConverterService {
 
 	public Place dtoToPlace(PlaceDTO dto) {
-		Place entity = new Place(dto.getId(), dto.getName(), dto.getReference(), dto.getMaximumCapacityParticipants(), dto.isPublic());
+		if (dto != null) {
+			Place entity = new Place(dto.getId(), dto.getName(), dto.getReference(), dto.getMaximumCapacityParticipants(), dto.isPublic());
+			
+			return entity;
+		}
 		
-		return entity;
+		throw new NullPointerException("Could not convert because object is null");
 	}
 	
 	public PlaceDTO placeToDto(Place entity) {
-		PlaceDTO dto = new PlaceDTO(entity.getId(), entity.getName(), entity.getReference(), entity.getMaximumCapacityParticipants(), entity.isPublic());
+		if (entity != null) {
+			PlaceDTO dto = new PlaceDTO(entity.getId(), entity.getName(), entity.getReference(), entity.getMaximumCapacityParticipants(), entity.isPublic());
+			
+			return dto;
+		}
 		
-		return dto;
+		throw new NullPointerException("Could not convert because object is null");
 	}
 
 	public List<Place> dtoToPlace(List<PlaceDTO> dtoList) {
-		List<Place> entityList = new ArrayList<>();
 		
-		Place entity = null;
-		
-		if (dtoList != null && !dtoList.isEmpty()) {
-			for (PlaceDTO dto: dtoList) {
-				entity = dtoToPlace(dto);
-				entityList.add(entity);
+		if (dtoList != null) {
+			List<Place> entityList = new ArrayList<>();
+			
+			Place entity = null;
+			
+			if (dtoList != null && !dtoList.isEmpty()) {
+				for (PlaceDTO dto: dtoList) {
+					entity = dtoToPlace(dto);
+					entityList.add(entity);
+				}
 			}
+			
+			return entityList;
 		}
 		
-		return entityList;
+		throw new NullPointerException("Could not convert because object is null");
 	}
 	
 	public List<PlaceDTO> placeToDto(List<Place> entityList) {
-		List<PlaceDTO> dtoList = new ArrayList<>();
-		
-		PlaceDTO dto = null;
-		
-		if (entityList != null && !entityList.isEmpty()) {
-			for (Place place: entityList) {
-				dto = placeToDto(place);
-				dtoList.add(dto);
+		if (entityList != null) {
+			List<PlaceDTO> dtoList = new ArrayList<>();
+			
+			PlaceDTO dto = null;
+			
+			if (entityList != null && !entityList.isEmpty()) {
+				for (Place place: entityList) {
+					dto = placeToDto(place);
+					dtoList.add(dto);
+				}
 			}
+			
+			return dtoList;
 		}
 		
-		return dtoList;
+		throw new NullPointerException("Could not convert because object is null");
 	}
 }
