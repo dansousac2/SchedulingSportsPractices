@@ -1,13 +1,9 @@
 package br.edu.ifpb.dac.ssp.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;	
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.math.BigDecimal;
-
-import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -15,29 +11,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
-import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
 import br.edu.ifpb.dac.ssp.service.PlaceConverterService;
 import br.edu.ifpb.dac.ssp.service.PlaceService;
 
 class PlaceControllerTest {
 
 	@InjectMocks
-	@Autowired
 	private PlaceController controller;
 	@Mock
 	private PlaceService service;
-	@Mock
-	private PlaceRepository repository;
-	@Mock
-	private PlaceConverterService converter;
-	private PlaceDTO dto;
+	private PlaceConverterService converter = new PlaceConverterService();
+	private PlaceDTO exDto;
+	private Place exPlace;
 	@Captor
 	private ArgumentCaptor<Place> capPlace;
 	
@@ -45,14 +36,21 @@ class PlaceControllerTest {
 	public void dtoLauncher() {
 		MockitoAnnotations.openMocks(this);
 		ReflectionTestUtils.setField(controller, "converterService", converter);
-		ReflectionTestUtils.setField(service,"placeRepository",repository);
-		ReflectionTestUtils.setField(controller,"placeService",service);
-		dto = new PlaceDTO();
-		dto.setId(1);
-		dto.setName("Quadra Esportiva");
-		dto.setPublic(false);
-		dto.setMaximumCapacityParticipants(20);
-		dto.setReference("Próximo à entrada");
+		ReflectionTestUtils.setField(controller, "placeService",service);
+		
+		exPlace = new Place();
+		exPlace.setId(1);
+		exPlace.setName("Campo de Voleibol");
+		exPlace.setPublic(false);
+		exPlace.setReference("Perto da Entrada");
+		exPlace.setMaximumCapacityParticipants(20);
+		
+		exDto = new PlaceDTO();
+		exDto.setId(1);
+		exDto.setName("Quadra Esportiva");
+		exDto.setPublic(false);
+		exDto.setMaximumCapacityParticipants(20);
+		exDto.setReference("Próximo à entrada");
 	}
 	
 	/*
@@ -63,21 +61,33 @@ class PlaceControllerTest {
 	 * são individuais oriundas do mesmo "save" por isso acredito que possam estar no mesmo teste
 	 */
 	
+	/*
+	 * Object in DB have the same atributes (id and name, for example) as the 
+	 * DTO of the parameter's method
+	 */
 	@Test
-	public void saveOK() {
-		// Mockito.when in first, when possible.         
-		Mockito.when(converter.dtoToPlace(Mockito.any(PlaceDTO.class))).thenCallRealMethod();
-		ResponseEntity respEntity = controller.save(dto);
+	public void saveObjectInDb() {
+		ResponseEntity respEntity = controller.save(exDto);
 		Mockito.verify(service).save(capPlace.capture());
-		Mockito.when(repository.save(Mockito.any())).thenReturn(capPlace.getValue());
-		Place sportInDB = capPlace.getValue();
+		Place placeDB = capPlace.getValue();
 		
-		assertEquals(dto.getName(), sportInDB.getName());
-		if(!(dto.getReference() == null)) {
-			assertEquals(dto.getReference(), sportInDB.getReference());
+		assertEquals(exDto.getId(), placeDB.getId());
+		assertEquals(exDto.getName(), placeDB.getName());
+		if(!(exDto.getReference() == null)) {
+			assertEquals(exDto.getReference(), placeDB.getReference());
 		}
-		assertEquals(HttpStatus.CREATED, respEntity.getStatusCode());
-//		assertEquals(null,respEntity.getBody().getDadosSensiveis01());
 	}
-
+	
+	@Test
+	public void StatusCreatedInSave() {
+		
+		Mockito.when(service.save(Mockito.any())).thenReturn(exPlace);
+		ResponseEntity respEntity = controller.save(exDto);
+		assertEquals(HttpStatus.CREATED, respEntity.getStatusCode());
+	}
+	@Test
+	@Disabled
+	public void someAtributeNotMustBeShown() {
+		// verify business rule in the ConverterService
+	}
 }
