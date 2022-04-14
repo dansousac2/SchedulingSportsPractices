@@ -1,6 +1,7 @@
 package br.edu.ifpb.dac.ssp.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
 import br.edu.ifpb.dac.ssp.service.PlaceConverterService;
@@ -68,26 +70,48 @@ class PlaceControllerTest {
 	@Test
 	public void saveObjectInDb() {
 		ResponseEntity respEntity = controller.save(exDto);
-		Mockito.verify(service).save(capPlace.capture());
-		Place placeDB = capPlace.getValue();
-		
-		assertEquals(exDto.getId(), placeDB.getId());
-		assertEquals(exDto.getName(), placeDB.getName());
-		if(!(exDto.getReference() == null)) {
-			assertEquals(exDto.getReference(), placeDB.getReference());
+		try {
+			Mockito.verify(service).save(capPlace.capture());
+			Place placeDB = capPlace.getValue();
+			assertEquals(exDto.getId(), placeDB.getId());
+			assertEquals(exDto.getName(), placeDB.getName());
+			if(!(exDto.getReference() == null)) {
+				assertEquals(exDto.getReference(), placeDB.getReference());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	@Test
-	public void StatusCreatedInSave() {
+	public void saveStatusCreated() {
 		
-		Mockito.when(service.save(Mockito.any())).thenReturn(exPlace);
-		ResponseEntity respEntity = controller.save(exDto);
-		assertEquals(HttpStatus.CREATED, respEntity.getStatusCode());
+		try {
+			Mockito.when(service.save(Mockito.any())).thenReturn(exPlace);
+			ResponseEntity respEntity = controller.save(exDto);
+			assertEquals(HttpStatus.CREATED, respEntity.getStatusCode());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
 	@Test
 	@Disabled
-	public void someAtributeNotMustBeShown() {
+	public void saveSomeAtributeNotMustBeShown() {
 		// verify business rule in the ConverterService
+	}
+	
+	@Test
+	public void saveFailWithoutName() {
+		exDto.setName(null);
+		try {
+			Mockito.when(service.save(Mockito.any())).thenCallRealMethod();
+			ResponseEntity resp = controller.save(exDto);
+			String sResp = String.valueOf(resp.getBody());
+			
+			assertTrue(sResp.contains("name is missing") && sResp.contains("save"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
