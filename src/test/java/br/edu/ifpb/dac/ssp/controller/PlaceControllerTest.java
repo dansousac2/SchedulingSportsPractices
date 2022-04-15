@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
+import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
 import br.edu.ifpb.dac.ssp.service.PlaceConverterService;
 import br.edu.ifpb.dac.ssp.service.PlaceService;
 
@@ -32,18 +33,21 @@ class PlaceControllerTest {
 	private PlaceController controller;
 	@Mock
 	private PlaceService service;
+	@Mock
+	private PlaceRepository repository;
+	@Captor
+	private ArgumentCaptor<Place> capPlace;
 	private PlaceConverterService converter = new PlaceConverterService();
 	private PlaceDTO exDto;
 	private Place exPlace;
-	@Captor
-	private ArgumentCaptor<Place> capPlace;
 	private ResponseEntity respEntity;
 	
 	@BeforeEach
-	public void dtoLauncher() {
+	public void beforeEach() {
 		MockitoAnnotations.openMocks(this);
-		ReflectionTestUtils.setField(controller, "converterService", converter);
+		ReflectionTestUtils.setField(service, "placeRepository", repository);
 		ReflectionTestUtils.setField(controller, "placeService",service);
+		ReflectionTestUtils.setField(controller, "converterService", converter);
 		
 		exPlace = new Place();
 		exPlace.setId(1);
@@ -108,6 +112,7 @@ class PlaceControllerTest {
 			String sResp = String.valueOf(respEntity.getBody()); // Exception is throwed and passed to de ResponseEntity 
 			
 			assertTrue(sResp.contains("name is missing") && sResp.contains("save"));
+			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -126,6 +131,21 @@ class PlaceControllerTest {
 		}
 	}
 	
+	@Test
+	public void updateFailIdNotFounded() {
+		try {
+			Mockito.when(service.update(exPlace)).thenThrow(new ObjectNotFoundException(exPlace.getId()));
+			respEntity = controller.update(1, exDto); // body contains message error
+			String s = String.valueOf(respEntity.getBody());
+			
+			assertTrue(s.contains("Could not find object with id 1"));
+			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
 	public void updateHttpsStatusOK() {
 		try {
 			Mockito.when(service.update(Mockito.any())).thenReturn(exPlace);
@@ -152,7 +172,7 @@ class PlaceControllerTest {
 	}
 	
 	@Test
-	public void findById() {
+	public void findByIdHttpStatus() {
 		try {
 			Mockito.when(service.findById(1)).thenReturn(exPlace);
 			respEntity = controller.findById(1);
@@ -164,16 +184,34 @@ class PlaceControllerTest {
 	}
 	
 	@Test
+	public void findByIdNotFounded() {
+		try {
+			Mockito.when(service.findById(1)).thenCallRealMethod();
+			Mockito.when(repository.existsById(1)).thenReturn(false);
+			respEntity = controller.findById(1); // with message error of ObjectnotFoundException
+			
+			String s = String.valueOf(respEntity.getBody());
+			
+			Mockito.verifyNoInteractions(repository);
+			assertTrue(s.contains("Could not find object with id 1"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	@Test
 	public void getAllHttpStatusOK() {
 		try {
 			List<Place> list = new ArrayList<>();
 			for(int i = 1; i < 4; i++) {
 				String nameComp = String.valueOf(i);
-				Place place = new Place();
-				place.setId(i);
-				place.setName("lugar" + nameComp);
-				place.setPublic(true);
-				list.add(place);
+				exPlace = new Place();
+				exPlace.setId(i);
+				exPlace.setName("lugar" + nameComp);
+				exPlace.setPublic(true);
+				list.add(exPlace);
 			}
 			Mockito.when(service.findAll()).thenReturn(list);
 			respEntity = controller.getAll();
