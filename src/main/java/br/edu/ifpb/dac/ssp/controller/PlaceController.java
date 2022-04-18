@@ -36,7 +36,7 @@ public class PlaceController {
 	public ResponseEntity getAll() {
 		List<Place> entityList = placeService.findAll();
 		
-		List<PlaceDTO> dtoList = converterService.placeToDto(entityList);
+		List<PlaceDTO> dtoList = converterService.placesToDtos(entityList);
 		
 		return ResponseEntity.ok().body(dtoList);
 	}

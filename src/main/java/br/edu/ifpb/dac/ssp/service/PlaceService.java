@@ -52,15 +52,15 @@ public class PlaceService {
 	}
 	
 	public Place update(Place place) throws Exception {
+		if (place.getName() == null || place.getName().isBlank()) {
+			throw new MissingFieldException("name", "update");
+		}
+		
 		if (place.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(place.getId())) {
 			throw new ObjectNotFoundException(place.getId());
-		}
-		
-		if (place.getName() == null || place.getName().isBlank()) {
-			throw new MissingFieldException("name", "update");
-		}
+		} 
 		
 		return placeRepository.save(place);
 	}
@@ -77,7 +77,7 @@ public class PlaceService {
 	
 	public void deleteById(Integer id) throws Exception {
 		if (id == null) {
-			throw new MissingFieldException("id");
+			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
 			throw new ObjectNotFoundException(id);
 		}
@@ -85,3 +85,4 @@ public class PlaceService {
 		placeRepository.deleteById(id);
 	}
 }
+

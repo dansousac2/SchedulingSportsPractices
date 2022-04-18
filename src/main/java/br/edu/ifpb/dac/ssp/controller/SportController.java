@@ -33,7 +33,7 @@ public class SportController {
 	public ResponseEntity getAll() {
 		List<Sport> entityList = sportService.findAll();
 		
-		List<SportDTO> dtoList = converterService.sportToDto(entityList);
+		List<SportDTO> dtoList = converterService.sportsToDtos(entityList);
 		
 		return ResponseEntity.ok().body(dtoList);
 	}

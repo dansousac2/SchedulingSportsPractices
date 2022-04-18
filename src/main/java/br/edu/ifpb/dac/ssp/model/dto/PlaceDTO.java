@@ -1,6 +1,5 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
-
 public class PlaceDTO {
 
 	private Integer id;
@@ -67,6 +66,4 @@ public class PlaceDTO {
 	public void setPublic(boolean isPublic) {
 		this.isPublic = isPublic;
 	}
-	
-	
 }

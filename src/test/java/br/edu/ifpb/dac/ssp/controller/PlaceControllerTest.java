@@ -23,7 +23,7 @@ import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
 import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
-import br.edu.ifpb.dac.ssp.service.PlaceConverterService;
+import br.edu.ifpb.dac.ssp.service.PlaceConverterServiceTest;
 import br.edu.ifpb.dac.ssp.service.PlaceService;
 
 
@@ -37,7 +37,7 @@ class PlaceControllerTest {
 	private PlaceRepository repository;
 	@Captor
 	private ArgumentCaptor<Place> capPlace;
-	private PlaceConverterService converter = new PlaceConverterService();
+	private PlaceConverterServiceTest converter = new PlaceConverterServiceTest();
 	private PlaceDTO exDto;
 	private Place exPlace;
 	private ResponseEntity respEntity;

@@ -31,7 +31,7 @@ public class SportConverterService {
 		throw new NullPointerException("Could not convert because object is null");
 	}
 	
-	public List<Sport> dtoToSport(List<SportDTO> dtoList) {
+	public List<Sport> dtosToSports(List<SportDTO> dtoList) {
 
 		if (dtoList != null) {
 			List<Sport> entityList = new ArrayList<>();
@@ -51,7 +51,7 @@ public class SportConverterService {
 		throw new NullPointerException("Could not convert because object is null");
 	}
 	
-	public List<SportDTO> sportToDto(List<Sport> entityList) {
+	public List<SportDTO> sportsToDtos(List<Sport> entityList) {
 		if (entityList != null) {
 			List<SportDTO> dtoList = new ArrayList<>();
 			

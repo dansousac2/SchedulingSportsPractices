@@ -52,14 +52,14 @@ public class SportService {
 	}
 	
 	public Sport update(Sport sport) throws Exception {
+		if (sport.getName() == null || sport.getName().isBlank()) {
+			throw new MissingFieldException("name", "update");
+		}
+		
 		if (sport.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(sport.getId())) {
 			throw new ObjectNotFoundException(sport.getId());
-		}
-		
-		if (sport.getName() == null || sport.getName().isBlank()) {
-			throw new MissingFieldException("name", "update");
 		}
 		
 		return sportRepository.save(sport);
@@ -77,7 +77,7 @@ public class SportService {
 	
 	public void deleteById(Integer id) throws Exception {
 		if (id == null) {
-			throw new MissingFieldException("id");
+			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
 			throw new ObjectNotFoundException(id);
 		}

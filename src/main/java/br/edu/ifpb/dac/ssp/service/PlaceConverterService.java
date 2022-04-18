@@ -31,7 +31,7 @@ public class PlaceConverterService {
 		throw new NullPointerException("Could not convert because object is null");
 	}
 
-	public List<Place> dtoToPlace(List<PlaceDTO> dtoList) {
+	public List<Place> dtosToPlaces(List<PlaceDTO> dtoList) {
 		
 		if (dtoList != null) {
 			List<Place> entityList = new ArrayList<>();
@@ -51,7 +51,7 @@ public class PlaceConverterService {
 		throw new NullPointerException("Could not convert because object is null");
 	}
 	
-	public List<PlaceDTO> placeToDto(List<Place> entityList) {
+	public List<PlaceDTO> placesToDtos(List<Place> entityList) {
 		if (entityList != null) {
 			List<PlaceDTO> dtoList = new ArrayList<>();
 			
