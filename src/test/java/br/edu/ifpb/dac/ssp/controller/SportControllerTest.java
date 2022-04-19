@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.controller;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -75,9 +76,10 @@ class SportControllerTest {
 			respEntity = controller.save(exDto);
 			Mockito.verify(service).save(capPlace.capture());
 			Sport placeDB = capPlace.getValue();
-			
-			assertEquals(exDto.getId(), placeDB.getId());
-			assertEquals(exDto.getName(), placeDB.getName());
+			assertAll("Test comparing id and name of dto and entity",
+					() -> assertEquals(exDto.getId(), placeDB.getId()),
+					() -> assertEquals(exDto.getName(), placeDB.getName())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -110,8 +112,10 @@ class SportControllerTest {
 			respEntity = controller.save(exDto);
 			String sResp = String.valueOf(respEntity.getBody()); // Exception is throwed and passed to de ResponseEntity 
 			
-			assertTrue(sResp.contains("name is missing") && sResp.contains("save"));
-			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
+			assertAll("Test message error in body and https",
+					() -> assertTrue(sResp.contains("name is missing") && sResp.contains("save")),
+					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,8 +141,10 @@ class SportControllerTest {
 			respEntity = controller.update(1, exDto); // body contains message error
 			String s = String.valueOf(respEntity.getBody());
 			
-			assertTrue(s.contains("Could not find object with id 1"));
-			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
+			assertAll("",
+					() -> assertTrue(s.contains("Could not find object with id 1")),
+					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -165,9 +171,10 @@ class SportControllerTest {
 	@Test
 	public void deleteHttpStatusAndBody() {
 		respEntity = controller.delete(1);
-		
-		assertEquals(HttpStatus.NO_CONTENT, respEntity.getStatusCode());
-		assertEquals(null, respEntity.getBody());
+		assertAll("Test https and body",
+				() -> assertEquals(HttpStatus.NO_CONTENT, respEntity.getStatusCode()),
+				() -> assertEquals(null, respEntity.getBody())
+		);
 	}
 	
 	@Test

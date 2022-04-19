@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.controller;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -74,11 +75,12 @@ class PlaceControllerTest {
 			respEntity = controller.save(exDto);
 			Mockito.verify(service).save(capPlace.capture());
 			Place placeDB = capPlace.getValue();
-			assertEquals(exDto.getId(), placeDB.getId());
-			assertEquals(exDto.getName(), placeDB.getName());
-			if(!(exDto.getReference() == null)) {
-				assertEquals(exDto.getReference(), placeDB.getReference());
-			}
+			
+			assertAll("Testing info of dto and entity saved in DB",
+					() -> assertEquals(exDto.getId(), placeDB.getId()),
+					() -> assertEquals(exDto.getName(), placeDB.getName())
+			);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -111,8 +113,10 @@ class PlaceControllerTest {
 			respEntity = controller.save(exDto);
 			String sResp = String.valueOf(respEntity.getBody()); // Exception is throwed and passed to de ResponseEntity 
 			
-			assertTrue(sResp.contains("name is missing") && sResp.contains("save"));
-			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
+			assertAll("Testing message and https of save method in fail case",
+					() -> assertTrue(sResp.contains("name is missing") && sResp.contains("save")),
+					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,9 +141,10 @@ class PlaceControllerTest {
 			Mockito.when(service.update(exPlace)).thenThrow(new ObjectNotFoundException(exPlace.getId()));
 			respEntity = controller.update(1, exDto); // body contains message error
 			String s = String.valueOf(respEntity.getBody());
-			
-			assertTrue(s.contains("Could not find object with id 1"));
-			assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode());
+			assertAll("Test message and https in fail case",
+					() -> assertTrue(s.contains("Could not find object with id 1")),
+					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -167,8 +172,10 @@ class PlaceControllerTest {
 	public void deleteHttpStatusAndBody() {
 		respEntity = controller.delete(1);
 		
-		assertEquals(HttpStatus.NO_CONTENT, respEntity.getStatusCode());
-		assertEquals(null, respEntity.getBody());
+		assertAll("Test body and https in fail case",
+				() -> assertEquals(HttpStatus.NO_CONTENT, respEntity.getStatusCode()),
+				() -> assertEquals(null, respEntity.getBody())
+		);
 	}
 	
 	@Test
@@ -189,16 +196,14 @@ class PlaceControllerTest {
 			Mockito.when(service.findById(1)).thenCallRealMethod();
 			Mockito.when(repository.existsById(1)).thenReturn(false);
 			respEntity = controller.findById(1); // with message error of ObjectnotFoundException
+			Mockito.verifyNoInteractions(repository);
 			
 			String s = String.valueOf(respEntity.getBody());
 			
-			Mockito.verifyNoInteractions(repository);
 			assertTrue(s.contains("Could not find object with id 1"));
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		
+		}	
 	}
 	
 	@Test
