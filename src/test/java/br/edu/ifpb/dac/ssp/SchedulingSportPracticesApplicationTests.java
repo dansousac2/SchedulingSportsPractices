@@ -1,13 +1,12 @@
 package br.edu.ifpb.dac.ssp;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 
-@SpringBootTest
+@SelectPackages({"br.edu.ifpb.dac.ssp.controller", "br.edu.ifpb.dac.ssp.service"})
+@Suite
+@SuiteDisplayName("Tests for functionalities implemented in Sprint 1")
 class SchedulingSportPracticesApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+	
 }
