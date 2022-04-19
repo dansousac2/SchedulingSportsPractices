@@ -196,10 +196,10 @@ class SportControllerTest {
 			Mockito.when(repository.existsById(1)).thenReturn(false);
 			respEntity = controller.findById(1); // with message error of ObjectnotFoundException
 			
-			String s = String.valueOf(respEntity.getBody());
-			
-			Mockito.verifyNoInteractions(repository);
-			assertTrue(s.contains("Could not find object with id 1"));
+			assertAll("Test when id is not founded",
+					() -> assertTrue(respEntity.getBody().equals("Could not find object with id 1")),
+					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
+			);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
