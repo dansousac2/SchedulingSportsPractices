@@ -42,7 +42,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(1)
+//	@Order(1)
 	public void testFindByIdThrowsObjectNotFoundException() {
 		// Testing findById by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.findById(25));
@@ -50,7 +50,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(2)
+//	@Order(2)
 	public void testFindByNameThrowsMissingFieldException() {
 		// Testing findByName by passing a null value...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> placeService.findByName(null));
@@ -58,7 +58,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(3)
+//	@Order(3)
 	public void testFindByNameThrowsObjectNotFoundException() {
 		// Testing findByName by passing an invalid name...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.findByName("Pátio"));
@@ -66,7 +66,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(4)
+//	@Order(4)
 	public void testSaveThrowsMissingFieldException() {
 		entity.setName(null);
 		
@@ -76,7 +76,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(5)
+//	@Order(5)
 	public void testUpdateWithoutIdThrowsMissingFieldException() {
 		entity.setId(null);
 		
@@ -86,7 +86,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(6)
+//	@Order(6)
 	public void testUpdateThrowsObjectNotFoundException() {
 		entity.setId(25);
 		
@@ -96,7 +96,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(7)
+//	@Order(7)
 	public void testUpdateWithoutNameThrowsMissingFieldException() {
 		entity.setName(null);
 		
@@ -106,7 +106,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(8)
+//	@Order(8)
 	public void testDeleteWithoutIdThrowsMissingFieldException() {
 		entity.setId(null);
 		
@@ -116,7 +116,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(9)
+//	@Order(9)
 	public void testDeleteThrowsObjectNotFoundException() {
 		entity.setId(25);
 		
@@ -126,7 +126,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(10)
+//	@Order(10)
 	public void testDeleteByIdWithoutIdThrowsMissingFieldException() {
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> placeService.deleteById(null));
@@ -134,7 +134,7 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-	@Order(11)
+//	@Order(11)
 	public void testDeleteByIdThrowsObjectNotFoundException() {		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.deleteById(25));
