@@ -12,6 +12,8 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 
 class PlaceDTOTest {
@@ -36,9 +38,10 @@ class PlaceDTOTest {
 		dto.setMaximumCapacityParticipants(80);
 	}
 	
-	@Test
-	public void nameIsInvalid() {
-		dto.setName("");
+	@ParameterizedTest
+	@ValueSource(strings = {" ", "   ", "\t", "\n"})
+	public void nameIsInvalid(String s) {
+		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
 		violations.forEach(e -> assertTrue(e.getMessage().equals("name can't be null or empty")));
 	}
