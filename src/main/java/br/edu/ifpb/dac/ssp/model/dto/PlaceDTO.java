@@ -1,10 +1,19 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 public class PlaceDTO {
 
 	private Integer id;
+//	@Pattern(regexp = "")
+	@NotBlank(message = "name can't be null or empty")
 	private String name;
 	private String reference;
+	@Size(max = 400, message = "capacity max is 400")
+	@Positive(message = "capacity must be positive")
 	private int maximumCapacityParticipants;
 	private boolean isPublic;
 	
