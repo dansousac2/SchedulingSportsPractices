@@ -11,7 +11,8 @@ class PlaceTest {
 
 	@Test
 	@ParameterizedTest
-	@ValueSource()
+	@ValueSource(strings = {"", "    ", "123 de 456", "12.3", " 999,99","Fulano,f", "Fulano.de.tal"})
 	void namePlaceIsInvalid(String candidate) {
+		
 	}
 }
