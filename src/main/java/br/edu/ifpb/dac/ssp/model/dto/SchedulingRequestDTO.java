@@ -12,9 +12,6 @@ public class SchedulingRequestDTO {
 	private String duration;
 	private String placeName;
 	private String sportName;
-	// Aqui seria para caso o usuário já queira passar uma lista inicial de participantes, aí no service quero organizar uma lógica para, caso esse atributo não venha nulo,
-	// puxar a lista e setar, vou ver se fica bom depois.
-	private String listParticipants;
 	// Organizar depois:
 	// private Integer userId;
 	
@@ -22,13 +19,12 @@ public class SchedulingRequestDTO {
 		
 	}
 	
-	public SchedulingRequestDTO(Integer id, String scheduledDate, String duration, String placeName, String sportName, String listParticipants) {
+	public SchedulingRequestDTO(Integer id, String scheduledDate, String duration, String placeName, String sportName) {
 		this.id = id;
 		this.scheduledDate = scheduledDate;
 		this.duration = duration;
 		this.placeName = placeName;
 		this.sportName = sportName;
-		this.listParticipants = listParticipants;
 	}
 
 	public Integer getId() {
@@ -71,17 +67,9 @@ public class SchedulingRequestDTO {
 		this.sportName = sportName;
 	}
 
-	public String getListParticipants() {
-		return listParticipants;
-	}
-
-	public void setListParticipants(String listParticipants) {
-		this.listParticipants = listParticipants;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(duration, id, listParticipants, placeName, scheduledDate, sportName);
+		return Objects.hash(duration, id,  placeName, scheduledDate, sportName);
 	}
 
 	@Override
@@ -94,7 +82,6 @@ public class SchedulingRequestDTO {
 			return false;
 		SchedulingRequestDTO other = (SchedulingRequestDTO) obj;
 		return Objects.equals(duration, other.duration) && Objects.equals(id, other.id)
-				&& Objects.equals(listParticipants, other.listParticipants)
 				&& Objects.equals(placeName, other.placeName) && Objects.equals(scheduledDate, other.scheduledDate)
 				&& Objects.equals(sportName, other.sportName);
 	}

@@ -1,6 +1,4 @@
 package br.edu.ifpb.dac.ssp.model.dto;
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Sport;
 import br.edu.ifpb.dac.ssp.model.User;
 
 import java.time.LocalTime;
@@ -17,19 +15,20 @@ public class SchedulingDTO {
 	// Aqui vão ficar os campos com validações do Spring Validation
 	// Por enquanto a maioria está só com NotBlank 
 	
-	@FutureOrPresent
-	@NotBlank
+	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
+	@NotBlank(message = "It's mandatory to inform a scheduled date!")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date scheduledDate;
 	
-	@NotBlank
+	@DateTimeFormat(pattern = "HH:mm:ss")
+	@NotBlank(message = "It's mandatory to inform a duration of practice!")
 	private LocalTime duration;
 	
-	@NotBlank
-	private Place place;
+	@NotBlank(message = "It's mandatory to inform a place for practice!")
+	private Integer placeId;
 	
-	@NotBlank
-	private Sport sport;
+	@NotBlank(message = "It's mandatory to inform a sport for practice!")
+	private Integer sportId;
 	
 	/*
 	 * Organizar melhor depois:

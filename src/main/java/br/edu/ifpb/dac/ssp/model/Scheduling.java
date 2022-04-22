@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -41,15 +40,11 @@ public class Scheduling implements Serializable {
 	@Column(name = "SCHEDULED_DURATION", nullable = false)
 	private LocalTime duration;
 
-	@ManyToOne
-	@JoinColumn(name = "place_id", referencedColumnName = "PLACE_ID")
-	@Column(name = "PRACTICE_PLACE", nullable = false)
-	private Place place;
+	@Column(name = "PRACTICE_PLACE_ID", nullable = false)
+	private Integer placeId;
 	
-	@ManyToOne
-	@JoinColumn(name = "sport_id", referencedColumnName = "SPORT_ID")
-	@Column(name = "PRACTICE_SPORT", nullable = false)
-	private Sport sport;
+	@Column(name = "PRACTICE_SPORT_ID", nullable = false)
+	private Integer sportId;
 	
 	/*
 	// Organizar melhor depois
@@ -72,11 +67,11 @@ public class Scheduling implements Serializable {
 		this.quantityOfParticipants = 0;
 	}
 
-	public Scheduling(Date scheduledDate, LocalTime duration, Place place, Sport sport) {
+	public Scheduling(Date scheduledDate, LocalTime duration, Integer placeId, Integer sportId) {
 		this.scheduledDate = scheduledDate;
 		this.duration = duration;
-		this.place = place;
-		this.sport = sport;
+		this.placeId = placeId;
+		this.sportId = sportId;
 		
 		this.participants = new HashSet<User>();
 		this.quantityOfParticipants = 0;
@@ -106,20 +101,20 @@ public class Scheduling implements Serializable {
 		this.duration = duration;
 	}
 
-	public Place getPlace() {
-		return place;
+	public Integer getPlaceId() {
+		return placeId;
 	}
 
-	public void setPlace(Place place) {
-		this.place = place;
+	public void setPlaceId(Integer placeId) {
+		this.placeId = placeId;
 	}
 
-	public Sport getSport() {
-		return sport;
+	public Integer getSportId() {
+		return sportId;
 	}
 
-	public void setSport(Sport sport) {
-		this.sport = sport;
+	public void setSportId(Integer sportId) {
+		this.sportId = sportId;
 	}
 
 	public Set<User> getParticipants() {
