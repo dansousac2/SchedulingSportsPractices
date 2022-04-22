@@ -9,9 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 
-@Table(name = "PRACTICE_PLACE")
+@Table(name = "PRACTICE_PLACE", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @Entity
 public class Place implements Serializable {
 
