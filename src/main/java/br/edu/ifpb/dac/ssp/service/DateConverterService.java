@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DateConverterService {
 
+	// TODO: Finalizar
+	
 	public Date stringToDate(String data) {
 		SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		formatoData.setLenient(false);

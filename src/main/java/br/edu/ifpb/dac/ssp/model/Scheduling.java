@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -11,8 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -20,9 +22,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-@Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {})})
+@Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"scheduledDate"})})
 @Entity
-
 public class Scheduling implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -33,23 +34,34 @@ public class Scheduling implements Serializable {
 	private Integer id;
 	
 	@Temporal(TemporalType.DATE)
+	@Column(name = "SCHEDULED_DATE", nullable = false)
 	private Date scheduledDate;
 	
 	@Temporal(TemporalType.TIME)
+	@Column(name = "SCHEDULED_DURATION", nullable = false)
 	private LocalTime duration;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "place_id", referencedColumnName = "PLACE_ID")
+	@Column(name = "PRACTICE_PLACE", nullable = false)
 	private Place place;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "sport_id", referencedColumnName = "SPORT_ID")
+	@Column(name = "PRACTICE_SPORT", nullable = false)
 	private Sport sport;
 	
-	// Organizar melhor depois:
+	/*
+	// Organizar melhor depois
+	@Column(name = "CREATED_BY")
 	private User creator;
+	*/
 	
 	@ManyToMany
+	@JoinTable(
+			name = "PRACTICE_PARTICIPANTS",
+			joinColumns = @JoinColumn(name = "SCHEDULED_PRACTICE_ID"),
+			inverseJoinColumns = @JoinColumn(name = "USER_ID"))
 	private Set<User> participants;
 	
 	@Transient
@@ -60,13 +72,14 @@ public class Scheduling implements Serializable {
 		this.quantityOfParticipants = 0;
 	}
 
-	public Scheduling(Date scheduledDate, LocalTime duration, Place place, Sport sport,
-			User creatorOfPractice) {
+	public Scheduling(Date scheduledDate, LocalTime duration, Place place, Sport sport) {
 		this.scheduledDate = scheduledDate;
 		this.duration = duration;
 		this.place = place;
 		this.sport = sport;
-		this.creator = creatorOfPractice;
+		
+		this.participants = new HashSet<User>();
+		this.quantityOfParticipants = 0;
 	}
 
 	public Integer getId() {
@@ -109,14 +122,6 @@ public class Scheduling implements Serializable {
 		this.sport = sport;
 	}
 
-	public User getCreator() {
-		return creator;
-	}
-
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
-
 	public Set<User> getParticipants() {
 		return participants;
 	}
@@ -131,8 +136,10 @@ public class Scheduling implements Serializable {
 	}
 	
 	public void removeParticipant(User user) {
-		this.participants.remove(user);
-		this.quantityOfParticipants -= 1;
+		if (this.participants.size() > 0) {
+			this.participants.remove(user);
+			this.quantityOfParticipants -= 1;
+		}
 	}
 	
 	public int getQuantityOfParticipants() {
@@ -141,5 +148,20 @@ public class Scheduling implements Serializable {
 
 	public void setQuantityOfParticipants(int quantityOfParticipants) {
 		this.quantityOfParticipants = quantityOfParticipants;
+	}
+
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Scheduling other = (Scheduling) obj;
+		return Objects.equals(id, other.id);
 	}
 }
