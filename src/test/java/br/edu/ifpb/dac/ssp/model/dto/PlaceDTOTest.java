@@ -12,6 +12,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -31,11 +32,6 @@ class PlaceDTOTest {
 	@BeforeEach
 	public void beforeEach() {
 		dto = new PlaceDTO();
-		dto.setId(1);
-		dto.setName("Quadra");
-		dto.setReference("próximo a quadra");
-		dto.setPublic(true);
-		dto.setMaximumCapacityParticipants(80);
 	}
 	
 	@ParameterizedTest
@@ -51,11 +47,29 @@ class PlaceDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"", "   ", "\t", "\n\n", "D@n", "- 123 -", " *", "   &LA ", "!"}) // invalid
+	@ValueSource(strings = {"Mar", "", "   ", "\t", "\n\n", "D@n", "- 123 -", " *", "   &LA ", "!", ","}) // invalid
 	public void nameIsInvalid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
 		
 		assertNotEquals(0, violations.size(), "VALID NAME FOUND< " + s + " >");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(ints = {1,50,100}) // valid
+	public void capacityValid(int c) {
+		dto.setMaximumCapacityParticipants(c);
+		violations = validator.validateProperty(dto, "maximumCapacityParticipants");
+		
+		assertEquals(0, violations.size(), "INVALID CAPACITY FOUND< " + c + " >");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(ints = {0, -1, -50, -100}) // invalid
+	public void capacityInvalid(int c) {
+		dto.setMaximumCapacityParticipants(c);
+		violations = validator.validateProperty(dto, "maximumCapacityParticipants");
+		
+		assertNotEquals(0, violations.size(), "VALID CAPACITY FOUND< " + c + " >");
 	}
 }
