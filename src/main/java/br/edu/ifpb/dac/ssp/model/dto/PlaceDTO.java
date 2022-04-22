@@ -8,8 +8,7 @@ import javax.validation.constraints.Size;
 public class PlaceDTO {
 
 	private Integer id;
-//	@Pattern(regexp = "")
-	@NotBlank(message = "name can't be null or empty")
+	@Pattern(regexp = "^[^ ][a-zA-ZÀ-ú0-9\\s]{3,255}$", message = "Name is invalid! Verify and try again.")
 	private String name;
 	private String reference;
 	@Size(max = 400, message = "capacity max is 400")

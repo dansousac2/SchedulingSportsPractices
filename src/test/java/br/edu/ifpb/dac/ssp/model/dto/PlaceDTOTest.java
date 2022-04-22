@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
@@ -43,6 +44,13 @@ class PlaceDTOTest {
 	public void nameIsInvalid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
-		violations.forEach(e -> assertTrue(e.getMessage().equals("name can't be null or empty")));
+		
+		String message = "valid name";
+		
+		if(!violations.isEmpty()) {
+			message = violations.stream().findFirst().get().getMessage();
+		}
+		
+		assertEquals("Name is invalid! Verify and try again.", message, "VALID NAME FOUND< " + s +" >");
 	}
 }
