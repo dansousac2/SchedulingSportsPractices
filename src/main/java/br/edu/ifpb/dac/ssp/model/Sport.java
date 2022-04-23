@@ -24,20 +24,15 @@ public class Sport implements Serializable {
 
 	@Column(name = "SPORT_NAME", nullable = false)
 	private String name;
-
-	@Column(name = "SPORT_MINIMUM_NUMBER_OF_PRACTITIONERS", nullable = true)
-	private int minimumNumberOfPractitioners;
-	
 	
 	public Sport() {
 		
 	}
 	
 	
-	public Sport(Integer id, String name, int minimumNumberOfPractitioners) {
+	public Sport(Integer id, String name) {
 		this.id = id;
 		this.name = name;
-		this.minimumNumberOfPractitioners = minimumNumberOfPractitioners;
 	}
 	
 	
@@ -55,14 +50,6 @@ public class Sport implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getMinimumNumberOfPractitioners() {
-		return minimumNumberOfPractitioners;
-	}
-
-	public void setMinimumNumberOfPractitioners(int minimumNumberOfPractitioners) {
-		this.minimumNumberOfPractitioners = minimumNumberOfPractitioners;
 	}
 
 	
