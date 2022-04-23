@@ -1,6 +1,7 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Set;
 
@@ -33,14 +34,55 @@ class UserDTOTest {
 	
 	@ParameterizedTest
 	@ValueSource(strings = {"D@n", "  1", "@¨%"}) // valid
-	public void schduledDateValid(String s) {
+	public void userNameValid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
 		
 		if(violations.size() > 0) {
 			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
 		}
-		assertEquals(0, violations.size(), "INVALID DATE FOUND<" + s + ">");
+		assertEquals(0, violations.size(), "INVALID NAME FOUND<" + s + ">");
 	}
 
+	@ParameterizedTest
+	@ValueSource(strings = {"Ex", "", "    ", " \n  ", "\t  "}) // invalid
+	public void userNameInvalid(String s) {
+		dto.setName(s);
+		violations = validator.validateProperty(dto, "name");
+		
+		assertNotEquals(0, violations.size(), "VALID NAME FOUND<" + s + ">");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"example@gmail.com", "example_123@yahoo.com.br"}) // valid
+	public void userEmailValid(String s) {
+		dto.setEmail(s);
+		violations = validator.validateProperty(dto, "email");
+		
+		if(violations.size() > 0) {
+			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
+		}
+		assertEquals(0, violations.size(), "INVALID EMAIL FOUND<" + s + ">");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"examp e@gmail.com", " example_123@yahoo.com.br", "example@hotmail"}) // invalid
+	public void userEmailInvalid(String s) {
+		dto.setEmail(s);
+		violations = validator.validateProperty(dto, "email");
+		
+		assertNotEquals(0, violations.size(), "VALID EMAIL FOUND<" + s + ">");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"1234567", "1a  5b ", "      a", " &¨*   "}) // valid
+	public void userPasswordValid(String s) {
+		dto.setPassword(s);
+		violations = validator.validateProperty(dto, "password");
+		
+		if(violations.size() > 0) {
+			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
+		}
+		assertEquals(0, violations.size(), "INVALID PASSWORD FOUND<" + s + ">");
+	}
 }
