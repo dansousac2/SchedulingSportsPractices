@@ -38,7 +38,7 @@ public class PlaceConverterService {
 			
 			Place entity = null;
 			
-			if (dtoList != null && !dtoList.isEmpty()) {
+			if (!dtoList.isEmpty()) {
 				for (PlaceDTO dto: dtoList) {
 					entity = dtoToPlace(dto);
 					entityList.add(entity);
@@ -57,7 +57,7 @@ public class PlaceConverterService {
 			
 			PlaceDTO dto = null;
 			
-			if (entityList != null && !entityList.isEmpty()) {
+			if (!entityList.isEmpty()) {
 				for (Place place: entityList) {
 					dto = placeToDto(place);
 					dtoList.add(dto);

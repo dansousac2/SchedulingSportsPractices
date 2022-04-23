@@ -103,7 +103,7 @@ public class Scheduling implements Serializable {
 		return duration;
 	}
 
-	public void setDurationOfPractice(LocalTime duration) {
+	public void setDuration(LocalTime duration) {
 		this.duration = duration;
 	}
 

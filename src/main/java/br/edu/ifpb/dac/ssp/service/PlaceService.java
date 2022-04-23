@@ -26,6 +26,10 @@ public class PlaceService {
 	}
 	
 	public Place findById(Integer id) throws Exception {
+		if (id == null) {
+			throw new MissingFieldException("id");
+		}
+		
 		if (!existsById(id)) {
 			throw new ObjectNotFoundException(id);
 		}
