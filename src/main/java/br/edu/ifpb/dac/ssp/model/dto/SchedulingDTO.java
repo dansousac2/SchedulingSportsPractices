@@ -3,6 +3,7 @@ package br.edu.ifpb.dac.ssp.model.dto;
 import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class SchedulingDTO {
@@ -10,19 +11,21 @@ public class SchedulingDTO {
 	private Integer id;
 	
 	@NotBlank(message = "It's mandatory to inform a scheduled date!")
-	@Size(min = 19, max = 19, message = "ScheduledDate should be formatted as 'dd/MM/yyyy HH:mm:ss'")
+	@Pattern(regexp = "^\\d\\d/\\d\\d/\\d\\d\\d\\d \\d\\d:\\d\\d:\\d\\d$",
+			message = "ScheduledDate should be formatted as 'dd/MM/yyyy HH:mm:ss'")
 	private String scheduledDate;
 	
 	@NotBlank(message = "It's mandatory to inform a duration of practice!")
-	@Size(min = 8, max = 8, message = "Duration for practice should be formatted as 'HH:mm:ss'")
+	@Pattern(regexp = "^\\d\\d:\\d\\d:\\d\\d$",
+	message = "Duration for practice should be formatted as 'HH:mm:ss'")
 	private String duration;
 	
-	@NotBlank(message = "It's mandatory to inform a place for practice!")
-	@Size(min = 3, max = 255)
+	@NotBlank(message = "It's mandatory to inform a place for practice with 4 characters or more!")
+	@Size(min = 4, max = 255)
 	private String placeName;
 	
 	@NotBlank(message = "It's mandatory to inform a sport for practice!")
-	@Size(min = 3, max = 255)
+	@Size(min = 4, max = 255)
 	private String sportName;
 	
 	// Organizar depois:

@@ -38,12 +38,10 @@ public class Scheduling implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "SCHEDULED_DATE", nullable = false)
 	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime scheduledDate;
 	
 	@Temporal(TemporalType.TIME)
 	@Column(name = "SCHEDULED_DURATION", nullable = false)
-	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime duration;
 
 	@Column(name = "PRACTICE_PLACE_ID", nullable = false)
