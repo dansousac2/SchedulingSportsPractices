@@ -14,7 +14,7 @@ public class SportConverterService {
 	
 	public Sport dtoToSport(SportDTO dto) {
 		if (dto != null) {
-			Sport entity = new Sport(dto.getId(), dto.getName(), dto.getMinimumNumberOfPractitioners());
+			Sport entity = new Sport(dto.getId(), dto.getName());
 			
 			return entity;
 		}
@@ -23,7 +23,7 @@ public class SportConverterService {
 	
 	public SportDTO sportToDto(Sport entity) {
 		if (entity != null) {
-			SportDTO dto = new SportDTO(entity.getId(), entity.getName(), entity.getMinimumNumberOfPractitioners());
+			SportDTO dto = new SportDTO(entity.getId(), entity.getName());
 			
 			return dto;
 		}
