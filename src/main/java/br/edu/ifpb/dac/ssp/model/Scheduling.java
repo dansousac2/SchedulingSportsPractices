@@ -1,8 +1,8 @@
 package br.edu.ifpb.dac.ssp.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,6 +20,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.FutureOrPresent;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"scheduledDate"})})
 @Entity
@@ -34,10 +37,13 @@ public class Scheduling implements Serializable {
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name = "SCHEDULED_DATE", nullable = false)
-	private Date scheduledDate;
+	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime scheduledDate;
 	
 	@Temporal(TemporalType.TIME)
 	@Column(name = "SCHEDULED_DURATION", nullable = false)
+	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime duration;
 
 	@Column(name = "PRACTICE_PLACE_ID", nullable = false)
@@ -67,7 +73,7 @@ public class Scheduling implements Serializable {
 		this.quantityOfParticipants = 0;
 	}
 
-	public Scheduling(Date scheduledDate, LocalTime duration, Integer placeId, Integer sportId) {
+	public Scheduling(LocalDateTime scheduledDate, LocalTime duration, Integer placeId, Integer sportId) {
 		this.scheduledDate = scheduledDate;
 		this.duration = duration;
 		this.placeId = placeId;
@@ -85,11 +91,11 @@ public class Scheduling implements Serializable {
 		this.id = id;
 	}
 
-	public Date getScheduledDate() {
+	public LocalDateTime getScheduledDate() {
 		return scheduledDate;
 	}
 
-	public void setScheduledDate(Date scheduledDate) {
+	public void setScheduledDate(LocalDateTime scheduledDate) {
 		this.scheduledDate = scheduledDate;
 	}
 

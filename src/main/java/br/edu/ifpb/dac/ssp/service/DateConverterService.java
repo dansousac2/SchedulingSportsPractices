@@ -1,36 +1,46 @@
 package br.edu.ifpb.dac.ssp.service;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ifpb.dac.ssp.exception.TimeParseException;
+
 @Service
 public class DateConverterService {
-
-	// TODO: Finalizar
 	
-	public Date stringToDate(String data) {
-		SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		formatoData.setLenient(false);
+	public LocalDateTime stringToDate(String dateString) throws Exception {
+		LocalDateTime dateTime;
 		
 		try {
-			Date dataConvertida = formatoData.parse(data);
-			return dataConvertida;
-		} catch (Exception e) {
-			// lançar exceção
+			dateTime = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		} catch (DateTimeParseException e) {
+			throw new TimeParseException("Could not convert " + dateString + " to LocalTime!");
 		}
 		
-		return null;
+		return dateTime;
 	}
 	
-	public String dateToString(Date date) {
-		// Implementar depois
-		return null;
+	public String dateToString(LocalDateTime date) {
+		return date.toString();
 	}
 	
-	public LocalTime stringToTime(String time) {
-		return null;
+	public LocalTime stringToTime(String timeString) throws Exception {
+		LocalTime time;
+		
+		try {
+			time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm:ss"));
+		} catch (DateTimeParseException e) {
+			throw new TimeParseException("Could not convert " + timeString + " to LocalTime!");
+		}
+		
+		return time;
+	}
+	
+	public String timeToString (LocalTime time) {
+		return time.toString();
 	}
 }

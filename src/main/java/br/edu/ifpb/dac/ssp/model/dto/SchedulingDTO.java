@@ -1,42 +1,101 @@
 package br.edu.ifpb.dac.ssp.model.dto;
-import br.edu.ifpb.dac.ssp.model.User;
 
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.Set;
+import java.util.Objects;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.validation.constraints.Size;
 
 public class SchedulingDTO {
-
-	// Aqui vão ficar os campos com validações do Spring Validation
-	// Por enquanto a maioria está só com NotBlank 
 	
-	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
+	private Integer id;
+	
 	@NotBlank(message = "It's mandatory to inform a scheduled date!")
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date scheduledDate;
+	@Size(min = 19, max = 19, message = "ScheduledDate should be formatted as 'dd/MM/yyyy HH:mm:ss'")
+	private String scheduledDate;
 	
-	@DateTimeFormat(pattern = "HH:mm:ss")
 	@NotBlank(message = "It's mandatory to inform a duration of practice!")
-	private LocalTime duration;
+	@Size(min = 8, max = 8, message = "Duration for practice should be formatted as 'HH:mm:ss'")
+	private String duration;
 	
 	@NotBlank(message = "It's mandatory to inform a place for practice!")
-	private Integer placeId;
+	@Size(min = 3, max = 255)
+	private String placeName;
 	
 	@NotBlank(message = "It's mandatory to inform a sport for practice!")
-	private Integer sportId;
+	@Size(min = 3, max = 255)
+	private String sportName;
 	
-	/*
-	 * Organizar melhor depois:
-	@NotBlank
-	private User creator;
-	*/
+	// Organizar depois:
+	// private Integer userId;
 	
-	@NotBlank
-	private Set<User> participants;
+	public SchedulingDTO() {
+		
+	}
 	
+	public SchedulingDTO(Integer id, String scheduledDate, String duration, String placeName, String sportName) {
+		this.id = id;
+		this.scheduledDate = scheduledDate.strip();
+		this.duration = duration.strip();
+		this.placeName = placeName.strip();
+		this.sportName = sportName.strip();
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getScheduledDate() {
+		return scheduledDate;
+	}
+
+	public void setScheduledDate(String scheduledDate) {
+		this.scheduledDate = scheduledDate.strip();
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration.strip();
+	}
+
+	public String getPlaceName() {
+		return placeName;
+	}
+
+	public void setPlaceName(String placeName) {
+		this.placeName = placeName.strip();
+	}
+
+	public String getSportName() {
+		return sportName;
+	}
+
+	public void setSportName(String sportName) {
+		this.sportName = sportName.strip();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(duration, id,  placeName, scheduledDate, sportName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SchedulingDTO other = (SchedulingDTO) obj;
+		return Objects.equals(duration, other.duration) && Objects.equals(id, other.id)
+				&& Objects.equals(placeName, other.placeName) && Objects.equals(scheduledDate, other.scheduledDate)
+				&& Objects.equals(sportName, other.sportName);
+	}
 }
