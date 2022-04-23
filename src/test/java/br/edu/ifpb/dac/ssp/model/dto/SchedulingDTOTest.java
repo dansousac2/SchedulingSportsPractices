@@ -101,7 +101,7 @@ class SchedulingDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"1234", "basebool 2.0", "  Hugby  ", "   Hu gb   "}) // Place's name valid
+	@ValueSource(strings = {"1234", "basebool 2.0", "  Hugby  ", "   Hu g   "}) // Place's name valid
 	public void schduledSportNameValid(String s) {
 		dto.setSportName(s);
 		violations = validator.validateProperty(dto, "sportName");
