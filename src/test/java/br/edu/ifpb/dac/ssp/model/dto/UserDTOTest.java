@@ -86,4 +86,13 @@ class UserDTOTest {
 		}
 		assertEquals(0, violations.size(), "INVALID PASSWORD FOUND<" + s + ">");
 	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"123456", "", "    ", "  \n ", "   \t "}) // invalid
+	public void userPasswordInvalid(String s) {
+		dto.setPassword(s);
+		violations = validator.validateProperty(dto, "password");
+		
+		assertNotEquals(0, violations.size(), "VALID PASSWORD FOUND<" + s + ">");
+	}
 }

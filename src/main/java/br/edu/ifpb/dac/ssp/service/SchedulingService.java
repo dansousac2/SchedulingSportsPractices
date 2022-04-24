@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +24,24 @@ public class SchedulingService {
 		return schedulingRepository.findAll();
 	}
 	
-	public boolean existsById(Integer id) {
-		return schedulingRepository.existsById(id);
+	public List<Scheduling> findAllByPlaceName(String placeName) {
+		return schedulingRepository.findAllByPlaceName(placeName);
 	}
 	
-	public boolean existsByScheduledDate(LocalDateTime scheduledDate) {
-		return schedulingRepository.existsByScheduledDate(scheduledDate);
+	public List<Scheduling> findAllByPlaceNameAndScheduledDate(String placeName, LocalDate scheduledDate) {
+		return schedulingRepository.findAllByPlaceNameAndScheduledDate(placeName, scheduledDate);
+	}
+	
+	public List<Scheduling> findAllBySportName(String sportName) {
+		return schedulingRepository.findAllBySportName(sportName);
+	}
+	
+	public List<Scheduling> findAllBySportNameAndScheduledDate(String sportName, LocalDate scheduledDate) {
+		return schedulingRepository.findAllBySportNameAndScheduledDate(sportName, scheduledDate);
+	}
+	
+	public boolean existsById(Integer id) {
+		return schedulingRepository.existsById(id);
 	}
 	
 	public Scheduling findById(Integer id) throws Exception {
@@ -43,26 +56,9 @@ public class SchedulingService {
 		return schedulingRepository.getById(id);
 	}
 	
-	public Optional<Scheduling> findByScheduledDate(LocalDateTime scheduledDate) throws Exception {
-		if (scheduledDate == null || scheduledDate.toString().isBlank()) {
-			throw new MissingFieldException("scheduled date");
-		}
-		
-		if (!schedulingRepository.existsByScheduledDate(scheduledDate)) {
-			throw new ObjectNotFoundException(scheduledDate.toString());
-		}
-		
-		return schedulingRepository.findByScheduledDate(scheduledDate);
+	public Scheduling save(Scheduling scheduling) {
+		return schedulingRepository.save(scheduling);
 	}
-	
-	public Scheduling save(Scheduling scheduling) throws Exception {
-		if (!existsByScheduledDate(scheduling.getScheduledDate())) {
-			return schedulingRepository.save(scheduling);
-		}
-		
-		throw new TimeAlreadyScheduledException();
-	}
-	
 	
 	public void delete(Scheduling scheduling) throws Exception {
 		if (!existsById(scheduling.getId())) {

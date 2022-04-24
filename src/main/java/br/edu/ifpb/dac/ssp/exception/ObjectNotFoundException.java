@@ -11,4 +11,8 @@ public class ObjectNotFoundException extends Exception {
 		public ObjectNotFoundException(String name) {
 			super("Could not find object with name " + name);
 		}
+		
+		public ObjectNotFoundException(String object, String name) {
+			super("Could not find " + object + " with name " + name);
+		}
 }

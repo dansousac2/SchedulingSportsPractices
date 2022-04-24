@@ -1,13 +1,15 @@
 package br.edu.ifpb.dac.ssp.repository;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 
 public interface SchedulingRepository extends JpaRepository<Scheduling, Integer> {
-
-	public Optional<Scheduling> findByScheduledDate(LocalDateTime scheduledDate);
-	public boolean existsByScheduledDate(LocalDateTime scheduledDate);
-}
+	
+	public List<Scheduling> findAllByPlaceName(String placeName);
+	public List<Scheduling> findAllByPlaceNameAndScheduledDate(String placeName, LocalDate scheduledDate);
+	public List<Scheduling> findAllBySportName(String sportName);
+	public List<Scheduling> findAllBySportNameAndScheduledDate(String sportName, LocalDate scheduledDate);
+} 

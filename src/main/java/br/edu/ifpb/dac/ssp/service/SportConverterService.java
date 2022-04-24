@@ -57,7 +57,7 @@ public class SportConverterService {
 			
 			SportDTO dto = null;
 			
-			if (entityList != null && !entityList.isEmpty()) {
+			if (!entityList.isEmpty()) {
 				for (Sport sport: entityList) {
 					dto = sportToDto(sport);
 					dtoList.add(dto);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
+import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
@@ -25,6 +26,10 @@ public class PlaceService {
 		return placeRepository.existsById(id);
 	}
 	
+	public boolean existsByName(String name) {
+		return placeRepository.existsByName(name);
+	}
+	
 	public Place findById(Integer id) throws Exception {
 		if (id == null) {
 			throw new MissingFieldException("id");
@@ -41,7 +46,7 @@ public class PlaceService {
 			throw new MissingFieldException("name");
 		}
 		
-		if (!placeRepository.existsByName(name)) {
+		if (!existsByName(name)) {
 			throw new ObjectNotFoundException(name);
 		}
 		return placeRepository.findByName(name);
@@ -50,6 +55,10 @@ public class PlaceService {
 	public Place save(Place place) throws Exception {
 		if (place.getName() == null || place.getName().isBlank()) {
 			throw new MissingFieldException("name", "save");
+		}
+		
+		if (existsByName(place.getName())) {
+			throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
 		}
 		
 		return placeRepository.save(place);
@@ -65,6 +74,11 @@ public class PlaceService {
 		} else if (!existsById(place.getId())) {
 			throw new ObjectNotFoundException(place.getId());
 		} 
+		
+		Place placeSaved = findByName(place.getName()).get();
+		if (placeSaved.getId() != place.getId()) {
+			throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
+		}
 		
 		return placeRepository.save(place);
 	}
