@@ -10,15 +10,20 @@ public class SchedulingDTO {
 	
 	private Integer id;
 	
-	@NotBlank(message = "It's mandatory to inform a scheduled date!")
-	@Pattern(regexp = "^\\d\\d/\\d\\d/\\d\\d\\d\\d \\d\\d:\\d\\d:\\d\\d$",
-			message = "ScheduledDate should be formatted as 'dd/MM/yyyy HH:mm:ss'")
+	@NotBlank(message = "It's mandatory to inform a scheduled start date!")
+	@Pattern(regexp = "^\\d\\d\\d\\d-\\d\\d-\\d\\d$",
+			message = "Scheduled start date should be formatted as 'yyyy-MM-dd'")
 	private String scheduledDate;
 	
-	@NotBlank(message = "It's mandatory to inform a duration of practice!")
-	@Pattern(regexp = "^\\d\\d:\\d\\d:\\d\\d$",
-	message = "Duration for practice should be formatted as 'HH:mm:ss'")
-	private String duration;
+	@NotBlank(message = "It's mandatory to inform a scheduled start time!")
+	@Pattern(regexp = "^\\d\\d:\\d\\d$",
+			message = "Scheduled start time should be formatted as 'HH:mm'")
+	private String scheduledStartTime;
+	
+	@NotBlank(message = "It's mandatory to inform a scheduled finish time!")
+	@Pattern(regexp = "^\\d\\d:\\d\\d$",
+			message = "Scheduled finish time should be formatted as 'HH:mm'")
+	private String scheduledFinishTime;
 	
 	@NotBlank(message = "It's mandatory to inform a place for practice with 4 characters or more!")
 	@Size(min = 4, max = 255)
@@ -29,18 +34,19 @@ public class SchedulingDTO {
 	private String sportName;
 	
 	// Organizar depois:
-	// private Integer userId;
+	// private Integer creatorId;
 	
 	public SchedulingDTO() {
 		
 	}
 	
-	public SchedulingDTO(Integer id, String scheduledDate, String duration, String placeName, String sportName) {
+	public SchedulingDTO(Integer id, String scheduledDate, String scheduledStartTime, String scheduledFinishTime, String placeName, String sportName) {
 		this.id = id;
-		this.scheduledDate = scheduledDate.strip();
-		this.duration = duration.strip();
-		this.placeName = placeName.strip();
-		this.sportName = sportName.strip();
+		this.scheduledDate = scheduledDate;
+		this.scheduledStartTime = scheduledStartTime;
+		this.scheduledFinishTime = scheduledFinishTime;
+		this.placeName = placeName;
+		this.sportName = sportName;
 	}
 
 	public Integer getId() {
@@ -56,15 +62,23 @@ public class SchedulingDTO {
 	}
 
 	public void setScheduledDate(String scheduledDate) {
-		this.scheduledDate = scheduledDate.strip();
+		this.scheduledDate = scheduledDate;
 	}
 
-	public String getDuration() {
-		return duration;
+	public String getScheduledStartTime() {
+		return scheduledStartTime;
 	}
 
-	public void setDuration(String duration) {
-		this.duration = duration.strip();
+	public void setScheduledStartTime(String scheduledStartTime) {
+		this.scheduledStartTime = scheduledStartTime;
+	}
+
+	public String getScheduledFinishTime() {
+		return scheduledFinishTime;
+	}
+
+	public void setScheduledFinishTime(String scheduledFinishTime) {
+		this.scheduledFinishTime = scheduledFinishTime;
 	}
 
 	public String getPlaceName() {
@@ -85,7 +99,7 @@ public class SchedulingDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(duration, id,  placeName, scheduledDate, sportName);
+		return Objects.hash(id, placeName, scheduledDate, scheduledFinishTime, scheduledStartTime, sportName);
 	}
 
 	@Override
@@ -97,8 +111,10 @@ public class SchedulingDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		SchedulingDTO other = (SchedulingDTO) obj;
-		return Objects.equals(duration, other.duration) && Objects.equals(id, other.id)
-				&& Objects.equals(placeName, other.placeName) && Objects.equals(scheduledDate, other.scheduledDate)
+		return Objects.equals(id, other.id) && Objects.equals(placeName, other.placeName)
+				&& Objects.equals(scheduledDate, other.scheduledDate)
+				&& Objects.equals(scheduledFinishTime, other.scheduledFinishTime)
+				&& Objects.equals(scheduledStartTime, other.scheduledStartTime)
 				&& Objects.equals(sportName, other.sportName);
 	}
 }

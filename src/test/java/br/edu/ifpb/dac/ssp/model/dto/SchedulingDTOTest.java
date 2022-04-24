@@ -33,7 +33,7 @@ class SchedulingDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"99/99/9999 99:99:99", "00/00/0000 00:00:00", "  \n   00/00/0000 00:00:00  \n "}) // valid
+	@ValueSource(strings = {"9999-99-99", "0000-00-00", "  \n   0000-00-00  \n "}) // valid
 	public void schduledDateValid(String s) {
 		dto.setScheduledDate(s);
 		violations = validator.validateProperty(dto, "scheduledDate");
@@ -45,7 +45,7 @@ class SchedulingDTOTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"", "    ", " \n ", "\t", "100/00/0000 00:00:00", "00/100/0000 00:00:00", "00/00/10000 00:00:00", "00/00/0000 100:00:00",
+	@ValueSource(strings = {"", "    ", " \n ", "\t", "100/00/0000", "00/100/0000 00:00:00", "00/00/10000 00:00:00", "00/00/0000 100:00:00",
 			"00/00/0000 00:100:00", "00/00/0000 00:00:100", "00/00/00 00 00:00:00", "00/00/000 00:00:00",
 			"00-00/0000 00:00:00", "00/00/0000-00:00:00"}) // invalid
 	public void schduledDateInvalid(String s) {
@@ -58,7 +58,7 @@ class SchedulingDTOTest {
 	@ParameterizedTest
 	@ValueSource(strings = { "99:99:99", "00:00:00", "  99:99:99  "}) // duration valid
 	public void schduledDurationValid(String s) {
-		dto.setDuration(s);
+		dto.setScheduledDate(s);
 		violations = validator.validateProperty(dto, "duration");
 
 		if(violations.size() > 0) {
@@ -72,7 +72,7 @@ class SchedulingDTOTest {
 	@ValueSource(strings = {"", "    ", " \n  \n  ", " \t ", "100:00:00", "00:100:00", "00:00:100", "00:0 0:00",
 			"00:00:0", "00:00-00"}) // duration invalid
 	public void schduledDurationInvalid(String s) {
-		dto.setDuration(s);
+		dto.setScheduledDate(s);
 		violations = validator.validateProperty(dto, "duration");
 
 		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");

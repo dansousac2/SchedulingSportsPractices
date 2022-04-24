@@ -1,7 +1,7 @@
 package br.edu.ifpb.dac.ssp.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,14 +16,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.FutureOrPresent;
 
 
-@Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"SCHEDULED_DATE"})})
+@Table(name = "SCHEDULED_PRACTICE")
 @Entity
 public class Scheduling implements Serializable {
 
@@ -34,20 +31,21 @@ public class Scheduling implements Serializable {
 	@Column(name = "SCHEDULED_PRACTICE_ID")
 	private Integer id;
 	
-	// @Temporal(TemporalType.DATE) 
 	@Column(name = "SCHEDULED_DATE", nullable = false)
 	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
-	private LocalDateTime scheduledDate;
+	private LocalDate scheduledDate;
 	
-	// @Temporal(TemporalType.TIME)
-	@Column(name = "SCHEDULED_DURATION", nullable = false)
-	private LocalTime duration;
+	@Column(name = "SCHEDULED_START_TIME", nullable = false)
+	private LocalTime scheduledStartTime;
+	
+	@Column(name = "SCHEDULED_FINISH_TIME", nullable = false)
+	private LocalTime scheduledFinishTime;
 
-	@Column(name = "PRACTICE_PLACE_ID", nullable = false)
-	private Integer placeId;
+	@Column(name = "PRACTICE_PLACE_NAME", nullable = false)
+	private String placeName;
 	
-	@Column(name = "PRACTICE_SPORT_ID", nullable = false)
-	private Integer sportId;
+	@Column(name = "PRACTICE_SPORT_NAME", nullable = false)
+	private String sportName;
 	
 	/*
 	// Organizar melhor depois
@@ -70,14 +68,12 @@ public class Scheduling implements Serializable {
 		this.quantityOfParticipants = 0;
 	}
 
-	public Scheduling(LocalDateTime scheduledDate, LocalTime duration, Integer placeId, Integer sportId) {
+	public Scheduling(LocalDate scheduledDate, LocalTime scheduledStartTime, LocalTime scheduledFinishTime, String placeName, String sportName) {
 		this.scheduledDate = scheduledDate;
-		this.duration = duration;
-		this.placeId = placeId;
-		this.sportId = sportId;
-		
-		this.participants = new HashSet<User>();
-		this.quantityOfParticipants = 0;
+		this.scheduledStartTime = scheduledStartTime;
+		this.scheduledFinishTime = scheduledFinishTime;
+		this.placeName = placeName;
+		this.sportName = sportName;
 	}
 
 	public Integer getId() {
@@ -88,36 +84,44 @@ public class Scheduling implements Serializable {
 		this.id = id;
 	}
 
-	public LocalDateTime getScheduledDate() {
+	public LocalDate getScheduledDate() {
 		return scheduledDate;
 	}
 
-	public void setScheduledDate(LocalDateTime scheduledDate) {
+	public void setScheduledDate(LocalDate scheduledDate) {
 		this.scheduledDate = scheduledDate;
 	}
 
-	public LocalTime getDuration() {
-		return duration;
+	public LocalTime getScheduledStartTime() {
+		return scheduledStartTime;
 	}
 
-	public void setDuration(LocalTime duration) {
-		this.duration = duration;
+	public void setScheduledStartTime(LocalTime scheduledStartTime) {
+		this.scheduledStartTime = scheduledStartTime;
 	}
 
-	public Integer getPlaceId() {
-		return placeId;
+	public LocalTime getScheduledFinishTime() {
+		return scheduledFinishTime;
 	}
 
-	public void setPlaceId(Integer placeId) {
-		this.placeId = placeId;
+	public void setScheduledFinishTime(LocalTime scheduledFinishTime) {
+		this.scheduledFinishTime = scheduledFinishTime;
 	}
 
-	public Integer getSportId() {
-		return sportId;
+	public String getPlaceName() {
+		return placeName;
 	}
 
-	public void setSportId(Integer sportId) {
-		this.sportId = sportId;
+	public void setPlaceName(String placeName) {
+		this.placeName = placeName;
+	}
+
+	public String getSportName() {
+		return sportName;
+	}
+
+	public void setSportName(String sportName) {
+		this.sportName = sportName;
 	}
 
 	public Set<User> getParticipants() {

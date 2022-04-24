@@ -11,18 +11,9 @@ import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
 
 @Service
 public class SchedulingConverterService {
-
-	// TODO: Organizar melhor conversões e se possível diminuir dependências
 	
 	@Autowired 
 	private DateConverterService dateConverter;
-	
-	// Tentar tirar esses dois daqui e colocar no controller
-	@Autowired
-	private PlaceService placeService;
-	
-	@Autowired
-	private SportService sportService;
 	
 	public Scheduling dtoToScheduling(SchedulingDTO dto) throws Exception {
 		if (dto != null) {
@@ -30,9 +21,10 @@ public class SchedulingConverterService {
 			
 			entity.setId(dto.getId());
 			entity.setScheduledDate(dateConverter.stringToDate(dto.getScheduledDate()));
-			entity.setDuration(dateConverter.stringToTime(dto.getDuration()));
-			entity.setPlaceId(placeService.findByName(dto.getPlaceName()).get().getId());
-			entity.setSportId(sportService.findByName(dto.getSportName()).get().getId());
+			entity.setScheduledStartTime(dateConverter.stringToTime(dto.getScheduledStartTime()));
+			entity.setScheduledFinishTime(dateConverter.stringToTime(dto.getScheduledFinishTime()));
+			entity.setPlaceName(dto.getPlaceName());
+			entity.setSportName(dto.getSportName());
 			
 			return entity;
 		}
@@ -43,11 +35,13 @@ public class SchedulingConverterService {
 	public SchedulingDTO schedulingToDto(Scheduling entity) throws Exception {
 		if (entity != null) {
 			SchedulingDTO dto = new SchedulingDTO();
+			
 			dto.setId(entity.getId());
 			dto.setScheduledDate(dateConverter.dateToString(entity.getScheduledDate()));
-			dto.setDuration(dateConverter.timeToString(entity.getDuration()));
-			dto.setPlaceName(placeService.findById(entity.getId()).getName());
-			dto.setSportName(sportService.findById(entity.getId()).getName());
+			dto.setScheduledStartTime(dateConverter.timeToString(entity.getScheduledStartTime()));
+			dto.setScheduledFinishTime(dateConverter.timeToString(entity.getScheduledFinishTime()));
+			dto.setPlaceName(entity.getPlaceName());
+			dto.setSportName(entity.getSportName());
 			
 			return dto;
 		}
