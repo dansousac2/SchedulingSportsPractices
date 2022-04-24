@@ -33,7 +33,7 @@ class UserDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"D@n", "  1", "@¨%"}) // valid
+	@ValueSource(strings = {"D@n", "@¨%", " U 2   "}) // valid
 	public void userNameValid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
@@ -42,10 +42,11 @@ class UserDTOTest {
 			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
 		}
 		assertEquals(0, violations.size(), "INVALID NAME FOUND<" + s + ">");
+		
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Ex", "", "    ", " \n  ", "\t  "}) // invalid
+	@ValueSource(strings = {"Ex","      Go  ", "", "    ", " \n  ", "\t  "}) // invalid
 	public void userNameInvalid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
