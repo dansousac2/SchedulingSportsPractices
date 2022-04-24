@@ -32,7 +32,7 @@ public class SportServiceTest {
 		System.out.println("Setting attributtes for Sport...");
 		entity.setId(1);
 		entity.setName("Basquete");
-		entity.setMinimumNumberOfPractitioners(10);
+		// entity.setMinimumNumberOfPractitioners(10);
 	}
 	
 	@Test

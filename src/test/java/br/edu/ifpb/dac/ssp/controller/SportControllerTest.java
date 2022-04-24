@@ -58,12 +58,12 @@ class SportControllerTest {
 		exSport = new Sport();
 		exSport.setId(1);
 		exSport.setName("Voleibol");
-		exSport.setMinimumNumberOfPractitioners(10);
+		// exSport.setMinimumNumberOfPractitioners(10);
 		
 		exDto = new SportDTO();
 		exDto.setId(1);
 		exDto.setName("Voleibol");
-		exDto.setMinimumNumberOfPractitioners(10);
+		// exDto.setMinimumNumberOfPractitioners(10);
 	}
 
 	/*

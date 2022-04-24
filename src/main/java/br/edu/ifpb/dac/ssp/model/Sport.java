@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@Table(name = "SPORTS_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
+@Table(name = "SPORTS_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"SPORT_NAME"})})
 @Entity
 public class Sport implements Serializable {
 

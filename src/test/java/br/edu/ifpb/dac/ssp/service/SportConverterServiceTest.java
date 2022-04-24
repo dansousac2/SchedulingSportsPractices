@@ -25,13 +25,13 @@ public class SportConverterServiceTest {
 		entity = new Sport();
 		entity.setId(1);
 		entity.setName("Basquete");
-		entity.setMinimumNumberOfPractitioners(10);
+		// entity.setMinimumNumberOfPractitioners(10);
 		
 		System.out.println("Setting attributtes for dto...");
 		dto = new SportDTO();
 		dto.setId(1);
 		dto.setName("Basquete");
-		dto.setMinimumNumberOfPractitioners(10);
+		// dto.setMinimumNumberOfPractitioners(10);
 	}
 	
 	@Test
@@ -39,8 +39,8 @@ public class SportConverterServiceTest {
 		SportDTO dtoConverted = converterService.sportToDto(entity);
 		assertAll("Testing comparing dto and entity field by field",
 			() -> assertEquals(dtoConverted.getId(), entity.getId()),
-			() -> assertEquals(dtoConverted.getName(), entity.getName()),
-			() -> assertEquals(dtoConverted.getMinimumNumberOfPractitioners(), entity.getMinimumNumberOfPractitioners())
+			() -> assertEquals(dtoConverted.getName(), entity.getName())
+			// () -> assertEquals(dtoConverted.getMinimumNumberOfPractitioners(), entity.getMinimumNumberOfPractitioners())
 		);
 	}
 	
@@ -49,8 +49,8 @@ public class SportConverterServiceTest {
 		Sport entityConverted = converterService.dtoToSport(dto);
 		assertAll("Testing comparing entity and dto field by field",
 			() -> assertEquals(entityConverted.getId(), dto.getId()),
-			() -> assertEquals(entityConverted.getName(), dto.getName()),
-			() -> assertEquals(entityConverted.getMinimumNumberOfPractitioners(), dto.getMinimumNumberOfPractitioners())
+			() -> assertEquals(entityConverted.getName(), dto.getName())
+			// () -> assertEquals(entityConverted.getMinimumNumberOfPractitioners(), dto.getMinimumNumberOfPractitioners())
 		);
 	}
 	
