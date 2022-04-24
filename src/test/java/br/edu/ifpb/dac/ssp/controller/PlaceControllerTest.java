@@ -64,11 +64,7 @@ class PlaceControllerTest {
 		exDto.setReference("Perto da Entrada");
 		exDto.setMaximumCapacityParticipants(20);
 	}
-
-	/*
-	 * Object in DB have the same atributes (id and name, for example) as the 
-	 * DTO of the parameter's method
-	 */
+	
 	@Test
 	public void saveObjectInDb() {
 		try {

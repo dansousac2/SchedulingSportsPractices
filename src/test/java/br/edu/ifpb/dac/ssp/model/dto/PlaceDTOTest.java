@@ -47,7 +47,7 @@ class PlaceDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"Mar", "", "   ", "\t", "\n\n", "D@n", "- 123 -", " *", "   &LA ", "!", ","}) // invalid
+	@ValueSource(strings = {"Laboratory-22", "Mar", "", "   ", "\t", "\n\n", "D@n", "- 123 -", " *", "   &LA ", "!", ","}) // invalid
 	public void nameIsInvalid(String s) {
 		dto.setName(s);
 		violations = validator.validateProperty(dto, "name");
@@ -56,7 +56,7 @@ class PlaceDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(ints = {1,50,100}) // valid
+	@ValueSource(ints = {1,50,100, 400}) // valid
 	public void capacityValid(int c) {
 		dto.setMaximumCapacityParticipants(c);
 		violations = validator.validateProperty(dto, "maximumCapacityParticipants");
@@ -65,7 +65,7 @@ class PlaceDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(ints = {0, -1, -50, -100}) // invalid
+	@ValueSource(ints = {401, 0, -1, -50, -100}) // invalid
 	public void capacityInvalid(int c) {
 		dto.setMaximumCapacityParticipants(c);
 		violations = validator.validateProperty(dto, "maximumCapacityParticipants");
