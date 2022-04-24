@@ -11,7 +11,7 @@ public class UserDTO {
 	private Integer id;
 	
 	@NotBlank(message = "Please enter your name. Is required!")
-	@Size(min = 3, max = 255, message = "The space must be filled with a minimum of 7 characters and a maximum of 255!")
+	@Size(min = 3, max = 255, message = "The space must be filled with a minimum of 3 characters and a maximum of 255!")
 	private String name;
 	
 	@Email(message = "Email should be valid!")
@@ -54,7 +54,7 @@ public class UserDTO {
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.trim();
 	}
 	public String getEmail() {
 		return email;
