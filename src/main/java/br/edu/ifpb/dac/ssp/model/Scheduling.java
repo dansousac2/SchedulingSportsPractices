@@ -22,9 +22,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.FutureOrPresent;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
-@Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"scheduledDate"})})
+@Table(name = "SCHEDULED_PRACTICE", uniqueConstraints = {@UniqueConstraint(columnNames = {"SCHEDULED_DATE"})})
 @Entity
 public class Scheduling implements Serializable {
 
@@ -35,12 +34,12 @@ public class Scheduling implements Serializable {
 	@Column(name = "SCHEDULED_PRACTICE_ID")
 	private Integer id;
 	
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE) 
 	@Column(name = "SCHEDULED_DATE", nullable = false)
 	@FutureOrPresent(message = "Scheduled date shouldn't be in past")
 	private LocalDateTime scheduledDate;
 	
-	@Temporal(TemporalType.TIME)
+	// @Temporal(TemporalType.TIME)
 	@Column(name = "SCHEDULED_DURATION", nullable = false)
 	private LocalTime duration;
 

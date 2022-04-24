@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.repository.SchedulingRepository;
 
@@ -25,6 +27,10 @@ public class SchedulingService {
 		return schedulingRepository.existsById(id);
 	}
 	
+	public boolean existsByScheduledDate(LocalDateTime scheduledDate) {
+		return schedulingRepository.existsByScheduledDate(scheduledDate);
+	}
+	
 	public Scheduling findById(Integer id) throws Exception {
 		if (id == null) {
 			throw new MissingFieldException("id");
@@ -37,29 +43,26 @@ public class SchedulingService {
 		return schedulingRepository.getById(id);
 	}
 	
-	public Optional<Scheduling> findByName(String name) throws Exception {
-		if (name == null || name.isBlank()) {
-			throw new MissingFieldException("name");
+	public Optional<Scheduling> findByScheduledDate(LocalDateTime scheduledDate) throws Exception {
+		if (scheduledDate == null || scheduledDate.toString().isBlank()) {
+			throw new MissingFieldException("scheduled date");
 		}
 		
-		if (!schedulingRepository.existsByName(name)) {
-			throw new ObjectNotFoundException(name);
+		if (!schedulingRepository.existsByScheduledDate(scheduledDate)) {
+			throw new ObjectNotFoundException(scheduledDate.toString());
 		}
 		
-		return schedulingRepository.findByName(name);
+		return schedulingRepository.findByScheduledDate(scheduledDate);
 	}
 	
-	public Scheduling save(Scheduling scheduling) {
-		return schedulingRepository.save(scheduling);
-	}
-	
-	public Scheduling update(Scheduling scheduling) throws Exception {
-		if (!existsById(scheduling.getId())) {
-			throw new ObjectNotFoundException(scheduling.getId());
-		} 
+	public Scheduling save(Scheduling scheduling) throws Exception {
+		if (!existsByScheduledDate(scheduling.getScheduledDate())) {
+			return schedulingRepository.save(scheduling);
+		}
 		
-		return schedulingRepository.save(scheduling);
+		throw new TimeAlreadyScheduledException();
 	}
+	
 	
 	public void delete(Scheduling scheduling) throws Exception {
 		if (!existsById(scheduling.getId())) {

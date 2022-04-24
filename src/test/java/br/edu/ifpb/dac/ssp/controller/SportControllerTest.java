@@ -21,14 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
 import br.edu.ifpb.dac.ssp.model.dto.SportDTO;
-import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
 import br.edu.ifpb.dac.ssp.repository.SportRepository;
-import br.edu.ifpb.dac.ssp.service.PlaceConverterServiceTest;
-import br.edu.ifpb.dac.ssp.service.PlaceService;
 import br.edu.ifpb.dac.ssp.service.SportConverterService;
 import br.edu.ifpb.dac.ssp.service.SportService;
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
 import br.edu.ifpb.dac.ssp.service.SchedulingConverterService;
 import br.edu.ifpb.dac.ssp.service.SchedulingService;
+import br.edu.ifpb.dac.ssp.service.SchedulingValidatorService;
 
 @RestController
 @RequestMapping("api/scheduling")
@@ -32,31 +34,63 @@ public class SchedulingController {
 	@Autowired
 	private SchedulingConverterService converterService;
 	
+	@Autowired
+	private SchedulingValidatorService validatorService;
+	
 	@GetMapping
 	public ResponseEntity getAll() {
-		List<Scheduling> entityList = schedulingService.findAll();
-		
-		// ...
-		return null;
+		try {
+			List<Scheduling> entityList = schedulingService.findAll();
+			
+			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
+			
+			return ResponseEntity.ok().body(dtoList);
+			
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity findById(@PathVariable Integer id) {
-		return null;
+		try {
+			Scheduling entity = schedulingService.findById(id);
+			SchedulingDTO dto = converterService.schedulingToDto(entity);
+			
+			return ResponseEntity.ok().body(dto);
+		
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 	
 	@PostMapping
 	public ResponseEntity save(@Valid @RequestBody SchedulingDTO dto) {
-		return null;
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody SchedulingDTO dto) {
-		return null;
+		
+		try {
+			validatorService.validateSchedulingDTO(dto);
+			Scheduling entity = converterService.dtoToScheduling(dto);
+			
+			validatorService.validateScheduling(entity);
+			entity = schedulingService.save(entity);
+			
+			dto = converterService.schedulingToDto(entity);
+			
+			return new ResponseEntity(dto, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {
-		return null;
+		try {
+			schedulingService.deleteById(id);
+			
+			return ResponseEntity.noContent().build();
+			
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 }
