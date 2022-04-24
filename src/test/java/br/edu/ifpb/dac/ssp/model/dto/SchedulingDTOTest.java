@@ -33,7 +33,7 @@ class SchedulingDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"9999-99-99", "0000-00-00", "  \n   0000-00-00  \n "}) // valid
+	@ValueSource(strings = {"9999-99-99", "0000-00-00"}) // valid
 	public void schduledDateValid(String s) {
 		dto.setScheduledDate(s);
 		violations = validator.validateProperty(dto, "scheduledDate");
@@ -45,9 +45,8 @@ class SchedulingDTOTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"", "    ", " \n ", "\t", "100/00/0000", "00/100/0000 00:00:00", "00/00/10000 00:00:00", "00/00/0000 100:00:00",
-			"00/00/0000 00:100:00", "00/00/0000 00:00:100", "00/00/00 00 00:00:00", "00/00/000 00:00:00",
-			"00-00/0000 00:00:00", "00/00/0000-00:00:00"}) // invalid
+	@ValueSource(strings = {"0000-00-00\n", "10000-00-00", "0000-100-00", "0000-00-100", "0000-0 0-00", "0000-00:00",
+			"\n", "  \n ", "", "   "}) // invalid
 	public void schduledDateInvalid(String s) {
 		dto.setScheduledDate(s);
 		violations = validator.validateProperty(dto, "scheduledDate");
@@ -56,10 +55,10 @@ class SchedulingDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = { "99:99:99", "00:00:00", "  99:99:99  "}) // duration valid
-	public void schduledDurationValid(String s) {
-		dto.setScheduledDate(s);
-		violations = validator.validateProperty(dto, "duration");
+	@ValueSource(strings = { "99:99", "00:00", "99:99"}) // start time valid
+	public void schduledStartTimeValid(String s) {
+		dto.setScheduledStartTime(s);
+		violations = validator.validateProperty(dto, "scheduledStartTime");
 
 		if(violations.size() > 0) {
 			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
@@ -69,11 +68,32 @@ class SchedulingDTOTest {
 	}
 	
 	@ParameterizedTest
-	@ValueSource(strings = {"", "    ", " \n  \n  ", " \t ", "100:00:00", "00:100:00", "00:00:100", "00:0 0:00",
-			"00:00:0", "00:00-00"}) // duration invalid
-	public void schduledDurationInvalid(String s) {
-		dto.setScheduledDate(s);
-		violations = validator.validateProperty(dto, "duration");
+	@ValueSource(strings = {"", "    ", " \n  \n  ", " \t ", " 99:99", "099:99", "99:099", "99-99"}) // start time invalid
+	public void schduledStartTimeInvalid(String s) {
+		dto.setScheduledStartTime(s);
+		violations = validator.validateProperty(dto, "scheduledStartTime");
+
+		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = { "99:99", "00:00", "99:99"}) // finish time valid
+	public void schduledFinishTimeValid(String s) {
+		dto.setScheduledFinishTime(s);
+		violations = validator.validateProperty(dto, "scheduledFinishTime");
+
+		if(violations.size() > 0) {
+			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
+		}
+		
+		assertEquals(0, violations.size(), "INVALID DATE FOUND<" + s + ">");
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"", "    ", " \n  \n  ", " \t ", "99:bb", " 99:99", "099:99", "99:099", "99:99\n"}) // finish time invalid
+	public void schduledFinishTimeInvalid(String s) {
+		dto.setScheduledFinishTime(s);
+		violations = validator.validateProperty(dto, "scheduledFinishTime");
 
 		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");
 	}
