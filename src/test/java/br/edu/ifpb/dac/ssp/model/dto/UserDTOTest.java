@@ -42,6 +42,7 @@ class UserDTOTest {
 			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
 		}
 		assertEquals(0, violations.size(), "INVALID NAME FOUND<" + s + ">");
+		
 	}
 
 	@ParameterizedTest
