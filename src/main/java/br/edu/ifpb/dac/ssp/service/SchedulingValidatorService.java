@@ -40,7 +40,7 @@ public class SchedulingValidatorService {
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
 	}
 	
-	public void validateSchedulingDTO(SchedulingDTO dto) throws Exception {
+	public boolean validateSchedulingDTO(SchedulingDTO dto) throws Exception {
 		Set<ConstraintViolation<SchedulingDTO>> violations = validator.validate(dto);
 		
 		if (violations.size() != 0) {
@@ -54,10 +54,12 @@ public class SchedulingValidatorService {
 		validateSportName(dto.getSportName());
 		validateScheduledTime(scheduledStartDate, scheduledFinishDate);
 		validateDurationOfPractice(scheduledStartDate, scheduledFinishDate);
+		
+		return true;
 	}
 		
 	
-	public void validateScheduling(Scheduling entity) throws Exception {
+	public boolean validateScheduling(Scheduling entity) throws Exception {
 		Set<ConstraintViolation<Scheduling>> violations = validator.validate(entity);
 		
 		if (violations.size() != 0) {
@@ -69,21 +71,27 @@ public class SchedulingValidatorService {
 		validateScheduledDate(entity);
 		validateScheduledTime(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
 		validateDurationOfPractice(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
+		
+		return true;
 	}
 	
-	private void validatePlaceName(String placeName) throws Exception {
+	public boolean validatePlaceName(String placeName) throws Exception {
 		if (!placeService.existsByName(placeName)) {
 			throw new ObjectNotFoundException("Place", placeName);
 		}
+		
+		return true;
 	}
 	
-	private void validateSportName(String sportName) throws Exception {
+	public boolean validateSportName(String sportName) throws Exception {
 		if (!sportService.existsByName(sportName)) {
 			throw new ObjectNotFoundException("Sport", sportName);
 		}
+		
+		return true;
 	}
 	
-	private void validateScheduledTime(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
+	public boolean validateScheduledTime(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
 		LocalTime openingTime = dateConverter.stringToTime(Constants.INSTITUTION_OPENING_TIME);
 		LocalTime closingTime = dateConverter.stringToTime(Constants.INSTITUTION_CLOSING_TIME);
 		
@@ -91,9 +99,11 @@ public class SchedulingValidatorService {
 			scheduledStartTime.isAfter(closingTime) || scheduledFinishTime.isAfter(closingTime)) {
 			throw new RuleViolationException("Scheduled time should be between " + Constants.INSTITUTION_OPENING_TIME + " and " + Constants.INSTITUTION_CLOSING_TIME);
 		}
+		
+		return true;
 	}
 	
-	private void validateDurationOfPractice(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
+	public boolean validateDurationOfPractice(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
 		Duration durationOfPractice = Duration.between(scheduledStartTime, scheduledFinishTime);
 		
 		if (durationOfPractice.toMinutes() <= 0) {
@@ -101,9 +111,11 @@ public class SchedulingValidatorService {
 		} else if (durationOfPractice.toMinutes() > Constants.MAXIMUM_DURATION_PRACTICE_MINUTES) {
 			throw new RuleViolationException("Duration of practice should be a maximum of " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutes!");
 		}
+		
+		return true;
 	}
 	
-	private void validateScheduledDate(Scheduling entity) throws Exception {
+	public boolean validateScheduledDate(Scheduling entity) throws Exception {
 		List<Scheduling> entitiesWithSamePlaceAndDate = schedulingService.findAllByPlaceNameAndScheduledDate(entity.getPlaceName(), entity.getScheduledDate());
 		 
 		if (!entitiesWithSamePlaceAndDate.isEmpty()) {
@@ -122,5 +134,7 @@ public class SchedulingValidatorService {
 				}
 			}
 		}
+		
+		return true;
 	}
 }
