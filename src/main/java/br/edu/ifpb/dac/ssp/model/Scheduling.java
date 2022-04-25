@@ -47,12 +47,6 @@ public class Scheduling implements Serializable {
 	@Column(name = "PRACTICE_SPORT_NAME", nullable = false)
 	private String sportName;
 	
-	/*
-	// Organizar melhor depois
-	@Column(name = "CREATED_BY")
-	private User creator;
-	*/
-	
 	@ManyToMany
 	@JoinTable(
 			name = "PRACTICE_PARTICIPANTS",

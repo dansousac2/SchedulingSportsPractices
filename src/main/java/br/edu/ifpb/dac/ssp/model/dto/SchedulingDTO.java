@@ -33,9 +33,6 @@ public class SchedulingDTO {
 	@Size(min = 4, max = 255)
 	private String sportName;
 	
-	// Organizar depois:
-	// private Integer creatorId;
-	
 	public SchedulingDTO() {
 		
 	}
