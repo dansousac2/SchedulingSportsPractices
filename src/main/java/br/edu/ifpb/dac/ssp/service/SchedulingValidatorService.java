@@ -66,8 +66,8 @@ public class SchedulingValidatorService {
 			throw new RuleViolationException(violations.stream().findFirst().get().getMessage());
 		}
 		
-		validatePlaceName(entity.getPlaceName());
-		validateSportName(entity.getSportName());
+		validatePlaceName(entity.getPlace().getName());
+		validateSportName(entity.getSport().getName());
 		validateScheduledDate(entity);
 		validateScheduledTime(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
 		validateDurationOfPractice(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
@@ -116,7 +116,7 @@ public class SchedulingValidatorService {
 	}
 	
 	public boolean validateScheduledDate(Scheduling entity) throws Exception {
-		List<Scheduling> entitiesWithSamePlaceAndDate = schedulingService.findAllByPlaceNameAndScheduledDate(entity.getPlaceName(), entity.getScheduledDate());
+		List<Scheduling> entitiesWithSamePlaceAndDate = schedulingService.findAllByPlaceNameAndScheduledDate(entity.getPlace().getName(), entity.getScheduledDate());
 		 
 		if (!entitiesWithSamePlaceAndDate.isEmpty()) {
 			LocalTime startTime;

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,10 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.FutureOrPresent;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 @Table(name = "SCHEDULED_PRACTICE")
@@ -40,12 +46,19 @@ public class Scheduling implements Serializable {
 	
 	@Column(name = "SCHEDULED_FINISH_TIME", nullable = false)
 	private LocalTime scheduledFinishTime;
-
-	@Column(name = "PRACTICE_PLACE_NAME", nullable = false)
-	private String placeName;
 	
-	@Column(name = "PRACTICE_SPORT_NAME", nullable = false)
-	private String sportName;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "PRACTICE_PLACE", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Place place;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "PRACTICE_SPORT", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Sport sport;
+	
+	@Column(name = "USER_CREATOR")
+	private User creator;
 	
 	@ManyToMany
 	@JoinTable(
@@ -62,12 +75,12 @@ public class Scheduling implements Serializable {
 		this.quantityOfParticipants = 0;
 	}
 
-	public Scheduling(LocalDate scheduledDate, LocalTime scheduledStartTime, LocalTime scheduledFinishTime, String placeName, String sportName) {
+	public Scheduling(LocalDate scheduledDate, LocalTime scheduledStartTime, LocalTime scheduledFinishTime, Place place, Sport sport) {
 		this.scheduledDate = scheduledDate;
 		this.scheduledStartTime = scheduledStartTime;
 		this.scheduledFinishTime = scheduledFinishTime;
-		this.placeName = placeName;
-		this.sportName = sportName;
+		this.place = place;
+		this.sport = sport;
 	}
 
 	public Integer getId() {
@@ -102,20 +115,28 @@ public class Scheduling implements Serializable {
 		this.scheduledFinishTime = scheduledFinishTime;
 	}
 
-	public String getPlaceName() {
-		return placeName;
+	public Place getPlace() {
+		return place;
 	}
 
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
+	public void setPlace(Place place) {
+		this.place = place;
 	}
 
-	public String getSportName() {
-		return sportName;
+	public Sport getSport() {
+		return sport;
 	}
 
-	public void setSportName(String sportName) {
-		this.sportName = sportName;
+	public void setSport(Sport sport) {
+		this.sport = sport;
+	}
+
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 
 	public Set<User> getParticipants() {

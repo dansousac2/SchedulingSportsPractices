@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.exception.RuleViolationException;
+import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
+import br.edu.ifpb.dac.ssp.model.Sport;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
 
 public class SchedulingValidatorServiceTest {
@@ -39,8 +41,8 @@ public class SchedulingValidatorServiceTest {
 		entity.setScheduledDate(LocalDate.parse("2022-05-01"));
 		entity.setScheduledStartTime(LocalTime.parse("08:00"));
 		entity.setScheduledFinishTime(LocalTime.parse("09:00"));
-		entity.setPlaceName("Ginásio");
-		entity.setSportName("Futebol");
+		entity.setPlace(new Place(1, "Ginásio", "Perto do estacionamento", 80, false));
+		entity.setSport(new Sport(2, "Futebol"));
 		
 		System.out.println("Setting attributtes for dto...");
 		dto = new SchedulingDTO();

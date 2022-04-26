@@ -15,6 +15,12 @@ public class SchedulingConverterService {
 	@Autowired 
 	private DateConverterService dateConverter;
 	
+	@Autowired
+	private PlaceService placeService;
+	
+	@Autowired
+	private SportService sportService;
+	
 	public Scheduling dtoToScheduling(SchedulingDTO dto) throws Exception {
 		if (dto != null) {
 			Scheduling entity = new Scheduling();
@@ -23,8 +29,8 @@ public class SchedulingConverterService {
 			entity.setScheduledDate(dateConverter.stringToDate(dto.getScheduledDate()));
 			entity.setScheduledStartTime(dateConverter.stringToTime(dto.getScheduledStartTime()));
 			entity.setScheduledFinishTime(dateConverter.stringToTime(dto.getScheduledFinishTime()));
-			entity.setPlaceName(dto.getPlaceName());
-			entity.setSportName(dto.getSportName());
+			entity.setPlace(placeService.findByName(dto.getPlaceName()).get());
+			entity.setSport(sportService.findByName(dto.getSportName()).get());
 			
 			return entity;
 		}
@@ -40,8 +46,8 @@ public class SchedulingConverterService {
 			dto.setScheduledDate(dateConverter.dateToString(entity.getScheduledDate()));
 			dto.setScheduledStartTime(dateConverter.timeToString(entity.getScheduledStartTime()));
 			dto.setScheduledFinishTime(dateConverter.timeToString(entity.getScheduledFinishTime()));
-			dto.setPlaceName(entity.getPlaceName());
-			dto.setSportName(entity.getSportName());
+			dto.setPlaceName(entity.getPlace().getName());
+			dto.setSportName(entity.getSport().getName());
 			
 			return dto;
 		}
