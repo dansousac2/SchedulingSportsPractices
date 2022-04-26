@@ -35,7 +35,7 @@ public class SchedulingConverterService {
 			return entity;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public SchedulingDTO schedulingToDto(Scheduling entity) throws Exception {
@@ -52,7 +52,7 @@ public class SchedulingConverterService {
 			return dto;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<Scheduling> dtosToScheduling(List<SchedulingDTO> dtoList) throws Exception {
@@ -72,7 +72,7 @@ public class SchedulingConverterService {
 			return entityList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<SchedulingDTO> schedulingToDtos(List<Scheduling> entityList) throws Exception {
@@ -91,6 +91,6 @@ public class SchedulingConverterService {
 			return dtoList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 }

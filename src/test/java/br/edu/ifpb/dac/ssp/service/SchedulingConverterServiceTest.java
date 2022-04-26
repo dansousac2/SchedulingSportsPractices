@@ -104,13 +104,13 @@ public class SchedulingConverterServiceTest {
 	
 	@Test
 	public void testConvertEntityToDtoThrowsNullPointerException() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.schedulingToDto(null));
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.schedulingToDto(null));
 		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 	
 	@Test
 	public void testConvertDtoToEntityThrowsNullPointerException() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.dtoToScheduling(null));
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.dtoToScheduling(null));
 		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 }
