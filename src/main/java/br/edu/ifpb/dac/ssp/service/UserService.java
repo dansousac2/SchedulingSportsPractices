@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
+import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
@@ -23,6 +24,10 @@ public class UserService {
 	
 	public boolean existsById(Integer id) {
 		return userRepository.existsById(id);
+	}
+	
+	public boolean existsByRegistration(Integer registration) {
+		return userRepository.existsByRegistration(registration);
 	}
 	
 	public User findById(Integer id) throws Exception {
@@ -43,11 +48,26 @@ public class UserService {
 		return userRepository.findByName(name);
 	}
 	
+	public Optional<User> findByRegistration(Integer registration) throws Exception {
+		if (registration == null) {
+			throw new MissingFieldException("registration");
+		}
+		
+		if (!existsByRegistration(registration)) {
+			throw new ObjectNotFoundException(registration);
+		}
+		
+		return userRepository.findByRegistration(registration);
+	}
+	
 	public User save(User user) throws Exception {
 		if (user.getName() == null || user.getName().isBlank()) {
 			throw new MissingFieldException("name", "save");
 		}
 		
+		if (existsByRegistration(user.getRegistration())) {
+			throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
+		}
 		return userRepository.save(user);
 	}
 	
@@ -60,6 +80,11 @@ public class UserService {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(user.getId())) {
 			throw new ObjectNotFoundException(user.getId());
+		}
+		
+		User userSaved = findByRegistration(user.getRegistration()).get();
+		if (userSaved.getId() != user.getId()) {
+			throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
 		}
 		
 		return userRepository.save(user);
