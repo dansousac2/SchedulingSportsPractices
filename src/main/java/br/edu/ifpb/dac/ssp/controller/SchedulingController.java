@@ -92,23 +92,6 @@ public class SchedulingController {
 		}
 	}
 
-	@PatchMapping("/participation/{id}")
-	public ResponseEntity addParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
-		try {
-			User user = userService.findByRegistration(userRegistration).get();
-			Scheduling entity = schedulingService.findById(id);
-
-			entity.addParticipant(user);
-			entity = schedulingService.save(entity);
-
-			UserDTO userDto = userConverterService.userToDto(user);
-
-			return ResponseEntity.ok().body(userDto);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
-
 	@GetMapping("/confirmedByPlace/{place}")
 	public ResponseEntity getAllSchedulingConfirmedByPlace(@PathVariable String place) {
 		try {
@@ -150,6 +133,44 @@ public class SchedulingController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@PatchMapping("/participation/add/{id}")
+	public ResponseEntity addParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
+		try {
+			User user = userService.findByRegistration(userRegistration).orElse(null);
+			Scheduling entity = schedulingService.findById(id);
+
+			if (user != null) {
+				entity.addParticipant(user);
+				entity = schedulingService.save(entity);
+			}
+			entity.addParticipant(user);
+			entity = schedulingService.save(entity);
+
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@PatchMapping("/participation/remove/{id}")
+	public ResponseEntity removeParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
+		try {
+			User user = userService.findByRegistration(userRegistration).orElse(null);
+			Scheduling entity = schedulingService.findById(id);
+
+			if (user != null) {
+				entity.removeParticipant(user);
+				entity = schedulingService.save(entity);
+			}
+
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {

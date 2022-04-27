@@ -53,9 +53,9 @@ public class UserService {
 			throw new MissingFieldException("registration");
 		}
 		
-		if (!existsByRegistration(registration)) {
-			throw new ObjectNotFoundException(registration);
-		}
+//		if (!existsByRegistration(registration)) {
+//			throw new ObjectNotFoundException(registration);
+//		}
 		
 		return userRepository.findByRegistration(registration);
 	}
@@ -82,9 +82,11 @@ public class UserService {
 			throw new ObjectNotFoundException(user.getId());
 		}
 		
-		User userSaved = findByRegistration(user.getRegistration()).get();
-		if (userSaved.getId() != user.getId()) {
-			throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
+		if (existsByRegistration(user.getRegistration())) {
+			User userSaved = findByRegistration(user.getRegistration()).get();
+			if (userSaved.getId() != user.getId()) {
+				throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
+			}
 		}
 		
 		return userRepository.save(user);

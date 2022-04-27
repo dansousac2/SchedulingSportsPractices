@@ -71,9 +71,11 @@ public class SportService {
 			throw new ObjectNotFoundException(sport.getId());
 		}
 		
-		Sport sportSaved = findByName(sport.getName()).get();
-		if (sportSaved.getId() != sport.getId()) {
-			throw new ObjectAlreadyExistsException("A sport with name " + sport.getName() + " already exists!");
+		if (existsByName(sport.getName())) {
+			Sport sportSaved = findByName(sport.getName()).get();
+			if (sportSaved.getId() != sport.getId()) {
+				throw new ObjectAlreadyExistsException("A sport with name " + sport.getName() + " already exists!");
+			}
 		}
 		
 		return sportRepository.save(sport);

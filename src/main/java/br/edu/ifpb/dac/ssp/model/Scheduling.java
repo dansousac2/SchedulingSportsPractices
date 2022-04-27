@@ -154,8 +154,8 @@ public class Scheduling implements Serializable {
 	
 	public void removeParticipant(User user) {
 		if (this.participants.size() > 0) {
-			this.participants.remove(user);
-			this.quantityOfParticipants -= 1;
+				this.participants.remove(user);
+				this.quantityOfParticipants -= 1;
 		}
 	}
 	

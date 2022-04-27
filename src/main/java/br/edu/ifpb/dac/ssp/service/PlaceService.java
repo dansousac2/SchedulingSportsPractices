@@ -75,11 +75,13 @@ public class PlaceService {
 			throw new ObjectNotFoundException(place.getId());
 		} 
 		
-		Place placeSaved = findByName(place.getName()).get();
-		if (placeSaved.getId() != place.getId()) {
-			throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
+		if (existsByName(place.getName())) {
+			Place placeSaved = findByName(place.getName()).get();
+			if (placeSaved.getId() != place.getId()) {
+				throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
+			}
 		}
-		
+
 		return placeRepository.save(place);
 	}
 	
