@@ -36,7 +36,7 @@ public class PlaceService {
 		}
 		
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Place", "id", id);
 		}
 		return placeRepository.getById(id);
 	}
@@ -47,7 +47,7 @@ public class PlaceService {
 		}
 		
 		if (!existsByName(name)) {
-			throw new ObjectNotFoundException(name);
+			throw new ObjectNotFoundException("Place", "name", name);
 		}
 		return placeRepository.findByName(name);
 	}
@@ -72,7 +72,7 @@ public class PlaceService {
 		if (place.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(place.getId())) {
-			throw new ObjectNotFoundException(place.getId());
+			throw new ObjectNotFoundException("Place", "id", place.getId());
 		} 
 		
 		if (existsByName(place.getName())) {
@@ -89,7 +89,7 @@ public class PlaceService {
 		if (place.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(place.getId())) {
-			throw new ObjectNotFoundException(place.getId());
+			throw new ObjectNotFoundException("Place", "id", place.getId());
 		}
 		
 		placeRepository.delete(place);
@@ -99,7 +99,7 @@ public class PlaceService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Place", "id", id);
 		}
 		
 		placeRepository.deleteById(id);

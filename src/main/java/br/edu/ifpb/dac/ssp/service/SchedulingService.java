@@ -50,7 +50,7 @@ public class SchedulingService {
 		}
 		
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Scheduling", "id", id);
 		}
 		
 		return schedulingRepository.getById(id);
@@ -62,7 +62,7 @@ public class SchedulingService {
 	
 	public void delete(Scheduling scheduling) throws Exception {
 		if (!existsById(scheduling.getId())) {
-			throw new ObjectNotFoundException(scheduling.getId());
+			throw new ObjectNotFoundException("Scheduling", "id", scheduling.getId());
 		} 
 		
 		schedulingRepository.delete(scheduling);
@@ -72,7 +72,7 @@ public class SchedulingService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Scheduling", "id", id);
 		}
 		
 		schedulingRepository.deleteById(id);

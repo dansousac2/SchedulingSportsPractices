@@ -32,7 +32,7 @@ public class SportService {
 	
 	public Sport findById(Integer id) throws Exception {
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Sport", "id", id);
 		}
 		return sportRepository.getById(id);
 	}
@@ -43,7 +43,7 @@ public class SportService {
 		}
 		
 		if (!existsByName(name)) {
-			throw new ObjectNotFoundException(name);
+			throw new ObjectNotFoundException("Sport", "name", name);
 		}
 		return sportRepository.findByName(name);
 	}
@@ -68,7 +68,7 @@ public class SportService {
 		if (sport.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(sport.getId())) {
-			throw new ObjectNotFoundException(sport.getId());
+			throw new ObjectNotFoundException("Sport", "id", sport.getId());
 		}
 		
 		if (existsByName(sport.getName())) {
@@ -85,7 +85,7 @@ public class SportService {
 		if (sport.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(sport.getId())) {
-			throw new ObjectNotFoundException(sport.getId());
+			throw new ObjectNotFoundException("Sport", "id", sport.getId());
 		}
 		
 		sportRepository.delete(sport);
@@ -95,7 +95,7 @@ public class SportService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("Sport", "id", id);
 		}
 		
 		sportRepository.deleteById(id);

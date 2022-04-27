@@ -77,7 +77,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validatePlaceName(String placeName) throws Exception {
 		if (!placeService.existsByName(placeName)) {
-			throw new ObjectNotFoundException("Place", placeName);
+			throw new ObjectNotFoundException("Place", "name",  placeName);
 		}
 		
 		return true;
@@ -85,7 +85,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validateSportName(String sportName) throws Exception {
 		if (!sportService.existsByName(sportName)) {
-			throw new ObjectNotFoundException("Sport", sportName);
+			throw new ObjectNotFoundException("Sport", "name", sportName);
 		}
 		
 		return true;

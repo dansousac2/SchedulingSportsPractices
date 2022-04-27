@@ -130,12 +130,12 @@ class SportControllerTest {
 	@Test
 	public void updateFailIdNotFounded() {
 		try {
-			Mockito.when(service.update(exSport)).thenThrow(new ObjectNotFoundException(exSport.getId()));
+			Mockito.when(service.update(exSport)).thenThrow(new ObjectNotFoundException("Sport", "id", exSport.getId()));
 			respEntity = controller.update(1, exDto); // body contains message error
 			String s = String.valueOf(respEntity.getBody());
 			
 			assertAll("",
-					() -> assertTrue(s.contains("Could not find object with id 1")),
+					() -> assertTrue(s.contains("Could not find Sport with id 1")),
 					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
 			);
 		} catch (Exception e) {
@@ -190,7 +190,7 @@ class SportControllerTest {
 			respEntity = controller.findById(1); // with message error of ObjectnotFoundException
 			
 			assertAll("Test when id is not founded",
-					() -> assertTrue(respEntity.getBody().equals("Could not find object with id 1")),
+					() -> assertTrue(respEntity.getBody().equals("Could not find Sport with id 1")),
 					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
 			);
 		} catch (Exception e) {

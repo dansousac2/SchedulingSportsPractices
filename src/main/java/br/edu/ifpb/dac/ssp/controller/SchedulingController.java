@@ -144,8 +144,6 @@ public class SchedulingController {
 				entity.addParticipant(user);
 				entity = schedulingService.save(entity);
 			}
-			entity.addParticipant(user);
-			entity = schedulingService.save(entity);
 
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {

@@ -32,7 +32,7 @@ public class UserService {
 	
 	public User findById(Integer id) throws Exception {
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("User", "id", id);
 		}
 		return userRepository.getById(id);
 	}
@@ -43,7 +43,7 @@ public class UserService {
 		}
 		
 		if (!userRepository.existsByName(name)) {
-			throw new ObjectNotFoundException(name);
+			throw new ObjectNotFoundException("User", "name", name);
 		}
 		return userRepository.findByName(name);
 	}
@@ -53,9 +53,9 @@ public class UserService {
 			throw new MissingFieldException("registration");
 		}
 		
-//		if (!existsByRegistration(registration)) {
-//			throw new ObjectNotFoundException(registration);
-//		}
+		if (!existsByRegistration(registration)) {
+			throw new ObjectNotFoundException("User", "registration", registration);
+		}
 		
 		return userRepository.findByRegistration(registration);
 	}
@@ -79,7 +79,7 @@ public class UserService {
 		if (user.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(user.getId())) {
-			throw new ObjectNotFoundException(user.getId());
+			throw new ObjectNotFoundException("User", "id", user.getId());
 		}
 		
 		if (existsByRegistration(user.getRegistration())) {
@@ -96,7 +96,7 @@ public class UserService {
 		if (user.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(user.getId())) {
-			throw new ObjectNotFoundException(user.getId());
+			throw new ObjectNotFoundException("User", "id", user.getId());
 		}
 		
 		userRepository.delete(user);
@@ -106,7 +106,7 @@ public class UserService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException(id);
+			throw new ObjectNotFoundException("User", "id", id);
 		}
 		
 		userRepository.deleteById(id);
