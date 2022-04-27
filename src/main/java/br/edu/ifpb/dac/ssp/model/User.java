@@ -32,7 +32,6 @@ public class User implements Serializable {
 	@Column(name = "USER_REGISTRATION", nullable = false)
 	private Integer registration;
 	
-	
 	@Column(name = "USER_PASSWORD", nullable = false)
 	private String password;
 	

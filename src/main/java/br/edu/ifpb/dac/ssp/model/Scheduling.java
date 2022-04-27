@@ -21,6 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -68,6 +69,7 @@ public class Scheduling implements Serializable {
 	private Set<User> participants;
 	
 	@Transient
+	@PositiveOrZero(message = "Quantity of participants shouldn't be a negative number!")
 	private int quantityOfParticipants; 
 	
 	public Scheduling() {
@@ -148,8 +150,10 @@ public class Scheduling implements Serializable {
 	}
 
 	public void addParticipant(User user) {
-		this.participants.add(user);
-		this.quantityOfParticipants += 1;
+		if (quantityOfParticipants < this.place.getMaximumCapacityParticipants()) {
+			this.participants.add(user);
+			this.quantityOfParticipants += 1;
+		}
 	}
 	
 	public void removeParticipant(User user) {
