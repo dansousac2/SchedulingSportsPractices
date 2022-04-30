@@ -106,6 +106,7 @@ public class SchedulingTest {
 		Set<User> setMock = mock(Set.class);
 		
 		when(placeMock.getMaximumCapacityParticipants()).thenReturn(5);
+		when(setMock.add(any())).thenReturn(true);
 		
 		entity.setPlace(placeMock);
 		entity.setParticipants(setMock);
