@@ -46,7 +46,7 @@ public class PlaceServiceTest {
 	public void testFindByIdThrowsObjectNotFoundException() {
 		// Testing findById by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.findById(25));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Place with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class PlaceServiceTest {
 	public void testFindByNameThrowsObjectNotFoundException() {
 		// Testing findByName by passing an invalid name...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.findByName("Pátio"));
-		assertEquals("Could not find object with name Pátio", exception.getMessage());
+		assertEquals("Could not find Place with name Pátio", exception.getMessage());
 	}
 	
 	@Test
@@ -92,7 +92,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.update(entity));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Place with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -122,7 +122,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.delete(entity));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Place with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -138,6 +138,6 @@ public class PlaceServiceTest {
 	public void testDeleteByIdThrowsObjectNotFoundException() {		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> placeService.deleteById(25));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Place with id 25", exception.getMessage());
 	}
 }

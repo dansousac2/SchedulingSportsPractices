@@ -39,7 +39,7 @@ public class SportServiceTest {
 	public void testFindByIdThrowsObjectNotFoundException() {
 		// Testing findById by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.findById(25));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -54,8 +54,8 @@ public class SportServiceTest {
 	@Order(3)
 	public void testFindByNameThrowsObjectNotFoundException() {
 		// Testing findByName by passing an invalid name...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.findByName("Pátio"));
-		assertEquals("Could not find object with name Pátio", exception.getMessage());
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.findByName("Golfe"));
+		assertEquals("Could not find Sport with name Golfe", exception.getMessage());
 	}
 	
 	@Test
@@ -85,7 +85,7 @@ public class SportServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.update(entity));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -115,7 +115,7 @@ public class SportServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.delete(entity));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -131,6 +131,6 @@ public class SportServiceTest {
 	public void testDeleteByIdThrowsObjectNotFoundException() {		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.deleteById(25));
-		assertEquals("Could not find object with id 25", exception.getMessage());
+		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 }

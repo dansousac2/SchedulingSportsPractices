@@ -1,6 +1,8 @@
 package br.edu.ifpb.dac.ssp.service;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
@@ -47,13 +49,15 @@ public class SchedulingValidatorService {
 			throw new RuleViolationException(violations.stream().findFirst().get().getMessage());
 		}
 		
-		LocalTime scheduledStartDate = dateConverter.stringToTime(dto.getScheduledStartTime());
-		LocalTime scheduledFinishDate = dateConverter.stringToTime(dto.getScheduledFinishTime());
+		LocalDate scheduledDate = dateConverter.stringToDate(dto.getScheduledDate());
+		LocalTime scheduledStartTime = dateConverter.stringToTime(dto.getScheduledStartTime());
+		LocalTime scheduledFinishTime = dateConverter.stringToTime(dto.getScheduledFinishTime());
 		
 		validatePlaceName(dto.getPlaceName());
 		validateSportName(dto.getSportName());
-		validateScheduledTime(scheduledStartDate, scheduledFinishDate);
-		validateDurationOfPractice(scheduledStartDate, scheduledFinishDate);
+		validateScheduledDateAndTime(scheduledDate, scheduledStartTime);
+		validateScheduledTime(scheduledStartTime, scheduledFinishTime);
+		validateDurationOfPractice(scheduledStartTime, scheduledFinishTime);
 		
 		return true;
 	}
@@ -68,6 +72,7 @@ public class SchedulingValidatorService {
 		
 		validatePlaceName(entity.getPlace().getName());
 		validateSportName(entity.getSport().getName());
+		validateScheduledDateAndTime(entity.getScheduledDate(), entity.getScheduledStartTime());
 		validateScheduledDate(entity);
 		validateScheduledTime(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
 		validateDurationOfPractice(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
@@ -133,6 +138,19 @@ public class SchedulingValidatorService {
 					throw new TimeAlreadyScheduledException();
 				}
 			}
+		}
+		
+		return true;
+	}
+	
+	public boolean validateScheduledDateAndTime(LocalDate scheduledDate, LocalTime scheduledStartTime) throws Exception {
+		String scheduledDateTimeString = scheduledDate.toString() + " " + scheduledStartTime.toString();
+		LocalDateTime scheduledDateTime = dateConverter.stringToDateTime(scheduledDateTimeString);
+		
+		LocalDateTime dateTimeNow = dateConverter.dateTimeNow();
+		
+		if (scheduledDateTime.isBefore(dateTimeNow)) {
+			throw new RuleViolationException("Scheduled date shouldn't be in past!");
 		}
 		
 		return true;

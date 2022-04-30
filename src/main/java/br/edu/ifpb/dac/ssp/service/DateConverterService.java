@@ -1,6 +1,7 @@
 package br.edu.ifpb.dac.ssp.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -42,5 +43,25 @@ public class DateConverterService {
 	
 	public String timeToString (LocalTime time) {
 		return time.toString();
+	}
+	
+	public LocalDateTime stringToDateTime(String dateTimeString) throws TimeParseException {
+		LocalDateTime dateTime;
+		
+		try {
+			dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		} catch (DateTimeParseException e) {
+			throw new TimeParseException("Could not convert " + dateTimeString + " to LocalTime!");
+		}
+		
+		return dateTime;
+	}
+	
+	public String dateTimeToString (LocalDateTime dateTime) {
+		return dateTime.toString();
+	}
+	
+	public LocalDateTime dateTimeNow() {
+		return LocalDateTime.now();
 	}
 }
