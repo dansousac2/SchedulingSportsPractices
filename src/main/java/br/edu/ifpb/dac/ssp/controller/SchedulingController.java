@@ -167,8 +167,6 @@ public class SchedulingController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
-	
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {

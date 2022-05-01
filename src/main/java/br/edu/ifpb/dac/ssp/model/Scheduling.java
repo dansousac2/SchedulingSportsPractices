@@ -68,13 +68,8 @@ public class Scheduling implements Serializable {
 			inverseJoinColumns = @JoinColumn(name = "USER_ID"))
 	private Set<User> participants;
 	
-	@Transient
-	@PositiveOrZero(message = "Quantity of participants shouldn't be a negative number!")
-	private int quantityOfParticipants; 
-	
 	public Scheduling() {
-		this.participants = new HashSet<User>();
-		this.quantityOfParticipants = 0;
+
 	}
 
 	public Scheduling(LocalDate scheduledDate, LocalTime scheduledStartTime, LocalTime scheduledFinishTime, Place place, Sport sport) {
@@ -150,25 +145,19 @@ public class Scheduling implements Serializable {
 	}
 
 	public void addParticipant(User user) {
-		if (this.quantityOfParticipants < this.place.getMaximumCapacityParticipants()) {
+		if (this.participants.size() < this.place.getMaximumCapacityParticipants()) {
 			this.participants.add(user);
-			this.quantityOfParticipants += 1;
 		}
 	}
 	
 	public void removeParticipant(User user) {
-		if (this.quantityOfParticipants > 0) {
+		if (this.participants.size() > 0) {
 				this.participants.remove(user);
-				this.quantityOfParticipants -= 1;
 		}
 	}
 	
 	public int getQuantityOfParticipants() {
-		return quantityOfParticipants;
-	}
-
-	public void setQuantityOfParticipants(int quantityOfParticipants) {
-		this.quantityOfParticipants = quantityOfParticipants;
+		return this.participants.size();
 	}
 
 	public int hashCode() {

@@ -58,26 +58,6 @@ public class SchedulingTest {
 		assertEquals("Scheduled date shouldn't be in past!", violations.stream().findFirst().get().getMessage());
 	}
 	
-	@ParameterizedTest
-	@ValueSource(ints = {10, 1, 0, 5, 20})
-	public void testQuantityOfParticipantsValid(int quantity) {
-		entity.setQuantityOfParticipants(quantity);
-		
-		violations = validator.validateProperty(entity, "quantityOfParticipants");
-		assertEquals(0, violations.size());
-	}
-	
-	@ParameterizedTest
-	@ValueSource(ints = {-1, -5, -10, -20})
-	public void testQuantityOfParticipantsInvalid(int quantity) {
-		entity.setQuantityOfParticipants(quantity);
-		
-		violations = validator.validateProperty(entity, "quantityOfParticipants");
-		
-		assertNotEquals(0, violations.size());
-		assertEquals("Quantity of participants shouldn't be a negative number!", violations.stream().findFirst().get().getMessage());
-	}
-	
 	@Test
 	public void testAddParticipantValid() {
 		Place placeMock = mock(Place.class);
@@ -85,7 +65,8 @@ public class SchedulingTest {
 		Set<User> setMock = mock(Set.class);
 		
 		when(placeMock.getMaximumCapacityParticipants()).thenReturn(5);
-		when(setMock.add(any())).thenReturn(true);
+		when(setMock.add(any(User.class))).thenReturn(true);
+		when(setMock.size()).thenReturn(0);
 		
 		entity.setPlace(placeMock);
 		entity.setParticipants(setMock);
@@ -93,10 +74,9 @@ public class SchedulingTest {
 		entity.addParticipant(userMock);
 		
 		verify(placeMock).getMaximumCapacityParticipants();
-		verify(setMock).add(any());	
+		verify(setMock).add(any(User.class));	
 		
 		assertTrue(setMock.add(userMock));
-		assertEquals(1, entity.getQuantityOfParticipants());
 	}
 	
 	@Test
@@ -106,16 +86,16 @@ public class SchedulingTest {
 		Set<User> setMock = mock(Set.class);
 		
 		when(placeMock.getMaximumCapacityParticipants()).thenReturn(5);
-		when(setMock.add(any())).thenReturn(true);
+		when(setMock.size()).thenReturn(5);
+		when(setMock.add(any(User.class))).thenReturn(true);
 		
 		entity.setPlace(placeMock);
 		entity.setParticipants(setMock);
-		entity.setQuantityOfParticipants(5);
 		
 		entity.addParticipant(userMock);
 		
 		verify(placeMock).getMaximumCapacityParticipants();
-		verifyNoInteractions(setMock);
+		verify(setMock, never()).add(any(User.class));
 		
 		assertEquals(5, entity.getQuantityOfParticipants());
 	}
@@ -125,17 +105,16 @@ public class SchedulingTest {
 		User userMock = mock(User.class);
 		Set<User> setMock = mock(Set.class);
 		
-		when(setMock.remove(any())).thenReturn(true);
+		when(setMock.size()).thenReturn(1);
+		when(setMock.remove(any(User.class))).thenReturn(true);
 		
 		entity.setParticipants(setMock);
-		entity.setQuantityOfParticipants(1);
 		
 		entity.removeParticipant(userMock);
 		
-		verify(setMock).remove(any());	
+		verify(setMock).remove(any(User.class));	
 		
 		assertTrue(setMock.remove(userMock));
-		assertEquals(0, entity.getQuantityOfParticipants());
 	}
 	
 	@Test
@@ -143,13 +122,13 @@ public class SchedulingTest {
 		User userMock = mock(User.class);
 		Set<User> setMock = mock(Set.class);
 		
-		entity.setParticipants(setMock);
-		entity.setParticipants(setMock);
-		entity.setQuantityOfParticipants(0);
+		when(setMock.size()).thenReturn(0);
+		when(setMock.remove(any(User.class))).thenReturn(true);
 		
+		entity.setParticipants(setMock);
 		entity.removeParticipant(userMock);
 		
-		verifyNoInteractions(setMock);
+		verify(setMock, never()).remove(any(User.class));
 		
 		assertEquals(0, entity.getQuantityOfParticipants());
 	}
