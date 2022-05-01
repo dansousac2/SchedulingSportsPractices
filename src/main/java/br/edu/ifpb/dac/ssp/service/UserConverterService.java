@@ -24,7 +24,7 @@ public class UserConverterService {
 			
 			return entity;
 		}
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public UserDTO userToDto(User entity) {
@@ -39,7 +39,7 @@ public class UserConverterService {
 			return dto;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<User> dtosToUsers(List<UserDTO> dtoList) {
@@ -59,7 +59,7 @@ public class UserConverterService {
 			return entityList;
 		}
 
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<UserDTO> usersToDtos(List<User> entityList) {
@@ -78,7 +78,7 @@ public class UserConverterService {
 			return dtoList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 
 }

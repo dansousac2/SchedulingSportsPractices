@@ -18,7 +18,7 @@ public class SportConverterService {
 			
 			return entity;
 		}
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public SportDTO sportToDto(Sport entity) {
@@ -28,7 +28,7 @@ public class SportConverterService {
 			return dto;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<Sport> dtosToSports(List<SportDTO> dtoList) {
@@ -48,7 +48,7 @@ public class SportConverterService {
 			return entityList;
 		}
 
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<SportDTO> sportsToDtos(List<Sport> entityList) {
@@ -67,7 +67,7 @@ public class SportConverterService {
 			return dtoList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 

@@ -52,13 +52,13 @@ public class SportConverterServiceTest {
 	
 	@Test
 	public void testConvertEntityToDtoThrowsNullPointerException() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.sportToDto(null));
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.sportToDto(null));
 		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 	
 	@Test
 	public void testConvertDtoToEntityThrowsNullPointerException() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.dtoToSport(null));
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.dtoToSport(null));
 		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 	

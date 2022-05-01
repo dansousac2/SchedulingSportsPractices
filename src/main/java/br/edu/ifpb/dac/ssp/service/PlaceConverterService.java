@@ -18,7 +18,7 @@ public class PlaceConverterService {
 			return entity;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public PlaceDTO placeToDto(Place entity) {
@@ -28,7 +28,7 @@ public class PlaceConverterService {
 			return dto;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 
 	public List<Place> dtosToPlaces(List<PlaceDTO> dtoList) {
@@ -48,7 +48,7 @@ public class PlaceConverterService {
 			return entityList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 	
 	public List<PlaceDTO> placesToDtos(List<Place> entityList) {
@@ -67,6 +67,6 @@ public class PlaceConverterService {
 			return dtoList;
 		}
 		
-		throw new NullPointerException("Could not convert because object is null");
+		throw new IllegalArgumentException("Could not convert because object is null");
 	}
 }
