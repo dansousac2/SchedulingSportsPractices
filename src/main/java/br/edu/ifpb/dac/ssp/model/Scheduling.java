@@ -48,14 +48,12 @@ public class Scheduling implements Serializable {
 	@Column(name = "SCHEDULED_FINISH_TIME", nullable = false)
 	private LocalTime scheduledFinishTime;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "PRACTICE_PLACE", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_PLACE")
 	private Place place;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "PRACTICE_SPORT", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SPORT")
 	private Sport sport;
 	
 	@Column(name = "USER_CREATOR")
