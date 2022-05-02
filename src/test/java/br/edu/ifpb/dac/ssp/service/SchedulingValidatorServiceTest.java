@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -275,8 +276,9 @@ public class SchedulingValidatorServiceTest {
 		when(entityMocked2.getPlace()).thenReturn(place);
 		when(entityMocked2.getScheduledStartTime()).thenReturn(LocalTime.parse("09:00"));
 		when(entityMocked2.getScheduledFinishTime()).thenReturn(LocalTime.parse("11:00"));
+		when(entityMocked2.getScheduledDate()).thenReturn(LocalDate.parse("2022-12-30"));
 		
-		List<Scheduling> listEntity = spy(List.class);
+		List<Scheduling> listEntity = new ArrayList<>();
 		listEntity.add(entityMocked1);
 		
 		when(schedulingService.findAllByPlaceNameAndScheduledDate(anyString(), any(LocalDate.class))).thenReturn(listEntity);
