@@ -57,22 +57,9 @@ public class UserConverterServiceTest {
 				() -> assertEquals(dtoConverted.getId(), user.getId()),
 				() -> assertEquals(dtoConverted.getName(), user.getName()),
 				() -> assertEquals(dtoConverted.getEmail(), user.getEmail()),
-				() -> assertEquals(dtoConverted.getRegistration(), user.getRegistration())
-								
-			);
+				() -> assertEquals(dtoConverted.getRegistration(), user.getRegistration()),
+				() -> assertEquals(dtoConverted.getPassword(), null));		
 	}
-	
-//	@Test
-//	public void testConvertingEntityToDtoPassword() {
-//		UserDTO dtoConverted = converterService.userToDto(user);
-//		assertAll("Testing comparing dto and entity field by field",
-//				() -> assertEquals(dtoConverted.getPassword(), null)
-				
-//		   );
-
-		
-		
-//	}
 	
 	@Test
 	public void testConvertingEntityToDtoNullPointer() {
