@@ -44,7 +44,7 @@ public class SchedulingServiceTest {
 		when(repository.existsById(anyInt())).thenReturn(true);
 
 		assertDoesNotThrow(() -> service.findById(2));
-		verify(repository.getById(2));
+		verify(repository).getById(2);
 	}
 	
 	@DisplayName("Id Invalid")
@@ -53,7 +53,7 @@ public class SchedulingServiceTest {
 		when(repository.existsById(anyInt())).thenReturn(false);
 
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findById(2));
-		assertEquals("No scheduling were found with Id 2", exception.getMessage());
+		assertEquals("Could not find Scheduling with id 2", exception.getMessage());
 		
 	}
 	
@@ -70,17 +70,6 @@ public class SchedulingServiceTest {
 		
 	}
 	
-	@DisplayName("Save Invalid")
-	@Test
-	public void testSaveObjectInvalid() {
-		
-		scheduling.setId(2);
-		
-		when(repository.existsById(anyInt())).thenReturn(true);
-		
-		Throwable exception = assertThrows(ObjectAlreadyExistsException.class, () -> service.save(scheduling));
-		assertEquals("A schedule already exists with id 2", exception.getMessage());
-	}
 	
 	@DisplayName("Delete Valid User")
 	@Test
@@ -100,7 +89,7 @@ public class SchedulingServiceTest {
 		when(repository.existsById(2)).thenReturn(false);
 
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.delete(scheduling));
-		assertEquals("The schedule with id 2 was not found", exception.getMessage());
+		assertEquals("Could not find Scheduling with id 2", exception.getMessage());
 	}
 	
 	@DisplayName("Delete Valid Id")
@@ -117,7 +106,7 @@ public class SchedulingServiceTest {
 	@Test
 	public void testDeleteInvalidByIdField() {
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
-		assertEquals("Cannot delete a null id!", exception.getMessage());
+		assertEquals("Could not delete, the field id is missing!", exception.getMessage());
 		
 	}
 	
@@ -127,7 +116,7 @@ public class SchedulingServiceTest {
 		when(repository.existsById(2)).thenReturn(false);
 
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.deleteById(2));
-		assertEquals("The schedule with ID 2 was not found", exception.getMessage());
+		assertEquals("Could not find Scheduling with id 2", exception.getMessage());
 	}
 	
 

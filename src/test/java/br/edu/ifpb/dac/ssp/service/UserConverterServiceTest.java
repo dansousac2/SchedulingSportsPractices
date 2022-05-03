@@ -63,14 +63,14 @@ public class UserConverterServiceTest {
 	
 	@Test
 	public void testConvertingEntityToDtoNullPointer() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.userToDto(null));
-		assertEquals("Conversion impossible. the object is null", exception.getMessage());
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.userToDto(null));
+		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 	
 	@Test
 	public void testConvertingDtoToEntityNullPointer() {
-		Throwable exception = assertThrows(NullPointerException.class, () -> converterService.dtoToUser(null));
-		assertEquals("Conversion impossible. the object is null", exception.getMessage());
+		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.dtoToUser(null));
+		assertEquals("Could not convert because object is null", exception.getMessage());
 	}
 	
 
