@@ -4,27 +4,52 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
+import br.edu.ifpb.dac.ssp.exception.TimeParseException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.Sport;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
 
 public class SchedulingConverterServiceTest {
-	//TODO
+
+	@Mock
+	private DateConverterService dateConverter;
+	
+	@Mock
+	private PlaceService placeService;
+	
+	@Mock
+	private SportService sportService;
+	
+	@InjectMocks
+	@Spy
 	private static SchedulingConverterService converterService;
+	
 	private static Scheduling entity;
 	private static SchedulingDTO dto;
+	private static Optional<Place> place;
+	private static Optional<Sport> sport;
 	
 	@BeforeAll
 	public static void setUp() {
-		converterService = new SchedulingConverterService();
+		place = Optional.of(new Place(1, "Ginásio", "Perto do estacionamento", 80, false));
+		sport = Optional.of(new Sport(2, "Futebol"));
 		
 		System.out.println("Setting attributtes for entity...");
 		entity = new Scheduling();
@@ -32,8 +57,8 @@ public class SchedulingConverterServiceTest {
 		entity.setScheduledDate(LocalDate.parse("2022-05-01"));
 		entity.setScheduledStartTime(LocalTime.parse("08:00"));
 		entity.setScheduledFinishTime(LocalTime.parse("09:00"));
-		entity.setPlace(new Place(1, "Ginásio", "Perto do estacionamento", 80, false));
-		entity.setSport(new Sport(2, "Futebol"));
+		entity.setPlace(place.get());
+		entity.setSport(sport.get());
 		
 		System.out.println("Setting attributtes for dto...");
 		dto = new SchedulingDTO();
@@ -42,7 +67,13 @@ public class SchedulingConverterServiceTest {
 		dto.setScheduledStartTime("08:00");
 		dto.setScheduledFinishTime("09:00");
 		dto.setPlaceName("Ginásio");
-		dto.setSportName("Futebol");
+		dto.setSportName("Futebol");	
+	}
+	
+	@BeforeEach
+	public void setUpBeforeEach() {
+		MockitoAnnotations.openMocks(this);
+
 	}
 	
 	@Test
@@ -69,6 +100,9 @@ public class SchedulingConverterServiceTest {
 	@Test
 	public void testConvertEntityToDtoFields() {
 		try {
+			when(dateConverter.timeToString(any(LocalTime.class))).thenCallRealMethod();
+			when(dateConverter.dateToString(any(LocalDate.class))).thenCallRealMethod();
+			
 			SchedulingDTO dtoConverted = converterService.schedulingToDto(entity);
 			
 			assertAll("Testing comparing dto and entity field by field",
@@ -87,6 +121,12 @@ public class SchedulingConverterServiceTest {
 	@Test
 	public void testConvertDtoToEntityFields() {
 		try {
+			when(dateConverter.stringToTime(anyString())).thenCallRealMethod();
+			when(dateConverter.stringToDate(anyString())).thenCallRealMethod();
+			
+			when(placeService.findByName(anyString())).thenReturn(place);
+			when(sportService.findByName(anyString())).thenReturn(sport);
+			
 			Scheduling entityConverted = converterService.dtoToScheduling(dto);
 			
 			assertAll("Testing comparing dto and entity field by field",
@@ -94,8 +134,8 @@ public class SchedulingConverterServiceTest {
 					() -> assertEquals(entityConverted.getScheduledDate().toString(), dto.getScheduledDate()),
 					() -> assertEquals(entityConverted.getScheduledStartTime().toString(), dto.getScheduledStartTime()),
 					() -> assertEquals(entityConverted.getScheduledFinishTime().toString(), dto.getScheduledFinishTime()),
-					() -> assertEquals(entityConverted.getPlace(), dto.getPlaceName()),
-					() -> assertEquals(entityConverted.getSport(), dto.getSportName()));
+					() -> assertEquals(entityConverted.getPlace().getName(), dto.getPlaceName()),
+					() -> assertEquals(entityConverted.getSport().getName(), dto.getSportName()));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
