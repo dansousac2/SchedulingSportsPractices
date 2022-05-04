@@ -17,7 +17,7 @@ import br.edu.ifpb.dac.ssp.model.Sport;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
 
 public class SchedulingConverterServiceTest {
-
+	//TODO
 	private static SchedulingConverterService converterService;
 	private static Scheduling entity;
 	private static SchedulingDTO dto;
@@ -76,8 +76,8 @@ public class SchedulingConverterServiceTest {
 					() -> assertEquals(dtoConverted.getScheduledDate(), entity.getScheduledDate().toString()),
 					() -> assertEquals(dtoConverted.getScheduledStartTime(), entity.getScheduledStartTime().toString()),
 					() -> assertEquals(dtoConverted.getScheduledFinishTime(), entity.getScheduledFinishTime().toString()),
-					() -> assertEquals(dtoConverted.getPlaceName(), entity.getPlace()),
-					() -> assertEquals(dtoConverted.getSportName(), entity.getSport()));
+					() -> assertEquals(dtoConverted.getPlaceName(), entity.getPlace().getName()),
+					() -> assertEquals(dtoConverted.getSportName(), entity.getSport().getName()));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

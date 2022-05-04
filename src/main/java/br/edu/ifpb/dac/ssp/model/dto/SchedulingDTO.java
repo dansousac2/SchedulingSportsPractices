@@ -1,10 +1,14 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
+import java.time.LocalTime;
 import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class SchedulingDTO {
 	
@@ -19,6 +23,10 @@ public class SchedulingDTO {
 	@Pattern(regexp = "^\\d\\d:\\d\\d$",
 			message = "Scheduled start time should be formatted as 'HH:mm'")
 	private String scheduledStartTime;
+	
+	@NotNull
+	@JsonFormat(pattern = "HH:mm")
+	private LocalTime startTime;
 	
 	@NotBlank(message = "It's mandatory to inform a scheduled finish time!")
 	@Pattern(regexp = "^\\d\\d:\\d\\d$",
