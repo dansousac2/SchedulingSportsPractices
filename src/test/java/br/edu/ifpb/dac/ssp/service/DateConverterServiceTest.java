@@ -1,5 +1,6 @@
 package br.edu.ifpb.dac.ssp.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -22,12 +23,8 @@ class DateConverterServiceTest {
 	@ParameterizedTest
 	@ValueSource(strings = {"2020-01-01", "2024-02-29", "0001-01-01", "9999-01-01"}) // valid
 	public void stringToDateInvalid(String s) { 
-		try {
-			converter.stringToDate(s);
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail();
-		}
+		
+		assertDoesNotThrow(() -> converter.stringToDate(s));
 	}
 	
 	@ParameterizedTest
@@ -44,12 +41,7 @@ class DateConverterServiceTest {
 	@ParameterizedTest
 	@ValueSource(strings = {"23:59","00:00", "24:00"}) // valid
 	public void stringToTimeValid(String s) { 
-		try {
-			converter.stringToTime(s);
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail();
-		}
+		assertDoesNotThrow(() -> converter.stringToTime(s));
 	}
 	
 	@ParameterizedTest
