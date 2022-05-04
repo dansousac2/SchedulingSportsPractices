@@ -2,6 +2,11 @@ package br.edu.ifpb.dac.ssp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.BeforeAll;
 
 import br.edu.ifpb.dac.ssp.exception.*;
 import br.edu.ifpb.dac.ssp.model.Sport;
@@ -18,16 +23,21 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class SportServiceTest {
 
 	@InjectMocks
-	private SportService sportService;
+	private static SportService service;
 	@Mock
-	private SportRepository repository;
-	private static Sport entity = new Sport();
+	private static SportRepository repository;
+	private Sport entity = new Sport();
+	
+	@BeforeAll
+	public static void setup() {
+		service = new SportService();
+		ReflectionTestUtils.setField(service, "sportRepository", repository);
+	}
 	
 	@BeforeEach
 	public void beforeEach() {
 		System.out.println("Initializing classes...");
 		MockitoAnnotations.openMocks(this);
-		ReflectionTestUtils.setField(sportService, "sportRepository", repository);
 		
 		System.out.println("Setting attributtes for Sport...");
 		entity.setId(1);
@@ -36,17 +46,30 @@ public class SportServiceTest {
 	
 	@Test
 	@Order(1)
-	public void testFindByIdThrowsObjectNotFoundException() {
+	public void testFindByIdThrowsObjectNotFoundException() { // id invalid
 		// Testing findById by passing an invalid id...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.findById(25));
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findById(25));
 		assertEquals("Could not find Sport with id 25", exception.getMessage());
+	}
+	
+	@Test
+	public void findByIdValid() { // id invalid
+		try {
+			when(repository.existsById(anyInt())).thenReturn(true);
+			
+			service.findById(1);
+			
+			verify(repository).getById(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	@Order(2)
 	public void testFindByNameThrowsMissingFieldException() {
 		// Testing findByName by passing a null value...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.findByName(null));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.findByName(null));
 		assertEquals("Could not complete action, the field name is missing!", exception.getMessage());
 	}
 	
@@ -54,7 +77,7 @@ public class SportServiceTest {
 	@Order(3)
 	public void testFindByNameThrowsObjectNotFoundException() {
 		// Testing findByName by passing an invalid name...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.findByName("Golfe"));
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findByName("Golfe"));
 		assertEquals("Could not find Sport with name Golfe", exception.getMessage());
 	}
 	
@@ -64,7 +87,7 @@ public class SportServiceTest {
 		entity.setName(null);
 		
 		// Testing save by passing a null value for name...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.save(entity));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.save(entity));
 		assertEquals("Could not save, the field name is missing!", exception.getMessage());
 	}
 	
@@ -74,7 +97,7 @@ public class SportServiceTest {
 		entity.setId(null);
 		
 		// Testing update by passing a null value for id...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.update(entity));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.update(entity));
 		assertEquals("Could not update, the field id is missing!", exception.getMessage());
 	}
 	
@@ -84,7 +107,7 @@ public class SportServiceTest {
 		entity.setId(25);
 		
 		// Testing update by passing an invalid id...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.update(entity));
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.update(entity));
 		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 	
@@ -94,7 +117,7 @@ public class SportServiceTest {
 		entity.setName(null);
 		
 		// Testing update by passing a null value for name...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.update(entity));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.update(entity));
 		assertEquals("Could not update, the field name is missing!", exception.getMessage());
 	}
 	
@@ -104,7 +127,7 @@ public class SportServiceTest {
 		entity.setId(null);
 		
 		// Testing update by passing a null value for id...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.delete(entity));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.delete(entity));
 		assertEquals("Could not delete, the field id is missing!", exception.getMessage());
 	}
 	
@@ -114,7 +137,7 @@ public class SportServiceTest {
 		entity.setId(25);
 		
 		// Testing update by passing an invalid id...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.delete(entity));
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.delete(entity));
 		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 	
@@ -122,7 +145,7 @@ public class SportServiceTest {
 	@Order(10)
 	public void testDeleteByIdWithoutIdThrowsMissingFieldException() {
 		// Testing update by passing a null value for id...
-		Throwable exception = assertThrows(MissingFieldException.class, () -> sportService.deleteById(null));
+		Throwable exception = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
 		assertEquals("Could not delete, the field id is missing!", exception.getMessage());
 	}
 	
@@ -130,7 +153,7 @@ public class SportServiceTest {
 	@Order(11)
 	public void testDeleteByIdThrowsObjectNotFoundException() {		
 		// Testing update by passing an invalid id...
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> sportService.deleteById(25));
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.deleteById(25));
 		assertEquals("Could not find Sport with id 25", exception.getMessage());
 	}
 }
