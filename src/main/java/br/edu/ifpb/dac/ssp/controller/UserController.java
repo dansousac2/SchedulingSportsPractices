@@ -2,6 +2,7 @@ package br.edu.ifpb.dac.ssp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity findById(@PathVariable Integer id) {
+	public ResponseEntity findById(@Valid @PathVariable Integer id) {
 		
 		try {
 			User entity = userService.findById(id);
@@ -54,7 +55,7 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity save(@RequestBody UserDTO dto) {
+	public ResponseEntity save(@Valid @RequestBody UserDTO dto) {
 		
 		try {
 			User entity = converterService.dtoToUser(dto);
@@ -69,7 +70,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@PathVariable Integer id, @RequestBody UserDTO dto) {
+	public ResponseEntity update(@PathVariable Integer id, @Valid @RequestBody UserDTO dto) {
 		
 		try {
 			dto.setId(id);

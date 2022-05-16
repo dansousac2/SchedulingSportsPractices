@@ -2,7 +2,6 @@ package br.edu.ifpb.dac.ssp.controller;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -107,9 +106,10 @@ class UserControllerTest {
 
 	@Test
 	public void saveInvalidNameNull() {
-		exUserDto.setName("2");
+		exUserDto.setName("a");
+
 		resp = controller.save(exUserDto);
 		
-		verify(repository).save(any(User.class));
+		verify(repository, never()).save(any(User.class));
 	}
 }
