@@ -41,7 +41,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity findById(@Valid @PathVariable Integer id) {
+	public ResponseEntity findById(@PathVariable Integer id) {
 		
 		try {
 			User entity = userService.findById(id);
