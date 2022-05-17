@@ -262,7 +262,6 @@ public class SchedulingValidatorServiceTest {
 		}
 	}
 	
-	// Esse quebrou
 	@Test
 	public void testValidateScheduledDateException() {
 		Scheduling entityMocked1 = mock(Scheduling.class);
