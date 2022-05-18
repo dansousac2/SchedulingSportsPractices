@@ -82,19 +82,19 @@ class UserControllerTest {
 	@BeforeEach
 	public void beforeEach() {
 		MockitoAnnotations.openMocks(this);
-		
+
 		exUserDto = new UserDTO();
 		exUserDto.setName("Dansousa");
 		exUserDto.setEmail("dansousa@gmail.com");
 		exUserDto.setPassword("1234567");
 		exUserDto.setRegistration(123456789);
 		exUserDto.setId(1);
-		
+
 		exUser = userConverter.dtoToUser(exUserDto);
 	}
 
 	@Test
-	public void saveValidFields() { // save valid - compare fields of Dto and Entity
+	public void saveValid() { // save valid - compare fields (Dto and Entity); cod 201 and body
 
 		resp = controller.save(exUserDto);
 
@@ -107,10 +107,6 @@ class UserControllerTest {
 				() -> assertEquals(exUserDto.getEmail(), captured.getEmail()),
 				() -> assertEquals(exUserDto.getPassword(), captured.getPassword()),
 				() -> assertEquals(exUserDto.getRegistration(), captured.getRegistration()));
-	}
-
-	@Test
-	public void saveValidRespEnt() { // save valid - COD 201 and body
 
 		when(repository.save(any(User.class))).thenReturn(exUser);
 
@@ -118,13 +114,13 @@ class UserControllerTest {
 
 		assertAll("HttpStatus and body", () -> assertEquals(HttpStatus.CREATED, resp.getStatusCode()),
 				() -> assertEquals(UserDTO.class, resp.getBody().getClass()),
-				() -> assertNotEquals(exUserDto, resp.getBody())
-		);
+				() -> assertNotEquals(exUserDto, resp.getBody()));
+
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "a", " 12   ", " \n   ", "   ", " bc \t" })
-	public void saveInvalidName(String name) { // save invalid - field not match
+	public void saveInvalidNameJSON(String name) { // save invalid - field name invalid - JSON -> DTO
 		try {
 			exUserDto.setName(name);
 
@@ -142,32 +138,26 @@ class UserControllerTest {
 		}
 	}
 
-	private @Valid UserDTO verifyViolations(UserDTO exUserDto2, String field) throws Exception { // is the "mock" of
-																									// Http body request
-		violations = validator.validateProperty(exUserDto2, field);
-		if (violations.size() == 0) {
-			return exUserDto2;
+	@ParameterizedTest
+	@ValueSource(strings = { "", " \n  ", " \n \t", "null" }) // save invalid - name blanck or null
+	public void saveInvalidNameAfeterJson(String name) {
+		if (name.equals("null")) {
+			UserDTO novo = new UserDTO(null, "dan@gmail.com", 123456, "yep"); // name null - barred in UserService
+			resp = controller.save(novo);
+		} else {
+			exUserDto.setName(name); // name is blanck - barred in UserService
+			resp = controller.save(exUserDto);
 		}
-		throw new Exception(violations.stream().findFirst().get().getMessage());
+		assertEquals("Could not save, the field name is missing!", resp.getBody());
 	}
 
 	@Test
 	public void saveInvalidNull() { // save invalid - obj is null
 
-		resp = controller.save(null);
+		resp = controller.save(null); // barred in ConverterService
 
 		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
 		assertEquals("Could not convert because object is null", resp.getBody());
-	}
-
-	@ParameterizedTest
-	@ValueSource(strings = { "", " \n  ", " \n \t" })
-	public void saveInvalidNameBlanck(String name) { // save invalid - user's name is blanck
-		exUserDto.setName(name);
-
-		resp = controller.save(exUserDto);
-
-		assertEquals("Could not save, the field name is missing!", resp.getBody());
 	}
 
 	@Test
@@ -194,7 +184,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void updateInvalidNull() { // update invalid - obj null
+	public void updateInvalidDtoNull() { // update invalid - obj null
 
 		resp = controller.update(1, null); // controller
 
@@ -203,135 +193,125 @@ class UserControllerTest {
 		assertTrue(resp.getBody().toString().contains(error));
 	}
 
-	@Test
-	public void updateInvalidNameNull() { // update invalid - Dto's name is null
-		// exUserDto.setName(null); // throw NullPointException (trim)
-		
-		resp = controller.update(1, new UserDTO(null, "example@gmail.com", 13579, "password"));
-		
-		assertEquals("Could not update, the field name is missing!", resp.getBody()); // userService
-	}
-	
 	@ParameterizedTest
-	@ValueSource(strings = {"    ", "\n  ", "  \t  \n \t "})
-	public void updateInvalidNameBlanck(String name) { // update invalid - Dto's name is blanck
-		exUserDto.setName(name);
-		
-		resp = controller.update(1, exUserDto);
-		
-		assertEquals("Could not update, the field name is missing!", resp.getBody());
+	@ValueSource(strings = { "    ", "\n  ", "  \t  \n \t ", "null" })
+	public void updateInvalidName(String name) { // update invalid - Dto's name is blanck or null
+		if (!name.equals("null")) {
+
+			exUserDto.setName(name);
+
+			resp = controller.update(1, exUserDto);
+			assertEquals("Could not update, the field name is missing!", resp.getBody());
+		} else {
+			resp = controller.update(1, new UserDTO(null, "example@gmail.com", 13579, "password"));
+			assertEquals("Could not update, the field name is missing!", resp.getBody());
+		}
 	}
 
 	@Test
-	public void updateInvalidIdNull() { // update invalid - Dto's Id is null
-		
-		resp = controller.update(null, exUserDto);
-		
-		assertEquals("Could not update, the field id is missing!", resp.getBody());
-	}
-	
-	@Test
 	public void updateInvalidIdNotFound() { // update invalid - Dto's Id not found in DB
 		when(repository.existsById(anyInt())).thenReturn(false);
-		
+
 		resp = controller.update(12, exUserDto);
-		
+
 		assertEquals("Could not find User with id 12", resp.getBody());
 	}
-	
+
 	@Test
 	public void updateInvalidIdNotMatch() { // update invalid - dto's id in DB not match (same registration)
-		User user = new User(2,"Afonso","affff@gmail.com",123456789,"passwordloko");
-		
+		User user = new User(2, "Afonso", "affff@gmail.com", 123456789, "passwordloko");
+
 		when(repository.existsById(anyInt())).thenReturn(true);
 		when(repository.existsByRegistration(anyInt())).thenReturn(true);
 		when(repository.findByRegistration(123456789)).thenReturn(Optional.of(user));
-		
+
 		resp = controller.update(12, exUserDto);
-		
+
 		assertEquals("A user with registration 123456789 already exists!", resp.getBody());
 	}
-	
+
 	@Test
-	public void deleteValid() { // delete valid
+	public void deleteValid() { // delete valid - Htttp and body
 		when(repository.existsById(1)).thenReturn(true);
-		
+
 		resp = controller.delete(1);
-		
+
 		assertEquals(HttpStatus.NO_CONTENT, resp.getStatusCode());
 		assertFalse(resp.hasBody());
 	}
-	
+
 	@Test
 	public void deleteInvalidIdNull() { // delete invalid - the id is null
 		resp = controller.delete(null);
-		
+
 		assertEquals("Could not delete, the field id is missing!", resp.getBody());
 	}
-	
+
 	@Test
 	public void deleteInvalidIdNotFound() { // delete invalid - id not found in DB
 		when(repository.existsById(9)).thenReturn(false);
-		
+
 		resp = controller.delete(9);
-		
+
 		assertEquals("Could not find User with id 9", resp.getBody());
 	}
-	
+
 	@Test
 	public void findByIDValid() { // findByID valid - Http and body
 		when(repository.existsById(1)).thenReturn(true);
 		when(repository.getById(1)).thenReturn(exUser);
-		
+
 		resp = controller.findById(1);
-		
-		assertAll("HttpStatus and body",
-				() -> assertEquals(HttpStatus.OK, resp.getStatusCode()),
-				() -> assertEquals(UserDTO.class, resp.getBody().getClass())
-		);
+
+		assertEquals(HttpStatus.OK, resp.getStatusCode());
+		assertEquals(UserDTO.class, resp.getBody().getClass());
 	}
-	
+
 	@Test
 	public void findByIDInvalidNotFound() { // findByID invalid - not found in DB
 		when(repository.existsById(9)).thenReturn(false);
-		
 		resp = controller.findById(9);
-		
+
 		assertEquals("Could not find User with id 9", resp.getBody());
 	}
-	
+
 	@Test
 	public void findByIDInvalidNull() { // findByID invalid - id is null
 		resp = controller.findById(null);
-		
+
 		assertEquals("Could not find User with id null", resp.getBody());
 	}
 
 	@Test
 	public void getAllValidWithUsers() { // getAll valid - have User on DB
-		User user = new User(2,"Afonso","affff@gmail.com",123456710,"passwordloko");
-		
+		User user = new User(2, "Afonso", "affff@gmail.com", 123456710, "passwordloko");
 		List<User> list = new ArrayList<>();
 		list.add(user);
 		list.add(exUser);
-		
+
 		when(repository.findAll()).thenReturn(list);
-		
 		resp = controller.getAll();
-		
+
 		assertEquals(HttpStatus.OK, resp.getStatusCode());
-		assertFalse(resp.getBody().toString().contains("User@"));
-		System.out.println(resp.getBody());
 	}
-	
+
 	@Test
-	public void getAllValidWithout() { // getAll valid - have no obj in DB
+	public void getAllValidWithoutUsers() { // getAll valid - have no User in DB
 		List<User> list = new ArrayList<>();
 
 		when(repository.findAll()).thenReturn(list);
-		
 		resp = controller.getAll();
+		
 		assertEquals(HttpStatus.OK, resp.getStatusCode());
-		assertEquals("[]", resp.getBody().toString());
+		assertEquals(ArrayList.class, resp.getBody().getClass());
+	}
+	
+	// is the "mock" of Http body request
+	private @Valid UserDTO verifyViolations(UserDTO exUserDto2, String field) throws Exception { 
+		violations = validator.validateProperty(exUserDto2, field);
+		if (violations.size() == 0) {
+			return exUserDto2;
+		}
+		throw new Exception(violations.stream().findFirst().get().getMessage());
 	}
 }
