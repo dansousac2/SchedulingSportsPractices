@@ -3,6 +3,7 @@ package br.edu.ifpb.dac.ssp.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -59,71 +60,46 @@ public class SchedulingValidatorServiceTest {
 	}
 	
 	@Test
-	public void testValidateSchedulingOk() {
+	public void testValidateEntityAndDtoOk() {
 		Scheduling entityMocked = mock(Scheduling.class);
+		SchedulingDTO dtoMocked = mock(SchedulingDTO.class);
 		
 		try {
 			when(validatorService.validateScheduling(any())).thenReturn(true);
+			when(validatorService.validateSchedulingDTO(any())).thenReturn(true);
 			
-			boolean isValid = validatorService.validateScheduling(entityMocked);
-			assertTrue(isValid);
+			assertTrue(validatorService.validateSchedulingDTO(dtoMocked));
+			assertTrue(validatorService.validateScheduling(entityMocked));
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}	
 	}
 	
 	@Test
-	public void testValidateSchedulingDtoOk() {
-		SchedulingDTO dtoMocked = mock(SchedulingDTO.class);
-		
-		try {
-			when(validatorService.validateScheduling(any())).thenReturn(true);
-			
-			boolean isValid = validatorService.validateSchedulingDTO(dtoMocked);
-			assertTrue(isValid);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidatePlaceNameOk() {
+	public void testValidatePlaceAndSportNameOk() {
 		when(placeService.existsByName(anyString())).thenReturn(true);
+		when(sportService.existsByName(anyString())).thenReturn(true);
 		
 		try {
-			boolean isValid = validatorService.validatePlaceName("Pátio");
-			assertTrue(isValid);
+			assertTrue(validatorService.validatePlaceName("Pátio"));
+			assertTrue(validatorService.validateSportName("Futebol"));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			fail();
 		}
 	}
 	
 	@Test
 	public void testValidatePlaceNameException() {
 		when(placeService.existsByName(anyString())).thenReturn(false);
-		
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validatePlaceName("Pátio"));
-		assertEquals("Could not find Place with name Pátio", exception.getMessage());
-	}
-	
-	@Test
-	public void testValidateSportNameOk() {
-		when(sportService.existsByName(anyString())).thenReturn(true);
-		
-		try {
-			boolean isValid = validatorService.validateSportName("Futebol");
-			assertTrue(isValid);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testValidateSportNameException() {
 		when(sportService.existsByName(anyString())).thenReturn(false);
 		
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validateSportName("Golfe"));
-		assertEquals("Could not find Sport with name Golfe", exception.getMessage());
+		Throwable exceptionPlace = assertThrows(ObjectNotFoundException.class, () -> validatorService.validatePlaceName("Pátio"));
+		assertEquals("Could not find Place with name Pátio", exceptionPlace.getMessage());
+		
+		Throwable exceptionSport = assertThrows(ObjectNotFoundException.class, () -> validatorService.validateSportName("Golfe"));
+		assertEquals("Could not find Sport with name Golfe", exceptionSport.getMessage());
 	}
 	
 	@Test
@@ -134,8 +110,7 @@ public class SchedulingValidatorServiceTest {
 		try {
 			when(validatorService.validateScheduledTime(any(LocalTime.class), any(LocalTime.class))).thenReturn(true);
 				
-			boolean isValid = validatorService.validateScheduledTime(startTime, finishTime);
-			assertTrue(isValid);
+			assertTrue(validatorService.validateScheduledTime(startTime, finishTime));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -150,10 +125,10 @@ public class SchedulingValidatorServiceTest {
 			when(dateConverter.stringToTime(anyString())).thenCallRealMethod();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			fail();
 		}
 			
-		Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateScheduledTime(startTime, finishTime));
-			
+		Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateScheduledTime(startTime, finishTime));	
 		assertEquals("Scheduled time should be between 07:00 and 22:00", exception.getMessage());		
 	}
 	
@@ -161,17 +136,17 @@ public class SchedulingValidatorServiceTest {
 	public void testValidateScheduledDateAndTimeOk() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 		
-		LocalDate scheduledDate = LocalDate.now();
 		LocalTime scheduledStartTime = LocalTime.parse(LocalTime.now().format(dtf)).plusMinutes(5);
+		LocalDate scheduledDate = LocalDate.now();
 		
 		try {
 			when(dateConverter.dateTimeNow()).thenCallRealMethod();
 			when(dateConverter.stringToDateTime(anyString())).thenCallRealMethod();
 			
-			boolean isValid = validatorService.validateScheduledDateAndTime(scheduledDate, scheduledStartTime);
-			assertTrue(isValid);
+			assertTrue(validatorService.validateScheduledDateAndTime(scheduledDate, scheduledStartTime));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			fail();
 		}
 	}
 	
@@ -179,18 +154,17 @@ public class SchedulingValidatorServiceTest {
 	public void testValidateScheduledDateAndTimeException() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 		
-		LocalDate scheduledDate = LocalDate.now();
 		LocalTime scheduledStartTime = LocalTime.parse(LocalTime.now().format(dtf)).minusMinutes(5);
-		
+		LocalDate scheduledDate = LocalDate.now();
 		try {
 			when(dateConverter.dateTimeNow()).thenCallRealMethod();
 			when(dateConverter.stringToDateTime(anyString())).thenCallRealMethod();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			fail();
 		}
 		
 		Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateScheduledDateAndTime(scheduledDate, scheduledStartTime));
-		
 		assertEquals("Scheduled date shouldn't be in past!", exception.getMessage());
 	}
 	
@@ -200,35 +174,26 @@ public class SchedulingValidatorServiceTest {
 		LocalTime finishTime = LocalTime.parse("10:00");
 		
 		try {
-			boolean isValid = validatorService.validateDurationOfPractice(startTime, finishTime);
-			assertTrue(isValid);
+			assertTrue(validatorService.validateDurationOfPractice(startTime, finishTime));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			fail();
 		}
 	}
 	
 	@Test
-	public void testValidateDurationOfPracticeExceptionFinishTimeBeforeStartTime() {
-		LocalTime startTime = LocalTime.parse("10:00");
-		LocalTime finishTime = LocalTime.parse("08:00");
-		
-		try {
-			Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(startTime, finishTime));
-			assertEquals("Duration of practice shouldn't be negative or 0!", exception.getMessage());
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	
-	@Test
-	public void testValidateDurationOfPracticeExceptionMaximumDuration() {
+	public void testValidateDurationOfPracticeException() {
 		LocalTime startTime = LocalTime.parse("08:00");
 		LocalTime finishTime = LocalTime.parse("13:00");
 		
 		try {
-			Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(startTime, finishTime));
-			assertEquals("Duration of practice should be a maximum of 180 minutes!", exception.getMessage());
+			// Finish time before start time
+			Throwable exceptionNegative = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(finishTime, startTime));
+			assertEquals("Duration of practice shouldn't be negative or 0!", exceptionNegative.getMessage());
+			
+			// Duration above maximum
+			Throwable exceptionMaximum = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(startTime, finishTime));
+			assertEquals("Duration of practice should be a maximum of 180 minutes!", exceptionMaximum.getMessage());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -254,9 +219,7 @@ public class SchedulingValidatorServiceTest {
 		when(schedulingService.findAllByPlaceNameAndScheduledDate(anyString(), any(LocalDate.class))).thenReturn(listEntity);
 		
 		try {
-			boolean isValid = validatorService.validateScheduledDate(entityMocked2);
-			
-			assertTrue(isValid);
+			assertTrue(validatorService.validateScheduledDate(entityMocked2));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
