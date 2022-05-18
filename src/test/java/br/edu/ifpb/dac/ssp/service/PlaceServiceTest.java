@@ -215,7 +215,6 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-//	@Order(10)
 	public void testDeleteByIdWithoutIdThrowsMissingFieldException() {
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
@@ -223,7 +222,6 @@ public class PlaceServiceTest {
 	}
 	
 	@Test
-//	@Order(11)
 	public void testDeleteByIdThrowsObjectNotFoundException() {	
 		when(repository.existsById(anyInt())).thenReturn(false);
 		
