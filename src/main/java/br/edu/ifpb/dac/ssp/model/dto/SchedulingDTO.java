@@ -24,34 +24,29 @@ public class SchedulingDTO {
 			message = "Scheduled start time should be formatted as 'HH:mm'")
 	private String scheduledStartTime;
 	
-	@NotNull
-	@JsonFormat(pattern = "HH:mm")
-	private LocalTime startTime;
-	
 	@NotBlank(message = "It's mandatory to inform a scheduled finish time!")
 	@Pattern(regexp = "^\\d\\d:\\d\\d$",
 			message = "Scheduled finish time should be formatted as 'HH:mm'")
 	private String scheduledFinishTime;
 	
-	@NotBlank(message = "It's mandatory to inform a place for practice with 4 characters or more!")
-	@Size(min = 4, max = 255)
-	private String placeName;
+	@NotNull(message = "\"Place ID\" not must be null!")
+	private Integer placeId;
 	
-	@NotBlank(message = "It's mandatory to inform a sport for practice!")
-	@Size(min = 4, max = 255)
-	private String sportName;
+	@NotNull(message = "\"Sport ID\" not must be null!")
+	private Integer sportId;
 	
 	public SchedulingDTO() {
 		
 	}
 	
-	public SchedulingDTO(Integer id, String scheduledDate, String scheduledStartTime, String scheduledFinishTime, String placeName, String sportName) {
+	public SchedulingDTO(Integer id, String scheduledDate, String scheduledStartTime, String scheduledFinishTime, LocalTime startTime,  
+			Integer placeId, Integer sportId) {
 		this.id = id;
 		this.scheduledDate = scheduledDate;
 		this.scheduledStartTime = scheduledStartTime;
 		this.scheduledFinishTime = scheduledFinishTime;
-		this.placeName = placeName;
-		this.sportName = sportName;
+		this.placeId = placeId;
+		this.sportId = sportId;
 	}
 
 	public Integer getId() {
@@ -86,25 +81,25 @@ public class SchedulingDTO {
 		this.scheduledFinishTime = scheduledFinishTime;
 	}
 
-	public String getPlaceName() {
-		return placeName;
+	public Integer getPlaceId() {
+		return placeId;
 	}
 
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName.strip();
+	public void setPlaceId(Integer placeId) {
+		this.placeId = placeId;
 	}
 
-	public String getSportName() {
-		return sportName;
+	public Integer getSportId() {
+		return sportId;
 	}
 
-	public void setSportName(String sportName) {
-		this.sportName = sportName.strip();
+	public void setSportId(Integer sportId) {
+		this.sportId = sportId;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, placeName, scheduledDate, scheduledFinishTime, scheduledStartTime, sportName);
+		return Objects.hash(id, placeId, scheduledDate, scheduledFinishTime, scheduledStartTime, sportId);
 	}
 
 	@Override
@@ -116,10 +111,10 @@ public class SchedulingDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		SchedulingDTO other = (SchedulingDTO) obj;
-		return Objects.equals(id, other.id) && Objects.equals(placeName, other.placeName)
+		return Objects.equals(id, other.id) && Objects.equals(placeId, other.placeId)
 				&& Objects.equals(scheduledDate, other.scheduledDate)
 				&& Objects.equals(scheduledFinishTime, other.scheduledFinishTime)
 				&& Objects.equals(scheduledStartTime, other.scheduledStartTime)
-				&& Objects.equals(sportName, other.sportName);
+				&& Objects.equals(sportId, other.sportId);
 	}
 }

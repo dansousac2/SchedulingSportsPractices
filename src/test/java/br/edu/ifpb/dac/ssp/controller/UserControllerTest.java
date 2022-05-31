@@ -94,7 +94,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void saveValidFields() { // save valid - compare fields of Dto and Entity
+	public void saveValidFields() { // save valid - compare fields of Dto and Entity; 201 and body
 
 		resp = controller.save(exUserDto);
 
@@ -107,11 +107,7 @@ class UserControllerTest {
 				() -> assertEquals(exUserDto.getEmail(), captured.getEmail()),
 				() -> assertEquals(exUserDto.getPassword(), captured.getPassword()),
 				() -> assertEquals(exUserDto.getRegistration(), captured.getRegistration()));
-	}
-
-	@Test
-	public void saveValidRespEnt() { // save valid - COD 201 and body
-
+		
 		when(repository.save(any(User.class))).thenReturn(exUser);
 
 		resp = controller.save(exUserDto);

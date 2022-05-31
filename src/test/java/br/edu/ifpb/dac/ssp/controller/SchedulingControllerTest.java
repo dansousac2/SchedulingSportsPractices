@@ -103,8 +103,8 @@ public class SchedulingControllerTest {
 		dto.setScheduledDate("2022-05-01");
 		dto.setScheduledStartTime("08:00");
 		dto.setScheduledFinishTime("09:00");
-		dto.setPlaceName("Ginásio");
-		dto.setSportName("Futebol");
+		dto.setPlaceId(1);
+		dto.setSportId(1);
 		
 		listEntity = new ArrayList();
 		listEntity.add(entity);
@@ -262,26 +262,27 @@ public class SchedulingControllerTest {
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	}
 	
+	//TODO mostrar teste refatorado PlaceName => PlaceId
 	@Test
 	public void testGetAllConfirmedByPlaceAndSportValid() {
 		try {
-			when(validatorService.validatePlaceName(anyString())).thenReturn(true);
-			when(schedulingService.findAllByPlaceName(anyString())).thenReturn(listEntity);
+			when(validatorService.validPlaceId(anyInt())).thenReturn(true);
+			when(schedulingService.findAllByPlaceId(anyInt())).thenReturn(listEntity);
 			
-			when(validatorService.validateSportName(anyString())).thenReturn(true);
-			when(schedulingService.findAllBySportName(anyString())).thenReturn(listEntity);
+			when(validatorService.validSportId(anyInt())).thenReturn(true);
+			when(schedulingService.findAllBySportId(anyInt())).thenReturn(listEntity);
 			
 			when(converterService.schedulingToDtos(listEntity)).thenReturn(listDto);
 		} catch (Exception e) {
 			fail();
 		}
 		
-		response = controller.getAllSchedulingConfirmedByPlace("Ginásio");
+		response = controller.getAllSchedulingConfirmedByPlace(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.OK, response.getStatusCode()),
 				() -> assertEquals(listDto, response.getBody()));
 		
-		response = controller.getAllSchedulingConfirmedBySport("Futebol");
+		response = controller.getAllSchedulingConfirmedBySport(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.OK, response.getStatusCode()),
 				() -> assertEquals(listDto, response.getBody()));
@@ -290,29 +291,29 @@ public class SchedulingControllerTest {
 	@Test
 	public void testGetAllConfirmedByPlaceAndSportInvalid() {
 		try {
-			when(validatorService.validatePlaceName(anyString())).thenThrow(new ObjectNotFoundException("Place", "name",  entity.getPlace().getName()));
-			when(schedulingService.findAllByPlaceName(anyString())).thenReturn(listEntity);
+			when(validatorService.validPlaceId(anyInt())).thenThrow(new ObjectNotFoundException("Place", "name",  entity.getPlace().getName()));
+			when(schedulingService.findAllByPlaceId(anyInt())).thenReturn(listEntity);
 			
-			when(validatorService.validateSportName(anyString())).thenThrow(new ObjectNotFoundException("Sport", "name",  entity.getSport().getName()));
-			when(schedulingService.findAllBySportName(anyString())).thenReturn(listEntity);
+			when(validatorService.validSportId(anyInt())).thenThrow(new ObjectNotFoundException("Sport", "name",  entity.getSport().getName()));
+			when(schedulingService.findAllBySportId(anyInt())).thenReturn(listEntity);
 			
 			when(converterService.schedulingToDtos(listEntity)).thenReturn(listDto);
 		} catch (Exception e) {
 			fail();
 		}
 		
-		response = controller.getAllSchedulingConfirmedByPlace("Ginásio");
+		response = controller.getAllSchedulingConfirmedByPlace(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals("Could not find Place with name Ginásio", response.getBody()));
 		
-		response = controller.getAllSchedulingConfirmedBySport("Futebol");
+		response = controller.getAllSchedulingConfirmedBySport(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals("Could not find Sport with name Futebol", response.getBody()));
 		
 		try {
-			verify(schedulingService, never()).findAllByPlaceName(anyString());
+			verify(schedulingService, never()).findAllByPlaceId(anyInt());
 			verify(converterService, never()).schedulingToDtos(listEntity);
 		} catch (Exception e) {
 			fail();

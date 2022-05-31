@@ -53,8 +53,8 @@ public class SchedulingValidatorService {
 		LocalTime scheduledStartTime = dateConverter.stringToTime(dto.getScheduledStartTime());
 		LocalTime scheduledFinishTime = dateConverter.stringToTime(dto.getScheduledFinishTime());
 		
-		validatePlaceName(dto.getPlaceName());
-		validateSportName(dto.getSportName());
+		validPlaceId(dto.getPlaceId());
+		validSportId(dto.getSportId());
 		validateScheduledDateAndTime(scheduledDate, scheduledStartTime);
 		validateScheduledTime(scheduledStartTime, scheduledFinishTime);
 		validateDurationOfPractice(scheduledStartTime, scheduledFinishTime);
@@ -70,8 +70,8 @@ public class SchedulingValidatorService {
 			throw new RuleViolationException(violations.stream().findFirst().get().getMessage());
 		}
 		
-		validatePlaceName(entity.getPlace().getName());
-		validateSportName(entity.getSport().getName());
+		validPlaceId(entity.getPlace().getId());
+		validSportId(entity.getSport().getId());
 		validateScheduledDateAndTime(entity.getScheduledDate(), entity.getScheduledStartTime());
 		validateScheduledDate(entity);
 		validateScheduledTime(entity.getScheduledStartTime(), entity.getScheduledFinishTime());
@@ -80,17 +80,17 @@ public class SchedulingValidatorService {
 		return true;
 	}
 	
-	public boolean validatePlaceName(String placeName) throws Exception {
-		if (!placeService.existsByName(placeName)) {
-			throw new ObjectNotFoundException("Place", "name",  placeName);
+	public boolean validPlaceId(Integer id) throws Exception {
+		if (!placeService.existsById(id)) {
+			throw new ObjectNotFoundException("Place", "ID",  id);
 		}
 		
 		return true;
 	}
 	
-	public boolean validateSportName(String sportName) throws Exception {
-		if (!sportService.existsByName(sportName)) {
-			throw new ObjectNotFoundException("Sport", "name", sportName);
+	public boolean validSportId(Integer id) throws Exception {
+		if (!sportService.existsById(id)) {
+			throw new ObjectNotFoundException("Sport", "ID", id);
 		}
 		
 		return true;

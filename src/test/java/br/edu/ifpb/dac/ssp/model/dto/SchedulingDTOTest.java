@@ -12,6 +12,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -98,47 +99,39 @@ class SchedulingDTOTest {
 		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");
 	}
 	
-	@ParameterizedTest
-	@ValueSource(strings = {"1234", "Lab. c2", "  Laboratory-C2  ", "   La b   "}) // Place's name valid
-	public void schduledPlaceNameValid(String s) {
-		dto.setPlaceName(s);
-		violations = validator.validateProperty(dto, "placeName");
+	@Test
+	public void schduledPlaceIdValid() { // Place's ID valid
+		dto.setPlaceId(1);
+		violations = validator.validateProperty(dto, "placeId");
 
 		if(violations.size() > 0) {
-			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
+			System.out.println(violations.stream().findFirst().get().getMessage());	
 		}
 		
-		assertEquals(0, violations.size(), "INVALID DATE FOUND<" + s + ">");
+		assertEquals(0, violations.size());
 	}
 	
-	@ParameterizedTest
-	@ValueSource(strings = {"123", "Lab        ", "    Lab", "    Lab   ", "", "     ", "  \n ", "\t    ", "&"}) // Place's name invalid
-	public void schduledPlaceNameInvalid(String s) {
-		dto.setPlaceName(s);
-		violations = validator.validateProperty(dto, "placeName");
+	@Test
+	public void schduledPlaceIdInvalid() { // Place's ID invalid because is null
+		dto.setPlaceId(null);
+		violations = validator.validateProperty(dto, "placeId");
 
-		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");
+		assertNotEquals(0, violations.size());
 	}
 	
-	@ParameterizedTest
-	@ValueSource(strings = {"1234", "basebool 2.0", "  Hugby  ", "   Hu g   "}) // Place's name valid
-	public void schduledSportNameValid(String s) {
-		dto.setSportName(s);
-		violations = validator.validateProperty(dto, "sportName");
-
-		if(violations.size() > 0) {
-			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
-		}
+	@Test
+	public void schduledSportIdValid() { // Place's name valid
+		dto.setSportId(1);
+		violations = validator.validateProperty(dto, "sportId");
 		
-		assertEquals(0, violations.size(), "INVALID DATE FOUND<" + s + ">");
+		assertEquals(0, violations.size());
 	}
 	
-	@ParameterizedTest
-	@ValueSource(strings = {"123", "Bas        ", "    Bol", "    Bas   ", "", "     ", "  \n ", "\t    ", "&"}) // Place's name invalid
-	public void schduledSportNameInvalid(String s) {
-		dto.setSportName(s);
-		violations = validator.validateProperty(dto, "sportName");
+	@Test
+	public void schduledSportNameInvalid() { // Place's name invalid because is null
+		dto.setSportId(null);
+		violations = validator.validateProperty(dto, "sportId");
 
-		assertNotEquals(0, violations.size(), "VALID DATE FOUND<" + s + ">");
+		assertNotEquals(0, violations.size());
 	}
 }

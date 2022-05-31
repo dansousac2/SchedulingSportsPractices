@@ -29,8 +29,8 @@ public class SchedulingConverterService {
 			entity.setScheduledDate(dateConverter.stringToDate(dto.getScheduledDate()));
 			entity.setScheduledStartTime(dateConverter.stringToTime(dto.getScheduledStartTime()));
 			entity.setScheduledFinishTime(dateConverter.stringToTime(dto.getScheduledFinishTime()));
-			entity.setPlace(placeService.findByName(dto.getPlaceName()).get());
-			entity.setSport(sportService.findByName(dto.getSportName()).get());
+			entity.setPlace(placeService.findById(dto.getPlaceId()));
+			entity.setSport(sportService.findById(dto.getSportId()));
 			
 			return entity;
 		}
@@ -46,8 +46,8 @@ public class SchedulingConverterService {
 			dto.setScheduledDate(dateConverter.dateToString(entity.getScheduledDate()));
 			dto.setScheduledStartTime(dateConverter.timeToString(entity.getScheduledStartTime()));
 			dto.setScheduledFinishTime(dateConverter.timeToString(entity.getScheduledFinishTime()));
-			dto.setPlaceName(entity.getPlace().getName());
-			dto.setSportName(entity.getSport().getName());
+			dto.setPlaceId(entity.getPlace().getId());
+			dto.setSportId(entity.getSport().getId());
 			
 			return dto;
 		}

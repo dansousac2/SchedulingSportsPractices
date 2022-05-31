@@ -24,16 +24,16 @@ public class SchedulingService {
 		return schedulingRepository.findAll();
 	}
 	
-	public List<Scheduling> findAllByPlaceName(String placeName) {
-		return schedulingRepository.findAllByPlaceName(placeName);
+	public List<Scheduling> findAllByPlaceId(Integer id) {
+		return schedulingRepository.findAllByPlaceId(id);
 	}
 	
 	public List<Scheduling> findAllByPlaceNameAndScheduledDate(String placeName, LocalDate scheduledDate) {
 		return schedulingRepository.findAllByPlaceNameAndScheduledDate(placeName, scheduledDate);
 	}
 	
-	public List<Scheduling> findAllBySportName(String sportName) {
-		return schedulingRepository.findAllBySportName(sportName);
+	public List<Scheduling> findAllBySportId(Integer id) {
+		return schedulingRepository.findAllBySportId(id);
 	}
 	
 	public List<Scheduling> findAllBySportNameAndScheduledDate(String sportName, LocalDate scheduledDate) {

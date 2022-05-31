@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -66,8 +67,8 @@ public class SchedulingConverterServiceTest {
 		dto.setScheduledDate("2022-05-01");
 		dto.setScheduledStartTime("08:00");
 		dto.setScheduledFinishTime("09:00");
-		dto.setPlaceName("Ginásio");
-		dto.setSportName("Futebol");	
+		dto.setPlaceId(1);
+		dto.setSportId(2);	
 	}
 	
 	@BeforeEach
@@ -110,8 +111,8 @@ public class SchedulingConverterServiceTest {
 					() -> assertEquals(dtoConverted.getScheduledDate(), entity.getScheduledDate().toString()),
 					() -> assertEquals(dtoConverted.getScheduledStartTime(), entity.getScheduledStartTime().toString()),
 					() -> assertEquals(dtoConverted.getScheduledFinishTime(), entity.getScheduledFinishTime().toString()),
-					() -> assertEquals(dtoConverted.getPlaceName(), entity.getPlace().getName()),
-					() -> assertEquals(dtoConverted.getSportName(), entity.getSport().getName()));
+					() -> assertEquals(dtoConverted.getPlaceId(), entity.getPlace().getId()),
+					() -> assertEquals(dtoConverted.getSportId(), entity.getSport().getId()));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -124,8 +125,8 @@ public class SchedulingConverterServiceTest {
 			when(dateConverter.stringToTime(anyString())).thenCallRealMethod();
 			when(dateConverter.stringToDate(anyString())).thenCallRealMethod();
 			
-			when(placeService.findByName(anyString())).thenReturn(place);
-			when(sportService.findByName(anyString())).thenReturn(sport);
+			when(placeService.findById(anyInt())).thenReturn(place.get());
+			when(sportService.findById(anyInt())).thenReturn(sport.get());
 			
 			Scheduling entityConverted = converterService.dtoToScheduling(dto);
 			
@@ -134,8 +135,8 @@ public class SchedulingConverterServiceTest {
 					() -> assertEquals(entityConverted.getScheduledDate().toString(), dto.getScheduledDate()),
 					() -> assertEquals(entityConverted.getScheduledStartTime().toString(), dto.getScheduledStartTime()),
 					() -> assertEquals(entityConverted.getScheduledFinishTime().toString(), dto.getScheduledFinishTime()),
-					() -> assertEquals(entityConverted.getPlace().getName(), dto.getPlaceName()),
-					() -> assertEquals(entityConverted.getSport().getName(), dto.getSportName()));
+					() -> assertEquals(entityConverted.getPlace().getId(), dto.getPlaceId()),
+					() -> assertEquals(entityConverted.getSport().getId(), dto.getSportId()));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

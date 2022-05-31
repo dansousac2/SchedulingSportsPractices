@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -87,11 +88,11 @@ public class SchedulingValidatorServiceTest {
 	}
 	
 	@Test
-	public void testValidatePlaceNameOk() {
-		when(placeService.existsByName(anyString())).thenReturn(true);
+	public void testValidatePlaceIdOk() {
+		when(placeService.existsById(anyInt())).thenReturn(true);
 		
 		try {
-			boolean isValid = validatorService.validatePlaceName("Pátio");
+			boolean isValid = validatorService.validPlaceId(2);
 			assertTrue(isValid);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -99,19 +100,19 @@ public class SchedulingValidatorServiceTest {
 	}
 	
 	@Test
-	public void testValidatePlaceNameException() {
-		when(placeService.existsByName(anyString())).thenReturn(false);
+	public void testValidatePlaceIdException() {
+		when(placeService.existsById(anyInt())).thenReturn(false);
 		
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validatePlaceName("Pátio"));
-		assertEquals("Could not find Place with name Pátio", exception.getMessage());
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validPlaceId(12));
+		assertEquals("Could not find Place with ID 12", exception.getMessage());
 	}
 	
 	@Test
-	public void testValidateSportNameOk() {
-		when(sportService.existsByName(anyString())).thenReturn(true);
+	public void testValidateSportIdOk() {
+		when(sportService.existsById(anyInt())).thenReturn(true);
 		
 		try {
-			boolean isValid = validatorService.validateSportName("Futebol");
+			boolean isValid = validatorService.validSportId(5);
 			assertTrue(isValid);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -120,10 +121,10 @@ public class SchedulingValidatorServiceTest {
 	
 	@Test
 	public void testValidateSportNameException() {
-		when(sportService.existsByName(anyString())).thenReturn(false);
+		when(sportService.existsById(anyInt())).thenReturn(false);
 		
-		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validateSportName("Golfe"));
-		assertEquals("Could not find Sport with name Golfe", exception.getMessage());
+		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validSportId(7));
+		assertEquals("Could not find Sport with ID 7", exception.getMessage());
 	}
 	
 	@Test

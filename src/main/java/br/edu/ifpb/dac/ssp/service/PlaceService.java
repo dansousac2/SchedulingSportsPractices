@@ -26,6 +26,7 @@ public class PlaceService {
 		return placeRepository.existsById(id);
 	}
 	
+	//TODO Place.existsByName - excluir?
 	public boolean existsByName(String name) {
 		return placeRepository.existsByName(name);
 	}

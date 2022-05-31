@@ -91,12 +91,12 @@ public class SchedulingController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-
-	@GetMapping("/confirmedByPlace/{place}")
-	public ResponseEntity getAllSchedulingConfirmedByPlace(@PathVariable String place) {
+	
+	@GetMapping("/confirmedByPlace/{id}")
+	public ResponseEntity getAllSchedulingConfirmedByPlace(@PathVariable Integer id) {  // v.2
 		try {
-			validatorService.validatePlaceName(place);
-			List<Scheduling> entityList = schedulingService.findAllByPlaceName(place);
+			validatorService.validPlaceId(id);
+			List<Scheduling> entityList = schedulingService.findAllByPlaceId(id);
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
 			return ResponseEntity.ok().body(dtoList);
@@ -105,11 +105,11 @@ public class SchedulingController {
 		}
 	}
 
-	@GetMapping("/confirmedBySport/{sport}")
-	public ResponseEntity getAllSchedulingConfirmedBySport(@PathVariable String sport) {
+	@GetMapping("/confirmedBySport/{id}")
+	public ResponseEntity getAllSchedulingConfirmedBySport(@PathVariable Integer id) { // v.2
 		try {
-			validatorService.validateSportName(sport);
-			List<Scheduling> entityList = schedulingService.findAllBySportName(sport);
+			validatorService.validSportId(id);
+			List<Scheduling> entityList = schedulingService.findAllBySportId(id);
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
 			return ResponseEntity.ok().body(dtoList);
