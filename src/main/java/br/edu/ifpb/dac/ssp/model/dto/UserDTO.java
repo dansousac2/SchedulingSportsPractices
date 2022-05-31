@@ -54,8 +54,11 @@ public class UserDTO {
 	public String getName() {
 		return name;
 	}
+	//TODO
 	public void setName(String name) {
-		this.name = name.trim();
+		if(name != null) {
+			this.name = name.trim();
+		}
 	}
 	public String getEmail() {
 		return email;

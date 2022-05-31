@@ -13,11 +13,11 @@ public class SchedulingSportPracticesApplication implements WebMvcConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(SchedulingSportPracticesApplication.class, args);
 	}
-	
+
+	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry
 			.addMapping("/**")
-			.allowedMethods("GET", "POST", "DELETE", "PUT", "OPTIONS", "PATCH");
+			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH");
 	}
-
 }
