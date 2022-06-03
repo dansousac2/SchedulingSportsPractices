@@ -9,7 +9,7 @@ import br.edu.ifpb.dac.ssp.model.Scheduling;
 public interface SchedulingRepository extends JpaRepository<Scheduling, Integer> {
 	
 	public List<Scheduling> findAllByPlaceId(Integer id);
-	public List<Scheduling> findAllByPlaceNameAndScheduledDate(String placeName, LocalDate scheduledDate);
+	public List<Scheduling> findAllByPlaceIdAndScheduledDate(Integer placeId, LocalDate scheduledDate);
 	public List<Scheduling> findAllBySportId(Integer id);
-	public List<Scheduling> findAllBySportNameAndScheduledDate(String sportName, LocalDate scheduledDate);
+	public List<Scheduling> findAllBySportIdAndScheduledDate(Integer sportId, LocalDate scheduledDate);
 } 

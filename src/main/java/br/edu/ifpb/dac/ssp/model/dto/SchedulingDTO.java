@@ -29,10 +29,10 @@ public class SchedulingDTO {
 			message = "Scheduled finish time should be formatted as 'HH:mm'")
 	private String scheduledFinishTime;
 	
-	@NotNull(message = "\"Place ID\" not must be null!")
+	@NotNull(message = "\"Place id\" must not be null!")
 	private Integer placeId;
 	
-	@NotNull(message = "\"Sport ID\" not must be null!")
+	@NotNull(message = "\"Sport id\" must not be null!")
 	private Integer sportId;
 	
 	public SchedulingDTO() {

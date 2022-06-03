@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
+import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.SchedulingRepository;
 
 @Service
@@ -28,16 +30,16 @@ public class SchedulingService {
 		return schedulingRepository.findAllByPlaceId(id);
 	}
 	
-	public List<Scheduling> findAllByPlaceNameAndScheduledDate(String placeName, LocalDate scheduledDate) {
-		return schedulingRepository.findAllByPlaceNameAndScheduledDate(placeName, scheduledDate);
+	public List<Scheduling> findAllByPlaceIdAndScheduledDate(Integer placeId, LocalDate scheduledDate) {
+		return schedulingRepository.findAllByPlaceIdAndScheduledDate(placeId, scheduledDate);
 	}
 	
 	public List<Scheduling> findAllBySportId(Integer id) {
 		return schedulingRepository.findAllBySportId(id);
 	}
 	
-	public List<Scheduling> findAllBySportNameAndScheduledDate(String sportName, LocalDate scheduledDate) {
-		return schedulingRepository.findAllBySportNameAndScheduledDate(sportName, scheduledDate);
+	public List<Scheduling> findAllBySportIdAndScheduledDate(Integer sportId, LocalDate scheduledDate) {
+		return schedulingRepository.findAllBySportIdAndScheduledDate(sportId, scheduledDate);
 	}
 	
 	public boolean existsById(Integer id) {
@@ -76,5 +78,37 @@ public class SchedulingService {
 		}
 		
 		schedulingRepository.deleteById(id);
+	}
+	
+	public int getSchedulingQuantityOfParticipants(Integer id) throws Exception {
+		Scheduling scheduling = findById(id);
+		
+		return scheduling.getParticipants().size();
+	}
+	
+	public Set<User> getSchedulingParticipants(Integer id) throws Exception {
+		Scheduling scheduling = findById(id);
+		
+		return scheduling.getParticipants();
+	}
+	
+	public void addSchedulingParticipant(Integer schedulingId, User user) throws Exception {
+		Scheduling scheduling = findById(schedulingId);
+		
+		if (scheduling.getParticipants().size() < scheduling.getPlace().getMaximumCapacityParticipants()) {
+			scheduling.getParticipants().add(user);
+		}
+		
+		save(scheduling);
+	}
+	
+	public void removeSchedulingParticipant(Integer schedulingId, User user) throws Exception {
+		Scheduling scheduling = findById(schedulingId);
+		
+		if (scheduling.getParticipants().size() > 0) {
+			scheduling.getParticipants().remove(user);
+		}
+		
+		save(scheduling);
 	}
 }

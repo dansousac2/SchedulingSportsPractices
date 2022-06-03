@@ -39,7 +39,6 @@ public class Scheduling implements Serializable {
 	private Integer id;
 	
 	@Column(name = "SCHEDULED_DATE", nullable = false)
-	@FutureOrPresent(message = "Scheduled date shouldn't be in past!")
 	private LocalDate scheduledDate;
 	
 	@Column(name = "SCHEDULED_START_TIME", nullable = false)
@@ -140,22 +139,6 @@ public class Scheduling implements Serializable {
 
 	public void setParticipants(Set<User> participants) {
 		this.participants = participants;
-	}
-
-	public void addParticipant(User user) {
-		if (this.participants.size() < this.place.getMaximumCapacityParticipants()) {
-			this.participants.add(user);
-		}
-	}
-	
-	public void removeParticipant(User user) {
-		if (this.participants.size() > 0) {
-				this.participants.remove(user);
-		}
-	}
-	
-	public int getQuantityOfParticipants() {
-		return this.participants.size();
 	}
 
 	public int hashCode() {

@@ -82,7 +82,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validPlaceId(Integer id) throws Exception {
 		if (!placeService.existsById(id)) {
-			throw new ObjectNotFoundException("Place", "ID",  id);
+			throw new ObjectNotFoundException("Place", "Id",  id);
 		}
 		
 		return true;
@@ -90,7 +90,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validSportId(Integer id) throws Exception {
 		if (!sportService.existsById(id)) {
-			throw new ObjectNotFoundException("Sport", "ID", id);
+			throw new ObjectNotFoundException("Sport", "Id", id);
 		}
 		
 		return true;
@@ -121,7 +121,7 @@ public class SchedulingValidatorService {
 	}
 	
 	public boolean validateScheduledDate(Scheduling entity) throws Exception {
-		List<Scheduling> entitiesWithSamePlaceAndDate = schedulingService.findAllByPlaceNameAndScheduledDate(entity.getPlace().getName(), entity.getScheduledDate());
+		List<Scheduling> entitiesWithSamePlaceAndDate = schedulingService.findAllByPlaceIdAndScheduledDate(entity.getPlace().getId(), entity.getScheduledDate());
 		 
 		if (!entitiesWithSamePlaceAndDate.isEmpty()) {
 			LocalTime startTime;

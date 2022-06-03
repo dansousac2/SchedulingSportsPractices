@@ -2,12 +2,10 @@ package br.edu.ifpb.dac.ssp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -121,10 +119,8 @@ public class SchedulingController {
 	@GetMapping("/participation/{id}")
 	public ResponseEntity getSchedulingParticipants(@PathVariable Integer id) {
 		try {
-			Scheduling entity = schedulingService.findById(id);
-
 			List<User> participantList = new ArrayList<>();
-			participantList.addAll(entity.getParticipants());
+			participantList.addAll(schedulingService.getSchedulingParticipants(id));
 
 			List<UserDTO> participantListDTO = userConverterService.usersToDtos(participantList);
 
@@ -138,11 +134,9 @@ public class SchedulingController {
 	public ResponseEntity addParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
 		try {
 			User user = userService.findByRegistration(userRegistration).orElse(null);
-			Scheduling entity = schedulingService.findById(id);
 
 			if (user != null) {
-				entity.addParticipant(user);
-				entity = schedulingService.save(entity);
+				schedulingService.addSchedulingParticipant(id, user);
 			}
 
 			return ResponseEntity.noContent().build();
@@ -155,11 +149,9 @@ public class SchedulingController {
 	public ResponseEntity removeParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
 		try {
 			User user = userService.findByRegistration(userRegistration).orElse(null);
-			Scheduling entity = schedulingService.findById(id);
 
 			if (user != null) {
-				entity.removeParticipant(user);
-				entity = schedulingService.save(entity);
+				schedulingService.removeSchedulingParticipant(id, user);
 			}
 
 			return ResponseEntity.noContent().build();
