@@ -109,7 +109,7 @@ public class SchedulingValidatorServiceTest {
 		when(placeService.existsById(anyInt())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validPlaceId(12));
-		assertEquals("Could not find Place with ID 12", exception.getMessage());
+		assertEquals("Could not find Place with Id 12", exception.getMessage());
 	}
 	
 	@Test
@@ -125,11 +125,11 @@ public class SchedulingValidatorServiceTest {
 	}
 	
 	@Test
-	public void testValidateSportNameException() {
+	public void testValidateSportIdException() {
 		when(sportService.existsById(anyInt())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validSportId(7));
-		assertEquals("Could not find Sport with ID 7", exception.getMessage());
+		assertEquals("Could not find Sport with Id 7", exception.getMessage());
 	}
 	
 	@Test
@@ -246,7 +246,7 @@ public class SchedulingValidatorServiceTest {
 		List<Scheduling> listEntity = spy(List.class);
 		listEntity.add(entityMocked1);
 		
-		when(schedulingService.findAllByPlaceNameAndScheduledDate(anyString(), any(LocalDate.class))).thenReturn(listEntity);
+		when(schedulingService.findAllByPlaceIdAndScheduledDate(anyInt(), any(LocalDate.class))).thenReturn(listEntity);
 		
 		try {
 			assertTrue(validatorService.validateScheduledDate(entityMocked2));
@@ -273,7 +273,7 @@ public class SchedulingValidatorServiceTest {
 		List<Scheduling> listEntity = new ArrayList<>();
 		listEntity.add(entityMocked1);
 		
-		when(schedulingService.findAllByPlaceNameAndScheduledDate(anyString(), any(LocalDate.class))).thenReturn(listEntity);
+		when(schedulingService.findAllByPlaceIdAndScheduledDate(anyInt(), any(LocalDate.class))).thenReturn(listEntity);
 		
 		try {
 			Throwable exception = assertThrows(TimeAlreadyScheduledException.class, () -> validatorService.validateScheduledDate(entityMocked2));
