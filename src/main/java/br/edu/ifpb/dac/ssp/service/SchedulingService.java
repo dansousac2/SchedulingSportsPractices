@@ -2,6 +2,7 @@ package br.edu.ifpb.dac.ssp.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -94,9 +95,11 @@ public class SchedulingService {
 	
 	public void addSchedulingParticipant(Integer schedulingId, User user) throws Exception {
 		Scheduling scheduling = findById(schedulingId);
-		
+		//TODO adicionar alguma lógica de retorno quando não for possível - modificar retorno deste método?
 		if (scheduling.getParticipants().size() < scheduling.getPlace().getMaximumCapacityParticipants()) {
-			scheduling.getParticipants().add(user);
+			Set<User> setUser = new HashSet<>(scheduling.getParticipants());
+			setUser.add(user);
+			scheduling.setParticipants(setUser);
 		}
 		
 		save(scheduling);
