@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifpb.dac.ssp.model.Scheduling;
@@ -52,6 +53,32 @@ public class SchedulingController {
 
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
+			return ResponseEntity.ok().body(dtoList);
+
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@GetMapping("/useFilter")
+	public ResponseEntity getAllWithFilter(
+			@RequestParam(required = false) Integer id,
+			@RequestParam(required = false) Integer placeId,
+			@RequestParam(required = false) Integer sportId,
+			@RequestParam(required = false) String date
+	) {
+		try {
+			Scheduling filter = converterService.dtoRequestToSchedulinng(id, placeId, sportId, date);
+			//testes início
+			System.out.println("\nID: " + filter.getId());
+			System.out.println("place: " + filter.getPlace());
+			System.out.println("sport: " + filter.getSport());
+			System.out.println("date: " + filter.getScheduledDate());
+			//testes
+			List<Scheduling> entityList = schedulingService.findAll(filter);
+			System.out.println("tamanho da entityList: " + entityList.size()); //fim testes
+			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
+			
 			return ResponseEntity.ok().body(dtoList);
 
 		} catch (Exception e) {

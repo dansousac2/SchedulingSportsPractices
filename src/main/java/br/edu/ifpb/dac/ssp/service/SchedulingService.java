@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
@@ -25,6 +28,14 @@ public class SchedulingService {
 	
 	public List<Scheduling> findAll() {
 		return schedulingRepository.findAll();
+	}
+	
+	public List<Scheduling> findAll(Scheduling filter) {
+		Example<Scheduling> exp = Example.of(filter,
+				ExampleMatcher.matching()
+				.withIgnoreCase()
+				.withStringMatcher(StringMatcher.CONTAINING));
+		return schedulingRepository.findAll(exp);
 	}
 	
 	public List<Scheduling> findAllByPlaceId(Integer id) {
@@ -114,4 +125,5 @@ public class SchedulingService {
 		
 		save(scheduling);
 	}
+
 }

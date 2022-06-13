@@ -93,4 +93,21 @@ public class SchedulingConverterService {
 		
 		throw new IllegalArgumentException("Could not convert because object is null");
 	}
+
+	public Scheduling dtoRequestToSchedulinng(Integer id, Integer placeId, Integer sportId, String date) throws Exception {
+		Scheduling entity = new Scheduling();
+		entity.setId(id);
+		
+		if(date != null) {
+			entity.setScheduledDate(dateConverter.stringToDate(date));
+		}
+		if(placeId != null) {
+			entity.setPlace(placeService.findById(placeId));
+		}
+		if(sportId != null) {
+			entity.setSport(sportService.findById(sportId));
+		}
+		
+		return entity;
+	}
 }
