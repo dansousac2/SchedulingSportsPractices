@@ -104,26 +104,32 @@ public class SchedulingService {
 		return scheduling.getParticipants();
 	}
 	
-	public void addSchedulingParticipant(Integer schedulingId, User user) throws Exception {
+	public boolean addSchedulingParticipant(Integer schedulingId, User user) throws Exception {
 		Scheduling scheduling = findById(schedulingId);
-		//TODO adicionar alguma lógica de retorno quando não for possível - modificar retorno deste método?
-		if (scheduling.getParticipants().size() < scheduling.getPlace().getMaximumCapacityParticipants()) {
-			Set<User> setUser = new HashSet<>(scheduling.getParticipants());
-			setUser.add(user);
-			scheduling.setParticipants(setUser);
-		}
+
+		if (scheduling.getParticipants().size() >= scheduling.getPlace().getMaximumCapacityParticipants()) {
+			return false;
+		} 
+		
+		Set<User> setUser = new HashSet<>(scheduling.getParticipants());
+		setUser.add(user);
+		scheduling.setParticipants(setUser);
 		
 		save(scheduling);
+		return true;
 	}
 	
-	public void removeSchedulingParticipant(Integer schedulingId, User user) throws Exception {
+	public boolean removeSchedulingParticipant(Integer schedulingId, User user) throws Exception {
 		Scheduling scheduling = findById(schedulingId);
 		
-		if (scheduling.getParticipants().size() > 0) {
-			scheduling.getParticipants().remove(user);
+		if (scheduling.getParticipants().size() <= 0) {
+			return false;
 		}
 		
+		scheduling.getParticipants().remove(user);
+		
 		save(scheduling);
+		return true;
 	}
 
 }

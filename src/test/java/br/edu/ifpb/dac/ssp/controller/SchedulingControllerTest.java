@@ -3,6 +3,7 @@ package br.edu.ifpb.dac.ssp.controller;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -338,7 +339,10 @@ public class SchedulingControllerTest {
 	@Test
 	public void testGetSchedulingParticipantsInvalid() {
 		try {
+			when(schedulingService.getSchedulingParticipants(anyInt())).thenCallRealMethod();
 			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("Scheduling", "id", entity.getId()));
+			
+			when(userConverterService.usersToDtos(any())).thenReturn(listUserDto);
 		} catch (Exception e) {
 			fail();
 		}
@@ -354,10 +358,9 @@ public class SchedulingControllerTest {
 	@Test
 	public void testAddAndRemoveParticipantValid() {
 		try {
-			when(schedulingService.findById(anyInt())).thenReturn(entity);
-			when(schedulingService.save(any(Scheduling.class))).thenReturn(entity);
-			
 			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
+			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
+			when(schedulingService.removeSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 		} catch (Exception e) {
 			fail();
 		}
@@ -374,10 +377,8 @@ public class SchedulingControllerTest {
 		String errorMessage = "Could not find User with registration 123";
 		
 		try {
-			when(schedulingService.findById(anyInt())).thenReturn(entity);
-			when(schedulingService.save(any(Scheduling.class))).thenReturn(entity);
-			
 			when(userService.findByRegistration(anyInt())).thenThrow(new ObjectNotFoundException("User", "registration", 123));
+			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 		} catch (Exception e) {
 			fail();
 		}
@@ -393,8 +394,7 @@ public class SchedulingControllerTest {
 				() -> assertEquals(errorMessage, response.getBody()));
 		
 		try {
-			verify(schedulingService, never()).findById(anyInt());	
-			verify(schedulingService, never()).save(any(Scheduling.class));	
+			verify(schedulingService, never()).addSchedulingParticipant(anyInt(), any(User.class));	
 		} catch (Exception e) {
 			fail();
 		}
@@ -405,10 +405,13 @@ public class SchedulingControllerTest {
 		String errorMessage = "Could not find Scheduling with id 1";
 		
 		try {
+			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
+			
+			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
+			when(schedulingService.removeSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
+			
 			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("Scheduling", "id", 1));
 			when(schedulingService.save(any(Scheduling.class))).thenReturn(entity);
-			
-			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
 		} catch (Exception e) {
 			fail();
 		}
