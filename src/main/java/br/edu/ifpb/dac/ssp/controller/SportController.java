@@ -2,6 +2,8 @@ package br.edu.ifpb.dac.ssp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class SportController {
 	}
 	
 	@PostMapping
-	public ResponseEntity save(@RequestBody SportDTO dto) {
+	public ResponseEntity save(@RequestBody @Valid SportDTO dto) {
 		
 		try {
 			Sport entity = converterService.dtoToSport(dto);
@@ -68,7 +70,7 @@ public class SportController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@PathVariable Integer id, @RequestBody SportDTO dto) {
+	public ResponseEntity update(@PathVariable Integer id, @RequestBody @Valid SportDTO dto) {
 		
 		try {
 			dto.setId(id);

@@ -3,6 +3,8 @@ package br.edu.ifpb.dac.ssp.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,7 +102,7 @@ public class SchedulingController {
 	}
 
 	@PostMapping
-	public ResponseEntity save(@RequestBody SchedulingDTO dto) {
+	public ResponseEntity save(@RequestBody @Valid SchedulingDTO dto) {
 
 		try {
 			validatorService.validateSchedulingDTO(dto);

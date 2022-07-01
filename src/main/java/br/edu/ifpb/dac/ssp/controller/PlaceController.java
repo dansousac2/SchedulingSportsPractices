@@ -2,6 +2,8 @@ package br.edu.ifpb.dac.ssp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class PlaceController {
 	}
 	
 	@PostMapping
-	public ResponseEntity save(@RequestBody PlaceDTO dto) {
+	public ResponseEntity save(@RequestBody @Valid PlaceDTO dto) {
 		
 		try {
 			Place entity = converterService.dtoToPlace(dto);
@@ -71,7 +73,7 @@ public class PlaceController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity update(@PathVariable Integer id, @RequestBody PlaceDTO dto) {
+	public ResponseEntity update(@PathVariable Integer id, @RequestBody @Valid PlaceDTO dto) {
 		
 		try {
 			dto.setId(id);
