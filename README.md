@@ -1,5 +1,7 @@
 # Backend
 
+Equipe Alpha: Ayanne Prata, Danilo Costa, Keilla Vitória
+
 ---
 ### - Como usar:
 
