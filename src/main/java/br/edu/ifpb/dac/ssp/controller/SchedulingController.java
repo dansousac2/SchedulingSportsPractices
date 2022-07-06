@@ -1,6 +1,7 @@
 package br.edu.ifpb.dac.ssp.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -55,6 +56,8 @@ public class SchedulingController {
 
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
+			
+			
 			return ResponseEntity.ok().body(dtoList);
 
 		} catch (Exception e) {

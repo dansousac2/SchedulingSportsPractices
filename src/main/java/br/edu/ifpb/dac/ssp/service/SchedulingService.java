@@ -27,7 +27,7 @@ public class SchedulingService {
 	private SchedulingRepository schedulingRepository;
 	
 	public List<Scheduling> findAll() {
-		return schedulingRepository.findAll();
+		return schedulingRepository.findByOrderByScheduledDate();
 	}
 	
 	public List<Scheduling> findAll(Scheduling filter) {
