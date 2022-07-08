@@ -96,7 +96,7 @@ public class UserService {
 		if (user.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(user.getId())) {
-			throw new ObjectNotFoundException("User", "id", user.getId());
+			throw new ObjectNotFoundException("usuário", "id", user.getId());
 		}
 		
 		userRepository.delete(user);
@@ -106,7 +106,7 @@ public class UserService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException("User", "id", id);
+			throw new ObjectNotFoundException("usuário", "id", id);
 		}
 		
 		userRepository.deleteById(id);

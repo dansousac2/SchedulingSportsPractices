@@ -110,7 +110,7 @@ class PlaceControllerTest {
 			String sResp = String.valueOf(respEntity.getBody()); // Exception is throwed and passed to de ResponseEntity 
 			
 			assertAll("Testing message and https of save method in fail case",
-					() -> assertTrue(sResp.contains("name is missing") && sResp.contains("save")),
+					() -> assertTrue(sResp.contains("campo nome está faltando") && sResp.contains("save")),
 					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
 			);
 		} catch (Exception e) {
@@ -134,11 +134,11 @@ class PlaceControllerTest {
 	@Test
 	public void updateFailIdNotFounded() {
 		try {
-			Mockito.when(service.update(exPlace)).thenThrow(new ObjectNotFoundException("Place", "id", exPlace.getId()));
+			Mockito.when(service.update(exPlace)).thenThrow(new ObjectNotFoundException("local", "id", exPlace.getId()));
 			respEntity = controller.update(1, exDto); // body contains message error
 			String s = String.valueOf(respEntity.getBody());
 			assertAll("Test message and https in fail case",
-					() -> assertTrue(s.contains("Could not find Place with id 1")),
+					() -> assertTrue(s.contains("Não foi encontrado local com id 1")),
 					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
 			);
 		} catch (Exception e) {
@@ -194,7 +194,7 @@ class PlaceControllerTest {
 			respEntity = controller.findById(1); // with message error of ObjectnotFoundException
 
 			assertAll("Test when id is not founded",
-					() -> assertTrue(respEntity.getBody().equals("Could not find Place with id 1")),
+					() -> assertTrue(respEntity.getBody().equals("Não foi encontrado local com id 1")),
 					() -> assertEquals(HttpStatus.BAD_REQUEST, respEntity.getStatusCode())
 			);
 		} catch (Exception e) {

@@ -154,7 +154,7 @@ public class SchedulingControllerTest {
 		response = controller.findById(100);
 		assertAll("Asserting HttpStatus and body content",
 			() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-			() -> assertEquals("Could not find Scheduling with id 100", response.getBody()));
+			() -> assertEquals("Não foi encontrado agendamento com id 100", response.getBody()));
 		
 		try {
 			verify(converterService, never()).schedulingToDto(any(Scheduling.class));
@@ -188,39 +188,39 @@ public class SchedulingControllerTest {
 	public void testSaveInvalidValidateDto() {
 		try {
 			// Invalid place name
-			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new ObjectNotFoundException("Place", "name",  entity.getPlace().getName()));
+			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new ObjectNotFoundException("local", "nome",  entity.getPlace().getName()));
 			response = controller.save(dto);
 			assertAll("Asserting HttpStatus and body content",
 					() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-					() -> assertEquals("Could not find Place with name Ginásio", response.getBody()));
+					() -> assertEquals("Não foi encontrado local com nome Ginásio", response.getBody()));
 			
 			// Invalid sport name
-			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new ObjectNotFoundException("Sport", "name",  entity.getSport().getName()));
+			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new ObjectNotFoundException("esporte", "nome",  entity.getSport().getName()));
 			response = controller.save(dto);
 			assertAll("Asserting HttpStatus and body content",
 					() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-					() -> assertEquals("Could not find Sport with name Futebol", response.getBody()));
+					() -> assertEquals("Não foi encontrado esporte com nome Futebol", response.getBody()));
 			
 			// Invalid scheduled date and time (Scheduled time in past)
-			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("Scheduled date shouldn't be in past!"));
+			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("A data da prática não pode estar no passado!"));
 			response = controller.save(dto);
 			assertAll("Asserting HttpStatus and body content",
 					() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-					() -> assertEquals("Scheduled date shouldn't be in past!", response.getBody()));
+					() -> assertEquals("A data da prática não pode estar no passado!", response.getBody()));
 			
 			// Invalid scheduled time (Not between institution opening and closing time)
-			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("Scheduled time should be between " + Constants.INSTITUTION_OPENING_TIME + " and " + Constants.INSTITUTION_CLOSING_TIME));
+			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("O horário da prática deve ser entre " + Constants.INSTITUTION_OPENING_TIME + " e " + Constants.INSTITUTION_CLOSING_TIME));
 			response = controller.save(dto);
 			assertAll("Asserting HttpStatus and body content",
 					() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-					() -> assertEquals("Scheduled time should be between 07:00 and 22:00", response.getBody()));
+					() -> assertEquals("O horário da prática deve ser entre 07:00 e 22:00", response.getBody()));
 			
 			// Invalid scheduled time (duration of practice)
-			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("Duration of practice should be a maximum of " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutes!"));
+			when(validatorService.validateSchedulingDTO(any(SchedulingDTO.class))).thenThrow(new RuleViolationException("A prática agendada deve ter no máximo " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutos!"));
 			response = controller.save(dto);
 			assertAll("Asserting HttpStatus and body content",
 					() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-					() -> assertEquals("Duration of practice should be a maximum of 180 minutes!", response.getBody()));
+					() -> assertEquals("A prática agendada deve ter no máximo 180 minutos!", response.getBody()));
 			
 			verify(converterService, never()).dtoToScheduling(any(SchedulingDTO.class));
 			verify(validatorService, never()).validateScheduling(any(Scheduling.class));
@@ -245,7 +245,7 @@ public class SchedulingControllerTest {
 		response = controller.save(dto);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-				() -> assertEquals("There is already a practice scheduled for this time!", response.getBody()));
+				() -> assertEquals("Já existe uma prática agendada para esse horário!", response.getBody()));
 		
 		try {
 			verify(converterService).dtoToScheduling(any(SchedulingDTO.class));
@@ -292,10 +292,10 @@ public class SchedulingControllerTest {
 	@Test
 	public void testGetAllConfirmedByPlaceAndSportInvalid() {
 		try {
-			when(validatorService.validPlaceId(anyInt())).thenThrow(new ObjectNotFoundException("Place", "name",  entity.getPlace().getName()));
+			when(validatorService.validPlaceId(anyInt())).thenThrow(new ObjectNotFoundException("local", "nome",  entity.getPlace().getName()));
 			when(schedulingService.findAllByPlaceId(anyInt())).thenReturn(listEntity);
 			
-			when(validatorService.validSportId(anyInt())).thenThrow(new ObjectNotFoundException("Sport", "name",  entity.getSport().getName()));
+			when(validatorService.validSportId(anyInt())).thenThrow(new ObjectNotFoundException("esporte", "nome",  entity.getSport().getName()));
 			when(schedulingService.findAllBySportId(anyInt())).thenReturn(listEntity);
 			
 			when(converterService.schedulingToDtos(listEntity)).thenReturn(listDto);
@@ -306,12 +306,12 @@ public class SchedulingControllerTest {
 		response = controller.getAllSchedulingConfirmedByPlace(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-				() -> assertEquals("Could not find Place with name Ginásio", response.getBody()));
+				() -> assertEquals("Não foi encontrado local com nome Ginásio", response.getBody()));
 		
 		response = controller.getAllSchedulingConfirmedBySport(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-				() -> assertEquals("Could not find Sport with name Futebol", response.getBody()));
+				() -> assertEquals("Não foi encontrado esporte com nome Futebol", response.getBody()));
 		
 		try {
 			verify(schedulingService, never()).findAllByPlaceId(anyInt());
@@ -340,7 +340,7 @@ public class SchedulingControllerTest {
 	public void testGetSchedulingParticipantsInvalid() {
 		try {
 			when(schedulingService.getSchedulingParticipants(anyInt())).thenCallRealMethod();
-			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("Scheduling", "id", entity.getId()));
+			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("agendamento", "id", entity.getId()));
 			
 			when(userConverterService.usersToDtos(any())).thenReturn(listUserDto);
 		} catch (Exception e) {
@@ -350,7 +350,7 @@ public class SchedulingControllerTest {
 		response = controller.getSchedulingParticipants(1);
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
-				() -> assertEquals("Could not find Scheduling with id 1", response.getBody()));
+				() -> assertEquals("Não foi encontrado agendamento com id 1", response.getBody()));
 		
 		verify(userConverterService, never()).usersToDtos(any());
 	}
@@ -374,10 +374,10 @@ public class SchedulingControllerTest {
 	
 	@Test
 	public void testAddAndRemoveParticipantInvalidRegistration() {
-		String errorMessage = "Could not find User with registration 123";
+		String errorMessage = "Não foi encontrado usuário com matrícula 123";
 		
 		try {
-			when(userService.findByRegistration(anyInt())).thenThrow(new ObjectNotFoundException("User", "registration", 123));
+			when(userService.findByRegistration(anyInt())).thenThrow(new ObjectNotFoundException("usuário", "matrícula", 123));
 			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 		} catch (Exception e) {
 			fail();
@@ -402,7 +402,7 @@ public class SchedulingControllerTest {
 	
 	@Test
 	public void testAddAndRemoveParticipantInvalidId() {
-		String errorMessage = "Could not find Scheduling with id 1";
+		String errorMessage = "Não foi encontrado agendamento com id 1";
 		
 		try {
 			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
@@ -410,7 +410,7 @@ public class SchedulingControllerTest {
 			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
 			when(schedulingService.removeSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
 			
-			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("Scheduling", "id", 1));
+			when(schedulingService.findById(anyInt())).thenThrow(new ObjectNotFoundException("agendamento", "id", 1));
 			when(schedulingService.save(any(Scheduling.class))).thenReturn(entity);
 		} catch (Exception e) {
 			fail();

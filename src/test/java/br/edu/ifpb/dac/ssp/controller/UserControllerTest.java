@@ -129,8 +129,8 @@ class UserControllerTest {
 			fail();
 
 		} catch (Exception e) {
-			String error01 = "Please enter your name. Is required!";
-			String error02 = "The space must be filled with a minimum of 3 characters and a maximum of 255!";
+			String error01 = "É obrigatório informar o nome do usuário!";
+			String error02 = "Nome inválido! Deve possuir mais que 3 caracteres";
 
 			if (!(e.getMessage().equals(error01) || e.getMessage().equals(error02))) {
 				fail();
@@ -148,7 +148,7 @@ class UserControllerTest {
 			exUserDto.setName(name); // name is blanck - barred in UserService
 			resp = controller.save(exUserDto);
 		}
-		assertEquals("Could not save, the field name is missing!", resp.getBody());
+		assertEquals("Não foi possível usar save, o campo nome está faltando!", resp.getBody());
 	}
 
 	@Test
@@ -157,7 +157,7 @@ class UserControllerTest {
 		resp = controller.save(null); // barred in ConverterService
 
 		assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
-		assertEquals("Could not convert because object is null", resp.getBody());
+		assertEquals("Não foi possível converter pois o objeto é nulo", resp.getBody());
 	}
 
 	@Test
@@ -166,7 +166,7 @@ class UserControllerTest {
 
 		resp = controller.save(exUserDto);
 
-		assertEquals("A user with registration 123456789 already exists!", resp.getBody());
+		assertEquals("Já existe um usuário com matrícula 123456789", resp.getBody());
 	}
 
 	@Test
@@ -188,8 +188,8 @@ class UserControllerTest {
 
 		resp = controller.update(1, null); // controller
 
-		String error = "because \"dto\" is null"; // final message of a NullPointException
-
+		String error = " is null"; // final message of a NullPointException
+		System.out.println(resp.getBody().toString());
 		assertTrue(resp.getBody().toString().contains(error));
 	}
 
@@ -201,10 +201,10 @@ class UserControllerTest {
 			exUserDto.setName(name);
 
 			resp = controller.update(1, exUserDto);
-			assertEquals("Could not update, the field name is missing!", resp.getBody());
+			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		} else {
 			resp = controller.update(1, new UserDTO(null, "example@gmail.com", 13579, "password"));
-			assertEquals("Could not update, the field name is missing!", resp.getBody());
+			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		}
 	}
 
@@ -214,7 +214,7 @@ class UserControllerTest {
 
 		resp = controller.update(12, exUserDto);
 
-		assertEquals("Could not find User with id 12", resp.getBody());
+		assertEquals("Não foi encontrado usuário com id 12", resp.getBody());
 	}
 
 	@Test
@@ -227,7 +227,7 @@ class UserControllerTest {
 
 		resp = controller.update(12, exUserDto);
 
-		assertEquals("A user with registration 123456789 already exists!", resp.getBody());
+		assertEquals("Já existe um usuário com matrícula 123456789", resp.getBody());
 	}
 
 	@Test
@@ -244,7 +244,7 @@ class UserControllerTest {
 	public void deleteInvalidIdNull() { // delete invalid - the id is null
 		resp = controller.delete(null);
 
-		assertEquals("Could not delete, the field id is missing!", resp.getBody());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", resp.getBody());
 	}
 
 	@Test
@@ -253,7 +253,7 @@ class UserControllerTest {
 
 		resp = controller.delete(9);
 
-		assertEquals("Could not find User with id 9", resp.getBody());
+		assertEquals("Não foi encontrado usuário com id 9", resp.getBody());
 	}
 
 	@Test
@@ -272,14 +272,14 @@ class UserControllerTest {
 		when(repository.existsById(9)).thenReturn(false);
 		resp = controller.findById(9);
 
-		assertEquals("Could not find User with id 9", resp.getBody());
+		assertEquals("Não foi encontrado usuário com id 9", resp.getBody());
 	}
 
 	@Test
 	public void findByIDInvalidNull() { // findByID invalid - id is null
 		resp = controller.findById(null);
 
-		assertEquals("Could not find User with id null", resp.getBody());
+		assertEquals("Não foi encontrado usuário com id null", resp.getBody());
 	}
 
 	@Test
