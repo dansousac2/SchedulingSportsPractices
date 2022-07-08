@@ -94,9 +94,8 @@ public class SchedulingConverterService {
 		throw new IllegalArgumentException("Não foi possível converter pois o objeto é nulo");
 	}
 
-	public Scheduling dtoRequestToSchedulinng(Integer id, Integer placeId, Integer sportId, String date) throws Exception {
+	public Scheduling dtoRequestToSchedulinng(Integer placeId, Integer sportId, String date) throws Exception {
 		Scheduling entity = new Scheduling();
-		entity.setId(id);
 		
 		if(date != null) {
 			entity.setScheduledDate(dateConverter.stringToDate(date));

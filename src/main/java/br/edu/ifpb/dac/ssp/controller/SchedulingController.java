@@ -67,15 +67,13 @@ public class SchedulingController {
 	
 	@GetMapping("/useFilter")
 	public ResponseEntity getAllWithFilter(
-			@RequestParam(required = false) Integer id,
 			@RequestParam(required = false) Integer placeId,
 			@RequestParam(required = false) Integer sportId,
 			@RequestParam(required = false) String date
 	) {
 		try {
-			Scheduling filter = converterService.dtoRequestToSchedulinng(id, placeId, sportId, date);
+			Scheduling filter = converterService.dtoRequestToSchedulinng(placeId, sportId, date);
 			//testes início
-			System.out.println("\nID: " + filter.getId());
 			System.out.println("place: " + filter.getPlace());
 			System.out.println("sport: " + filter.getSport());
 			System.out.println("date: " + filter.getScheduledDate());
