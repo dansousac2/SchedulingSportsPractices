@@ -82,7 +82,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validPlaceId(Integer id) throws Exception {
 		if (!placeService.existsById(id)) {
-			throw new ObjectNotFoundException("Place", "Id",  id);
+			throw new ObjectNotFoundException("local", "id",  id);
 		}
 		
 		return true;
@@ -90,7 +90,7 @@ public class SchedulingValidatorService {
 	
 	public boolean validSportId(Integer id) throws Exception {
 		if (!sportService.existsById(id)) {
-			throw new ObjectNotFoundException("Sport", "Id", id);
+			throw new ObjectNotFoundException("esporte", "id", id);
 		}
 		
 		return true;
@@ -102,7 +102,7 @@ public class SchedulingValidatorService {
 		
 		if (scheduledStartTime.isBefore(openingTime) || scheduledFinishTime.isBefore(openingTime) ||
 			scheduledStartTime.isAfter(closingTime) || scheduledFinishTime.isAfter(closingTime)) {
-			throw new RuleViolationException("Scheduled time should be between " + Constants.INSTITUTION_OPENING_TIME + " and " + Constants.INSTITUTION_CLOSING_TIME);
+			throw new RuleViolationException("O horário da prática deve ser entre " + Constants.INSTITUTION_OPENING_TIME + " e " + Constants.INSTITUTION_CLOSING_TIME);
 		}
 		
 		return true;
@@ -114,7 +114,7 @@ public class SchedulingValidatorService {
 		if (durationOfPractice.toMinutes() <= 0) {
 			throw new RuleViolationException("Duration of practice shouldn't be negative or 0!");
 		} else if (durationOfPractice.toMinutes() > Constants.MAXIMUM_DURATION_PRACTICE_MINUTES) {
-			throw new RuleViolationException("Duration of practice should be a maximum of " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutes!");
+			throw new RuleViolationException("A prática agendada deve ter no máximo " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutos!");
 		}
 		
 		return true;
@@ -150,7 +150,7 @@ public class SchedulingValidatorService {
 		LocalDateTime dateTimeNow = dateConverter.dateTimeNow();
 		
 		if (scheduledDateTime.isBefore(dateTimeNow)) {
-			throw new RuleViolationException("Scheduled date shouldn't be in past!");
+			throw new RuleViolationException("A data da prática não pode estar no passado!");
 		}
 		
 		return true;

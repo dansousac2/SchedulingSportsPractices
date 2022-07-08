@@ -37,29 +37,29 @@ public class PlaceService {
 		}
 		
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException("Place", "id", id);
+			throw new ObjectNotFoundException("local", "id", id);
 		}
 		return placeRepository.getById(id);
 	}
 	
 	public Optional<Place> findByName(String name) throws Exception {
 		if (name == null || name.isBlank()) {
-			throw new MissingFieldException("name");
+			throw new MissingFieldException("nome");
 		}
 		
 		if (!existsByName(name)) {
-			throw new ObjectNotFoundException("Place", "name", name);
+			throw new ObjectNotFoundException("local", "nome", name);
 		}
 		return placeRepository.findByName(name);
 	}
 	
 	public Place save(Place place) throws Exception {
 		if (place.getName() == null || place.getName().isBlank()) {
-			throw new MissingFieldException("name", "save");
+			throw new MissingFieldException("nome", "save");
 		}
 		
 		if (existsByName(place.getName())) {
-			throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
+			throw new ObjectAlreadyExistsException("Já existe um local com nome " + place.getName());
 		}
 		
 		return placeRepository.save(place);
@@ -67,19 +67,19 @@ public class PlaceService {
 	
 	public Place update(Place place) throws Exception {
 		if (place.getName() == null || place.getName().isBlank()) {
-			throw new MissingFieldException("name", "update");
+			throw new MissingFieldException("nome", "update");
 		}
 		
 		if (place.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(place.getId())) {
-			throw new ObjectNotFoundException("Place", "id", place.getId());
+			throw new ObjectNotFoundException("local", "id", place.getId());
 		} 
 		
 		if (existsByName(place.getName())) {
 			Place placeSaved = findByName(place.getName()).get();
 			if (placeSaved.getId() != place.getId()) {
-				throw new ObjectAlreadyExistsException("A place with name " + place.getName() + " already exists!");
+				throw new ObjectAlreadyExistsException("Já existe um local com nome " + place.getName());
 			}
 		}
 
@@ -90,7 +90,7 @@ public class PlaceService {
 		if (place.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(place.getId())) {
-			throw new ObjectNotFoundException("Place", "id", place.getId());
+			throw new ObjectNotFoundException("local", "id", place.getId());
 		}
 		
 		placeRepository.delete(place);
@@ -100,7 +100,7 @@ public class PlaceService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException("Place", "id", id);
+			throw new ObjectNotFoundException("local", "id", id);
 		}
 		
 		placeRepository.deleteById(id);

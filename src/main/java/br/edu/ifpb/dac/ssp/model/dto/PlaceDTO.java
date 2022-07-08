@@ -9,12 +9,12 @@ import javax.validation.constraints.Size;
 public class PlaceDTO {
 
 	private Integer id;
-	@NotBlank(message = "Name not must be empty")
-	@Pattern(regexp = "^[a-zA-ZÀ-ú0-9\\s]{4,255}$", message = "Name is invalid! Verify if there are special characters nad size 4 chars or more.")
+	@NotBlank(message = "É obrigatório informar o nome do local!")
+	@Pattern(regexp = "^[a-zA-ZÀ-ú0-9\\s]{4,255}$", message = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais")
 	private String name;
 	private String reference;
-	@Positive(message = "capacity must be positive")
-	@Max(value = 400, message = "Max value to maximum capacity participants is 400.")
+	@Positive(message = "A capacidade de participantes deve ser um valor positivo!")
+	@Max(value = 400, message = "O valor máximo para capacidade de participantes é 400!")
 	private int maximumCapacityParticipants;
 	private boolean isPublic;
 	

@@ -9,8 +9,8 @@ public class SportDTO {
 	
 	private Integer id;
 	
-	@NotBlank(message = "Name not must be empty")
-	@Pattern(regexp = "^[a-zA-ZÀ-ú\\s]{3,255}$", message = "Name is invalid! Verify if there are special characters nad size 4 chars or more.")
+	@NotBlank(message = "É obrigatório informar o nome do esporte!")
+	@Pattern(regexp = "^[a-zA-ZÀ-ú\\s]{3,255}$", message = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais")
 	private String name;
 	 
 	public SportDTO() {

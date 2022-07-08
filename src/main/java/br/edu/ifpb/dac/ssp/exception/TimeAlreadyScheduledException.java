@@ -5,7 +5,7 @@ public class TimeAlreadyScheduledException extends Exception {
 	private static final long serialVersionUID = 1L;
 	
 	public TimeAlreadyScheduledException() {
-		super("There is already a practice scheduled for this time!");
+		super("Já existe uma prática agendada para esse horário!");
 	}
 
 }

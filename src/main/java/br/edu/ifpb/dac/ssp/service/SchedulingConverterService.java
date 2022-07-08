@@ -35,7 +35,7 @@ public class SchedulingConverterService {
 			return entity;
 		}
 		
-		throw new IllegalArgumentException("Could not convert because object is null");
+		throw new IllegalArgumentException("Não foi possível converter pois o objeto é nulo");
 	}
 	
 	public SchedulingDTO schedulingToDto(Scheduling entity) throws Exception {
@@ -52,7 +52,7 @@ public class SchedulingConverterService {
 			return dto;
 		}
 		
-		throw new IllegalArgumentException("Could not convert because object is null");
+		throw new IllegalArgumentException("Não foi possível converter pois o objeto é nulo");
 	}
 	
 	public List<Scheduling> dtosToScheduling(List<SchedulingDTO> dtoList) throws Exception {
@@ -72,7 +72,7 @@ public class SchedulingConverterService {
 			return entityList;
 		}
 		
-		throw new IllegalArgumentException("Could not convert because object is null");
+		throw new IllegalArgumentException("Não foi possível converter pois o objeto é nulo");
 	}
 	
 	public List<SchedulingDTO> schedulingToDtos(List<Scheduling> entityList) throws Exception {
@@ -91,7 +91,7 @@ public class SchedulingConverterService {
 			return dtoList;
 		}
 		
-		throw new IllegalArgumentException("Could not convert because object is null");
+		throw new IllegalArgumentException("Não foi possível converter pois o objeto é nulo");
 	}
 
 	public Scheduling dtoRequestToSchedulinng(Integer id, Integer placeId, Integer sportId, String date) throws Exception {

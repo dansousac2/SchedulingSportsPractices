@@ -14,25 +14,25 @@ public class SchedulingDTO {
 	
 	private Integer id;
 	
-	@NotBlank(message = "It's mandatory to inform a scheduled start date!")
+	@NotBlank(message = "É obrigatório informar a data da prática!")
 	@Pattern(regexp = "^\\d\\d\\d\\d-\\d\\d-\\d\\d$",
-			message = "Scheduled start date should be formatted as 'yyyy-MM-dd'")
+			message = "A data deve ter formato 'yyyy-MM-dd'")
 	private String scheduledDate;
 	
-	@NotBlank(message = "It's mandatory to inform a scheduled start time!")
+	@NotBlank(message = "É obrigatório informar o horário de início da prática!")
 	@Pattern(regexp = "^\\d\\d:\\d\\d$",
-			message = "Scheduled start time should be formatted as 'HH:mm'")
+			message = "O horário de início deve ter formato 'HH:mm'")
 	private String scheduledStartTime;
 	
-	@NotBlank(message = "It's mandatory to inform a scheduled finish time!")
+	@NotBlank(message = "É obrigatório informar o horário de término da prática!")
 	@Pattern(regexp = "^\\d\\d:\\d\\d$",
-			message = "Scheduled finish time should be formatted as 'HH:mm'")
+			message = "O horário de término deve ter formato 'HH:mm'")
 	private String scheduledFinishTime;
 	
-	@NotNull(message = "\"Place id\" must not be null!")
+	@NotNull(message = "O id do local não pode ser nulo!")
 	private Integer placeId;
 	
-	@NotNull(message = "\"Sport id\" must not be null!")
+	@NotNull(message = "O id do esporte não pode ser nulo!")
 	private Integer sportId;
 	
 	public SchedulingDTO() {

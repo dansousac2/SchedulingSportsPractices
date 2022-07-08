@@ -32,29 +32,29 @@ public class UserService {
 	
 	public User findById(Integer id) throws Exception {
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException("User", "id", id);
+			throw new ObjectNotFoundException("usuário", "id", id);
 		}
 		return userRepository.getById(id);
 	}
 	
 	public Optional<User> findByName(String name) throws Exception {
 		if (name == null || name.isBlank()) {
-			throw new MissingFieldException("name");
+			throw new MissingFieldException("nome");
 		}
 		
 		if (!userRepository.existsByName(name)) {
-			throw new ObjectNotFoundException("User", "name", name);
+			throw new ObjectNotFoundException("usuário", "nome", name);
 		}
 		return userRepository.findByName(name);
 	}
 	
 	public Optional<User> findByRegistration(Integer registration) throws Exception {
 		if (registration == null) {
-			throw new MissingFieldException("registration");
+			throw new MissingFieldException("matrícula");
 		}
 		
 		if (!existsByRegistration(registration)) {
-			throw new ObjectNotFoundException("User", "registration", registration);
+			throw new ObjectNotFoundException("usuário", "matrícula", registration);
 		}
 		
 		return userRepository.findByRegistration(registration);
@@ -62,30 +62,30 @@ public class UserService {
 	
 	public User save(User user) throws Exception {
 		if (user.getName() == null || user.getName().isBlank()) {
-			throw new MissingFieldException("name", "save");
+			throw new MissingFieldException("nome", "save");
 		}
 		
 		if (existsByRegistration(user.getRegistration())) {
-			throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
+			throw new ObjectAlreadyExistsException("Já existe um usuário com matrícula " + user.getRegistration());
 		}
 		return userRepository.save(user);
 	}
 	
 	public User update(User user) throws Exception {
 		if (user.getName() == null || user.getName().isBlank()) {
-			throw new MissingFieldException("name", "update");
+			throw new MissingFieldException("nome", "update");
 		}
 		
 		if (user.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(user.getId())) {
-			throw new ObjectNotFoundException("User", "id", user.getId());
+			throw new ObjectNotFoundException("usuário", "id", user.getId());
 		}
 		
 		if (existsByRegistration(user.getRegistration())) {
 			User userSaved = findByRegistration(user.getRegistration()).get();
 			if (userSaved.getId() != user.getId()) {
-				throw new ObjectAlreadyExistsException("A user with registration " + user.getRegistration() + " already exists!");
+				throw new ObjectAlreadyExistsException("Já existe um usuário com matrícula " + user.getRegistration());
 			}
 		}
 		

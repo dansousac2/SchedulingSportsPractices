@@ -32,29 +32,29 @@ public class SportService {
 	
 	public Sport findById(Integer id) throws Exception {
 		if (!existsById(id)) {
-			throw new ObjectNotFoundException("Sport", "id", id);
+			throw new ObjectNotFoundException("esporte", "id", id);
 		}
 		return sportRepository.getById(id);
 	}
 	
 	public Optional<Sport> findByName(String name) throws Exception {
 		if (name == null || name.isBlank()) {
-			throw new MissingFieldException("name");
+			throw new MissingFieldException("nome");
 		}
 		
 		if (!existsByName(name)) {
-			throw new ObjectNotFoundException("Sport", "name", name);
+			throw new ObjectNotFoundException("esporte", "nome", name);
 		}
 		return sportRepository.findByName(name);
 	}
 	
 	public Sport save(Sport sport) throws Exception {
 		if (sport.getName() == null || sport.getName().isBlank()) {
-			throw new MissingFieldException("name", "save");
+			throw new MissingFieldException("nome", "save");
 		}
 		
 		if (existsByName(sport.getName())) {
-			throw new ObjectAlreadyExistsException("A sport with name " + sport.getName() + " already exists!");
+			throw new ObjectAlreadyExistsException("Já existe um esporte com nome " + sport.getName());
 		}
 		
 		return sportRepository.save(sport);
@@ -62,19 +62,19 @@ public class SportService {
 	
 	public Sport update(Sport sport) throws Exception {
 		if (sport.getName() == null || sport.getName().isBlank()) {
-			throw new MissingFieldException("name", "update");
+			throw new MissingFieldException("nome", "update");
 		}
 		
 		if (sport.getId() == null) {
 			throw new MissingFieldException("id", "update");
 		} else if (!existsById(sport.getId())) {
-			throw new ObjectNotFoundException("Sport", "id", sport.getId());
+			throw new ObjectNotFoundException("esporte", "id", sport.getId());
 		}
 		
 		if (existsByName(sport.getName())) {
 			Sport sportSaved = findByName(sport.getName()).get();
 			if (sportSaved.getId() != sport.getId()) {
-				throw new ObjectAlreadyExistsException("A sport with name " + sport.getName() + " already exists!");
+				throw new ObjectAlreadyExistsException("Já existe um esporte com nome " + sport.getName());
 			}
 		}
 		
@@ -85,7 +85,7 @@ public class SportService {
 		if (sport.getId() == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(sport.getId())) {
-			throw new ObjectNotFoundException("Sport", "id", sport.getId());
+			throw new ObjectNotFoundException("esporte", "id", sport.getId());
 		}
 		
 		sportRepository.delete(sport);
@@ -95,7 +95,7 @@ public class SportService {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
 		} else if (!existsById(id)) {
-			throw new ObjectNotFoundException("Sport", "id", id);
+			throw new ObjectNotFoundException("esporte", "id", id);
 		}
 		
 		sportRepository.deleteById(id);

@@ -5,10 +5,10 @@ public class MissingFieldException extends Exception {
 	private static final long serialVersionUID = 1L;
 	
 	public MissingFieldException(String fieldName) {
-		super("Could not complete action, the field " + fieldName + " is missing!");
+		super("Não foi possível concluir a ação, o campo " + fieldName + " está faltando!");
 	}
 	
 	public MissingFieldException(String fieldName, String typeOfRequest) {
-		super("Could not " + typeOfRequest + ", the field " + fieldName + " is missing!");
+		super("Não foi possível usar " + typeOfRequest + ", o campo " + fieldName + " está faltando!");
 	}
 }

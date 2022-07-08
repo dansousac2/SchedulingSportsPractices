@@ -11,19 +11,19 @@ public class UserDTO {
 	
 	private Integer id;
 	
-	@NotBlank(message = "Please enter your name. Is required!")
-	@Size(min = 3, max = 255, message = "The space must be filled with a minimum of 3 characters and a maximum of 255!")
+	@NotBlank(message = "É obrigatório informar o nome do usuário!")
+	@Size(min = 3, max = 255, message = "Nome inválido! Deve possuir mais que 3 caracteres")
 	private String name;
 	
-	@Email(message = "Email should be valid!")
-	@Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address")
+	@Email(message = "O email deve ser válido!")
+	@Pattern(regexp=".+@.+\\..+", message="O email deve ser válido!")
 	private String email;
 	
-	@NotNull(message = "Please enter your password. The password field cannot be null!")
+	@NotNull(message = "É obrigatório informar a matrícula do usuário!")
 	private Integer registration;
 	
-	@NotBlank(message = "Please enter your password. Is required!")
-	@Size(min = 7, max = 32, message = "The password must be a minimum of 7 characters and a maximum of 32!")
+	@NotBlank(message = "É obrigatório informar a senha do usuário!")
+	@Size(min = 7, max = 50, message = "A senha deve possuir no mínimo 7 caracteres!")
 	private String password;
 
 	public UserDTO() {

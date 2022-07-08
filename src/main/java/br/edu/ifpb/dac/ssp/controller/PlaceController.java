@@ -32,7 +32,6 @@ public class PlaceController {
 	private PlaceConverterService converterService;
 	
 	// Falta organizar o getAll para funcionar com um filtro para name também (utilizando Example)
-	// Falta completar as validações e inserir as exceções necessárias
 	
 	@GetMapping
 	public ResponseEntity getAll() {

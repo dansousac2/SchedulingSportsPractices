@@ -19,7 +19,7 @@ public class DateConverterService {
 		try {
 			dateTime = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		} catch (DateTimeParseException e) {
-			throw new TimeParseException("Could not convert " + dateString + " to LocalDate!");
+			throw new TimeParseException("Não foi possível converter " + dateString);
 		}
 		
 		return dateTime;
@@ -35,7 +35,7 @@ public class DateConverterService {
 		try {
 			time = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
 		} catch (DateTimeParseException e) {
-			throw new TimeParseException("Could not convert " + timeString + " to LocalTime!");
+			throw new TimeParseException("Não foi possível converter " + timeString);
 		}
 		
 		return time;
@@ -51,7 +51,7 @@ public class DateConverterService {
 		try {
 			dateTime = LocalDateTime.parse(dateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		} catch (DateTimeParseException e) {
-			throw new TimeParseException("Could not convert " + dateTimeString + " to LocalTime!");
+			throw new TimeParseException("Não foi possível converter " + dateTimeString);
 		}
 		
 		return dateTime;
