@@ -2,6 +2,8 @@ package br.edu.ifpb.dac.ssp.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +38,11 @@ public class SchedulingService {
 				.withIgnoreCase()
 				.withStringMatcher(StringMatcher.CONTAINING));
 		return schedulingRepository.findAll(exp);
+	}
+	
+	public List<Scheduling> findAllFutureShedulings() {
+		List<Scheduling> list = schedulingRepository.findByOrderByScheduledDate();
+		return SchedulingsOnlyTodayToTheFuture(list);
 	}
 	
 	public List<Scheduling> findAllByPlaceId(Integer id) {
@@ -131,5 +138,20 @@ public class SchedulingService {
 		save(scheduling);
 		return true;
 	}
-
+	//TODO fazer teste desse método - filtro de agendamentos partindo de hoje para o futuro
+	private List<Scheduling> SchedulingsOnlyTodayToTheFuture(List<Scheduling> list) {
+		Collections.reverse(list);
+		
+		List<Scheduling> selectedList = new ArrayList<>();
+		
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).getScheduledDate().isBefore(LocalDate.now())) {
+				break;
+			}else {
+				selectedList.add(list.get(i));
+			}
+		}
+		
+		return selectedList;
+	}
 }

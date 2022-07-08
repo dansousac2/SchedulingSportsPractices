@@ -52,7 +52,7 @@ public class SchedulingController {
 	@GetMapping
 	public ResponseEntity getAll() {
 		try {
-			List<Scheduling> entityList = schedulingService.findAll();
+			List<Scheduling> entityList = schedulingService.findAllFutureShedulings();
 
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
