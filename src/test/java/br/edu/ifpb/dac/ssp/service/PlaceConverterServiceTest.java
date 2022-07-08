@@ -65,13 +65,13 @@ public class PlaceConverterServiceTest {
 	@Test
 	public void testConvertEntityToDtoThrowsNullPointerException() {
 		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.placeToDto(null));
-		assertEquals("Could not convert because object is null", exception.getMessage());
+		assertEquals("Não foi possível converter pois o objeto é nulo", exception.getMessage());
 	}
 	
 	@Test
 	public void testConvertDtoToEntityThrowsNullPointerException() {
 		Throwable exception = assertThrows(IllegalArgumentException.class, () -> converterService.dtoToPlace(null));
-		assertEquals("Could not convert because object is null", exception.getMessage());
+		assertEquals("Não foi possível converter pois o objeto é nulo", exception.getMessage());
 	}
 	
 }

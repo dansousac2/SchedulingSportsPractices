@@ -74,7 +74,7 @@ public class PlaceServiceTest {
 		when(repository.existsById(anyInt())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findById(25));
-		assertEquals("Could not find Place with id 25", exception.getMessage());
+		assertEquals("Não foi encontrado local com id 25", exception.getMessage());
 	}
 	
 	@Test
@@ -91,7 +91,7 @@ public class PlaceServiceTest {
 	public void testFindByNameThrowsMissingFieldException() {
 		// Testing findByName by passing a null value...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.findByName(null));
-		assertEquals("Could not complete action, the field name is missing!", exception.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo nome está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -100,7 +100,7 @@ public class PlaceServiceTest {
 		when(repository.existsByName(anyString())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findByName("Pátio"));
-		assertEquals("Could not find Place with name Pátio", exception.getMessage());
+		assertEquals("Não foi encontrado local com nome Pátio", exception.getMessage());
 	}
 	
 	@Test 
@@ -126,7 +126,7 @@ public class PlaceServiceTest {
 		
 		// Testing save by passing a null value for name...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.save(entity));
-		assertEquals("Could not save, the field name is missing!", exception.getMessage());
+		assertEquals("Não foi possível usar save, o campo nome está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -134,7 +134,7 @@ public class PlaceServiceTest {
 		when(repository.existsByName(anyString())).thenReturn(true);
 		
 		Throwable exception = assertThrows(ObjectAlreadyExistsException.class, () -> service.save(entity));
-		assertEquals("A place with name Ginásio already exists!", exception.getMessage());
+		assertEquals("Já existe um local com nome Ginásio", exception.getMessage());
 	}
 	
 	@Test
@@ -162,7 +162,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.update(entity));
-		assertEquals("Could not update, the field id is missing!", exception.getMessage());
+		assertEquals("Não foi possível usar update, o campo id está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -171,7 +171,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.update(entity));
-		assertEquals("Could not update, the field name is missing!", exception.getMessage());
+		assertEquals("Não foi possível usar update, o campo nome está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -180,7 +180,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.update(entity));
-		assertEquals("Could not find Place with id 1", exception.getMessage());
+		assertEquals("Não foi encontrado local com id 1", exception.getMessage());
 	}
 	
 	@Test
@@ -193,7 +193,7 @@ public class PlaceServiceTest {
 		when(repository.findByName(anyString())).thenReturn(Optional.of(placeMock));
 		
 		Throwable exception = assertThrows(ObjectAlreadyExistsException.class, () -> service.update(entity));
-		assertEquals("A place with name Ginásio already exists!", exception.getMessage());
+		assertEquals("Já existe um local com nome Ginásio", exception.getMessage());
 	}
 	
 	@Test
@@ -202,7 +202,7 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.delete(entity));
-		assertEquals("Could not delete, the field id is missing!", exception.getMessage());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -211,14 +211,14 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.delete(entity));
-		assertEquals("Could not find Place with id 1", exception.getMessage());
+		assertEquals("Não foi encontrado local com id 1", exception.getMessage());
 	}
 	
 	@Test
 	public void testDeleteByIdWithoutIdThrowsMissingFieldException() {
 		// Testing update by passing a null value for id...
 		Throwable exception = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
-		assertEquals("Could not delete, the field id is missing!", exception.getMessage());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", exception.getMessage());
 	}
 	
 	@Test
@@ -227,6 +227,6 @@ public class PlaceServiceTest {
 		
 		// Testing update by passing an invalid id...
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.deleteById(1));
-		assertEquals("Could not find Place with id 1", exception.getMessage());
+		assertEquals("Não foi encontrado local com id 1", exception.getMessage());
 	}
 }

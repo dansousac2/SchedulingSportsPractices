@@ -32,7 +32,7 @@ class DateConverterServiceTest {
 	public void stringToDateValid(String s) { 
 		try {
 			Throwable exc = assertThrows(TimeParseException.class, () -> converter.stringToDate(s));
-			assertEquals("Could not convert " + s + " to LocalDate!", exc.getMessage());
+			assertEquals("Não foi possível converter " + s, exc.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +49,7 @@ class DateConverterServiceTest {
 	public void stringToTimeinvalid(String s) { 
 		try {
 			Throwable exc = assertThrows(TimeParseException.class, () -> converter.stringToTime(s));
-			assertEquals("Could not convert " + s + " to LocalTime!", exc.getMessage());
+			assertEquals("Não foi possível converter " + s, exc.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
