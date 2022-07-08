@@ -94,7 +94,7 @@ public class SchedulingServiceTest {
 		when(repository.existsById(anyInt())).thenReturn(false);
 
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.findById(2));
-		assertEquals("Could not find Scheduling with id 2", exception.getMessage());
+		assertEquals("Não foi encontrado agendamento com id 2", exception.getMessage());
 
 	}
 
@@ -129,10 +129,10 @@ public class SchedulingServiceTest {
 		when(repository.existsById(2)).thenReturn(false);
 
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> service.delete(schedulingExp));
-		assertEquals("Could not find Scheduling with id 2", exception.getMessage());
+		assertEquals("Não foi encontrado agendamento com id 2", exception.getMessage());
 
 		Throwable exception02 = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
-		assertEquals("Could not delete, the field id is missing!", exception02.getMessage());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", exception02.getMessage());
 	}
 
 	@DisplayName("Quantity of participants and participants valids")
@@ -162,24 +162,24 @@ public class SchedulingServiceTest {
 		// ID is null - quantity of participants
 		Throwable excep = assertThrows(MissingFieldException.class,
 				() -> service.getSchedulingQuantityOfParticipants(null));
-		assertEquals("Could not complete action, the field id is missing!", excep.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo id está faltando!", excep.getMessage());
 
 		// ID is null - participants
 		Throwable excep03 = assertThrows(MissingFieldException.class,
 				() -> service.getSchedulingParticipants(null));
-		assertEquals("Could not complete action, the field id is missing!", excep03.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo id está faltando!", excep03.getMessage());
 		
 		when(repository.existsById(1)).thenReturn(false);
 		
 		// ID not finded in DB - quantity of participants
 		Throwable excep02 = assertThrows(ObjectNotFoundException.class,
 				() -> service.getSchedulingQuantityOfParticipants(1));
-		assertEquals("Could not find Scheduling with id 1", excep02.getMessage());
+		assertEquals("Não foi encontrado agendamento com id 1", excep02.getMessage());
 		
 		// ID not finded in DB - participants
 		Throwable excep04 = assertThrows(ObjectNotFoundException.class,
 				() -> service.getSchedulingParticipants(1));
-		assertEquals("Could not find Scheduling with id 1", excep04.getMessage());
+		assertEquals("Não foi encontrado agendamento com id 1", excep04.getMessage());
 	}
 	
 	@DisplayName("add participant valid")
@@ -206,13 +206,13 @@ public class SchedulingServiceTest {
 		
 		//ID is null
 		Throwable excep = assertThrows(MissingFieldException.class, () -> service.addSchedulingParticipant(null, userExp));
-		assertEquals("Could not complete action, the field id is missing!", excep.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo id está faltando!", excep.getMessage());
 		
 		when(repository.existsById(1)).thenReturn(false);
 		
 		//ID is not present in DB 
 		Throwable excep02 = assertThrows(ObjectNotFoundException.class, () -> service.addSchedulingParticipant(1, userExp));
-		assertEquals("Could not find Scheduling with id 1", excep02.getMessage());
+		assertEquals("Não foi encontrado agendamento com id 1", excep02.getMessage());
 		
 		//no more confirmations avaliable to this scheduling - atcualy we have 2 confirmed, and place capacity 3
 		placeExp.setMaximumCapacityParticipants(2);
@@ -263,13 +263,13 @@ public class SchedulingServiceTest {
 		try {
 			//ID is null
 			Throwable excep = assertThrows(MissingFieldException.class, () -> service.addSchedulingParticipant(null, userExp));
-			assertEquals("Could not complete action, the field id is missing!", excep.getMessage());
+			assertEquals("Não foi possível concluir a ação, o campo id está faltando!", excep.getMessage());
 			
 			when(repository.existsById(1)).thenReturn(false);
 			
 			//ID is not present in DB 
 			Throwable excep02 = assertThrows(ObjectNotFoundException.class, () -> service.addSchedulingParticipant(1, userExp));
-			assertEquals("Could not find Scheduling with id 1", excep02.getMessage());
+			assertEquals("Não foi encontrado agendamento com id 1", excep02.getMessage());
 			
 			//list participant empty on scheduling
 			Set<User> listEmpty = Set.of();

@@ -112,7 +112,7 @@ public class SchedulingValidatorService {
 		Duration durationOfPractice = Duration.between(scheduledStartTime, scheduledFinishTime);
 		
 		if (durationOfPractice.toMinutes() <= 0) {
-			throw new RuleViolationException("Duration of practice shouldn't be negative or 0!");
+			throw new RuleViolationException("A duração da prática não deve ser igual ou menor que 0 minutos!");
 		} else if (durationOfPractice.toMinutes() > Constants.MAXIMUM_DURATION_PRACTICE_MINUTES) {
 			throw new RuleViolationException("A prática agendada deve ter no máximo " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutos!");
 		}

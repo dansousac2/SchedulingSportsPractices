@@ -109,7 +109,7 @@ public class SchedulingValidatorServiceTest {
 		when(placeService.existsById(anyInt())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validPlaceId(12));
-		assertEquals("Could not find Place with Id 12", exception.getMessage());
+		assertEquals("Não foi encontrado local com id 12", exception.getMessage());
 	}
 	
 	@Test
@@ -129,7 +129,7 @@ public class SchedulingValidatorServiceTest {
 		when(sportService.existsById(anyInt())).thenReturn(false);
 		
 		Throwable exception = assertThrows(ObjectNotFoundException.class, () -> validatorService.validSportId(7));
-		assertEquals("Could not find Sport with Id 7", exception.getMessage());
+		assertEquals("Não foi encontrado esporte com id 7", exception.getMessage());
 	}
 	
 	@Test
@@ -159,7 +159,7 @@ public class SchedulingValidatorServiceTest {
 		}
 			
 		Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateScheduledTime(startTime, finishTime));	
-		assertEquals("Scheduled time should be between 07:00 and 22:00", exception.getMessage());		
+		assertEquals("O horário da prática deve ser entre 07:00 e 22:00", exception.getMessage());		
 	}
 	
 	@Test
@@ -195,7 +195,7 @@ public class SchedulingValidatorServiceTest {
 		}
 		
 		Throwable exception = assertThrows(RuleViolationException.class, () -> validatorService.validateScheduledDateAndTime(scheduledDate, scheduledStartTime));
-		assertEquals("Scheduled date shouldn't be in past!", exception.getMessage());
+		assertEquals("A data da prática não pode estar no passado!", exception.getMessage());
 	}
 	
 	@Test
@@ -219,11 +219,11 @@ public class SchedulingValidatorServiceTest {
 		try {
 			// Finish time before start time
 			Throwable exceptionNegative = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(finishTime, startTime));
-			assertEquals("Duration of practice shouldn't be negative or 0!", exceptionNegative.getMessage());
+			assertEquals("A duração da prática não deve ser igual ou menor que 0 minutos!", exceptionNegative.getMessage());
 			
 			// Duration above maximum
 			Throwable exceptionMaximum = assertThrows(RuleViolationException.class, () -> validatorService.validateDurationOfPractice(startTime, finishTime));
-			assertEquals("Duration of practice should be a maximum of 180 minutes!", exceptionMaximum.getMessage());
+			assertEquals("A prática agendada deve ter no máximo 180 minutos!", exceptionMaximum.getMessage());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -277,7 +277,7 @@ public class SchedulingValidatorServiceTest {
 		
 		try {
 			Throwable exception = assertThrows(TimeAlreadyScheduledException.class, () -> validatorService.validateScheduledDate(entityMocked2));
-			assertEquals("There is already a practice scheduled for this time!", exception.getMessage());
+			assertEquals("Já existe uma prática agendada para esse horário!", exception.getMessage());
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

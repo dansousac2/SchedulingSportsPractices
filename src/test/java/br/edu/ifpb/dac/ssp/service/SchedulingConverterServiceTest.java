@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import br.edu.ifpb.dac.ssp.exception.TimeParseException;
 import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.Sport;

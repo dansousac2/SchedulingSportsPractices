@@ -64,7 +64,7 @@ class UserServiceTest {
 			when(repository.existsById(anyInt())).thenReturn(false);
 			
 			Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.findById(1));
-			assertEquals("Could not find User with id 1", exc.getMessage());
+			assertEquals("Não foi encontrado usuário com id 1", exc.getMessage());
 		} catch (Exception e) {
 			e.getMessage();
 		}
@@ -83,7 +83,7 @@ class UserServiceTest {
 	@ValueSource(strings = {"", "   ", "\t\t", " \n \n "}) // name invalid because is empty
 	public void findByNameInvalidEmpty(String n) {
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.findByName(n));
-		assertEquals("Could not complete action, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -91,7 +91,7 @@ class UserServiceTest {
 		exUser.setName(null); // only to turn visible
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.findByName(exUser.getName()));
-		assertEquals("Could not complete action, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -107,7 +107,7 @@ class UserServiceTest {
 		when(repository.existsByRegistration(anyInt())).thenReturn(false);
 		
 		Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.findByRegistration(123456789));
-		assertEquals("Could not find User with registration 123456789", exc.getMessage());
+		assertEquals("Não foi encontrado usuário com matrícula 123456789", exc.getMessage());
 	}
 	
 	@Test 
@@ -115,7 +115,7 @@ class UserServiceTest {
 		exUser.setRegistration(null); // only to turn visible
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.findByRegistration(exUser.getRegistration()));
-		assertEquals("Could not complete action, the field registration is missing!", exc.getMessage());
+		assertEquals("Não foi possível concluir a ação, o campo matrícula está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -137,7 +137,7 @@ class UserServiceTest {
 		when(repository.existsByRegistration(anyInt())).thenReturn(true);
 		
 		Throwable exc = assertThrows(ObjectAlreadyExistsException.class, () -> service.save(exUser));
-		assertEquals("A user with registration 159357 already exists!", exc.getMessage());
+		assertEquals("Já existe um usuário com matrícula 159357", exc.getMessage());
 	}
 	
 	@Test
@@ -145,7 +145,7 @@ class UserServiceTest {
 		exUser.setName(null); // only to turn visible
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.save(exUser));
-		assertEquals("Could not save, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar save, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@ParameterizedTest
@@ -154,7 +154,7 @@ class UserServiceTest {
 		exUser.setName(n);
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.save(exUser));
-		assertEquals("Could not save, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar save, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -181,7 +181,7 @@ class UserServiceTest {
 		exUser.setName(null); // barred on the first verification in service. Only to turn visible.
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.update(exUser));
-		assertEquals("Could not update, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar update, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@ParameterizedTest
@@ -190,7 +190,7 @@ class UserServiceTest {
 		exUser.setName(s);
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.update(exUser));
-		assertEquals("Could not update, the field name is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar update, o campo nome está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -199,7 +199,7 @@ class UserServiceTest {
 		exUser.setId(null); // Only to turn visible. Throw exception on the secouund verification
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.update(exUser));
-		assertEquals("Could not update, the field id is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar update, o campo id está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -219,7 +219,7 @@ class UserServiceTest {
 		when(repository.findByRegistration(anyInt())).thenReturn(op);
 		
 		Throwable exc = assertThrows(ObjectAlreadyExistsException.class, () -> service.update(exUser));
-		assertEquals("A user with registration 123123 already exists!", exc.getMessage());
+		assertEquals("Já existe um usuário com matrícula 123123", exc.getMessage());
 	}
 	
 	@Test
@@ -236,7 +236,7 @@ class UserServiceTest {
 		exUser.setId(null); // Only to turn visible. Is the first verification in service
 		
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.delete(exUser));
-		assertEquals("Could not delete, the field id is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -246,7 +246,7 @@ class UserServiceTest {
 		when(repository.existsById(1)).thenReturn(false);
 		
 		Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.delete(exUser));
-		assertEquals("Could not find User with id 1", exc.getMessage());
+		assertEquals("Não foi encontrado usuário com id 1", exc.getMessage());
 	}
 	
 	@Test
@@ -260,7 +260,7 @@ class UserServiceTest {
 	@Test
 	public void deleteByIdInvalid() { // delete by id invalid because id is null
 		Throwable exc = assertThrows(MissingFieldException.class, () -> service.deleteById(null));
-		assertEquals("Could not delete, the field id is missing!", exc.getMessage());
+		assertEquals("Não foi possível usar delete, o campo id está faltando!", exc.getMessage());
 	}
 	
 	@Test
@@ -268,6 +268,6 @@ class UserServiceTest {
 		when(repository.existsById(1)).thenReturn(false);
 		
 		Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.deleteById(1));
-		assertEquals("Could not find User with id 1", exc.getMessage());
+		assertEquals("Não foi encontrado usuário com id 1", exc.getMessage());
 	}
 }
