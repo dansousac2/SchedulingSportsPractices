@@ -138,7 +138,7 @@ public class SchedulingService {
 		save(scheduling);
 		return true;
 	}
-	//TODO fazer teste desse método - filtro de agendamentos partindo de hoje para o futuro
+	
 	private List<Scheduling> schedulingsOnlyTodayToTheFuture(List<Scheduling> list) {
 		Collections.reverse(list);
 		

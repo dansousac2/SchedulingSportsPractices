@@ -287,5 +287,62 @@ public class SchedulingServiceTest {
 			System.out.println(e.getMessage());
 		}
 	}
+	//TODO mostrar novo teste - getAll by schedulingDate (este e o próximo)
+	@Test
+	@DisplayName("get all by date scheduling - valid")
+	void getAllByDateValid() {
+		Scheduling sched01 = new Scheduling();
+		LocalDate d01 = LocalDate.now().plusDays(-1); // 1 day before
+		sched01.setScheduledDate(d01);
+		
+		Scheduling sched02 = new Scheduling();
+		LocalDate d02 = LocalDate.now(); 			 // today
+		sched02.setScheduledDate(d02);
+		
+		Scheduling sched03 = new Scheduling();
+		LocalDate d03 = LocalDate.now().plusDays(1); // tomorrow
+		sched03.setScheduledDate(d03);
+		
+		List<Scheduling> list = new ArrayList<>();
+		list.add(sched01);
+		list.add(sched02);
+		list.add(sched03);
+		
+		when(repository.findByOrderByScheduledDate()).thenReturn(list);
+		
+		List<Scheduling> returned = service.findAllFutureShedulings();
+		
+		assertAll("return only schedulins to today and to the future",
+			() -> assertEquals(2, returned.size()),
+			() -> assertEquals(d02, returned.get(0).getScheduledDate()),
+			() -> assertEquals(d03, returned.get(1).getScheduledDate())
+		);
+	}
 	
+	@Test
+	@DisplayName("get all by date scheduling - invalid")
+	void getAllByDateInvalid() {
+		Scheduling sched01 = new Scheduling();
+		LocalDate d01 = LocalDate.now().plusDays(-1); // 1 day before
+		sched01.setScheduledDate(d01);
+		
+		Scheduling sched02 = new Scheduling();
+		LocalDate d02 = LocalDate.now().plusDays(-2); // 2 days before
+		sched02.setScheduledDate(d02);
+		
+		Scheduling sched03 = new Scheduling();
+		LocalDate d03 = LocalDate.now().plusDays(-3); // 3 days before
+		sched03.setScheduledDate(d03);
+		
+		List<Scheduling> list = new ArrayList<>();
+		list.add(sched01);
+		list.add(sched02);
+		list.add(sched03);
+		
+		when(repository.findByOrderByScheduledDate()).thenReturn(list);
+		
+		List<Scheduling> returned = service.findAllFutureShedulings();
+		
+		assertEquals(0, returned.size());
+	}
 }
