@@ -42,7 +42,7 @@ public class SchedulingService {
 	
 	public List<Scheduling> findAllFutureShedulings() {
 		List<Scheduling> list = schedulingRepository.findByOrderByScheduledDate();
-		return SchedulingsOnlyTodayToTheFuture(list);
+		return schedulingsOnlyTodayToTheFuture(list);
 	}
 	
 	public List<Scheduling> findAllByPlaceId(Integer id) {
@@ -139,7 +139,7 @@ public class SchedulingService {
 		return true;
 	}
 	//TODO fazer teste desse método - filtro de agendamentos partindo de hoje para o futuro
-	private List<Scheduling> SchedulingsOnlyTodayToTheFuture(List<Scheduling> list) {
+	private List<Scheduling> schedulingsOnlyTodayToTheFuture(List<Scheduling> list) {
 		Collections.reverse(list);
 		
 		List<Scheduling> selectedList = new ArrayList<>();
@@ -151,6 +151,8 @@ public class SchedulingService {
 				selectedList.add(list.get(i));
 			}
 		}
+		
+		Collections.reverse(selectedList);
 		
 		return selectedList;
 	}
