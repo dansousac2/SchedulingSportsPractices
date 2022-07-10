@@ -3,6 +3,7 @@ package br.edu.ifpb.dac.ssp.repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 

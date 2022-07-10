@@ -37,12 +37,15 @@ public class SchedulingService {
 				ExampleMatcher.matching()
 				.withIgnoreCase()
 				.withStringMatcher(StringMatcher.CONTAINING));
-		return schedulingRepository.findAll(exp);
+		
+		List<Scheduling> list = schedulingRepository.findAll(exp);
+		Collections.sort(list, new ComparatorSchedulingDate());
+		return schedulingsBeginingToday(list);
 	}
 	
 	public List<Scheduling> findAllFutureShedulings() {
 		List<Scheduling> list = schedulingRepository.findByOrderByScheduledDate();
-		return schedulingsOnlyTodayToTheFuture(list);
+		return schedulingsBeginingToday(list);
 	}
 	
 	public List<Scheduling> findAllByPlaceId(Integer id) {
@@ -139,7 +142,7 @@ public class SchedulingService {
 		return true;
 	}
 	
-	private List<Scheduling> schedulingsOnlyTodayToTheFuture(List<Scheduling> list) {
+	private List<Scheduling> schedulingsBeginingToday(List<Scheduling> list) {
 		Collections.reverse(list);
 		
 		List<Scheduling> selectedList = new ArrayList<>();

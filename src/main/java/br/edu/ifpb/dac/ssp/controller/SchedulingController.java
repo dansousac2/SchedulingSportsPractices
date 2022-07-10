@@ -64,7 +64,7 @@ public class SchedulingController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+	//TODO realizar testes deste método
 	@GetMapping("/useFilter")
 	public ResponseEntity getAllWithFilter(
 			@RequestParam(required = false) Integer placeId,
@@ -74,12 +74,13 @@ public class SchedulingController {
 		try {
 			Scheduling filter = converterService.dtoRequestToSchedulinng(placeId, sportId, date);
 			//testes início
-			System.out.println("place: " + filter.getPlace());
-			System.out.println("sport: " + filter.getSport());
+			System.out.printf("\nplace id informado: %s / obj no banco: %s", placeId, filter.getPlace());
+			System.out.println("\nsport: " + filter.getSport());
 			System.out.println("date: " + filter.getScheduledDate());
 			//testes
 			List<Scheduling> entityList = schedulingService.findAll(filter);
-			System.out.println("tamanho da entityList: " + entityList.size()); //fim testes
+			System.out.println("tamanho da entityList: " + entityList.size()); 
+			//fim testes
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 			
 			return ResponseEntity.ok().body(dtoList);
