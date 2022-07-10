@@ -13,5 +13,4 @@ public interface SchedulingRepository extends JpaRepository<Scheduling, Integer>
 	public List<Scheduling> findAllByPlaceIdAndScheduledDate(Integer placeId, LocalDate scheduledDate);
 	public List<Scheduling> findAllBySportId(Integer id);
 	public List<Scheduling> findAllBySportIdAndScheduledDate(Integer sportId, LocalDate scheduledDate);
-	public List<Scheduling> findByOrderByScheduledDate();
 } 

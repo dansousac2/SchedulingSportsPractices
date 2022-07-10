@@ -29,7 +29,8 @@ public class SchedulingService {
 	private SchedulingRepository schedulingRepository;
 	
 	public List<Scheduling> findAll() {
-		return schedulingRepository.findByOrderByScheduledDate();
+		List<Scheduling> list = schedulingRepository.findAll();
+		return schedulingsBeginingToday(list);
 	}
 	
 	public List<Scheduling> findAll(Scheduling filter) {
@@ -39,12 +40,7 @@ public class SchedulingService {
 				.withStringMatcher(StringMatcher.CONTAINING));
 		
 		List<Scheduling> list = schedulingRepository.findAll(exp);
-		Collections.sort(list, new ComparatorSchedulingDate());
-		return schedulingsBeginingToday(list);
-	}
-	
-	public List<Scheduling> findAllFutureShedulings() {
-		List<Scheduling> list = schedulingRepository.findByOrderByScheduledDate();
+		System.out.println("Tamanho da lista retornada pelo repository.findAll(filtro): " + list.size());
 		return schedulingsBeginingToday(list);
 	}
 	
@@ -143,6 +139,7 @@ public class SchedulingService {
 	}
 	
 	private List<Scheduling> schedulingsBeginingToday(List<Scheduling> list) {
+		Collections.sort(list, new ComparatorSchedulingDate());
 		Collections.reverse(list);
 		
 		List<Scheduling> selectedList = new ArrayList<>();

@@ -52,7 +52,7 @@ public class SchedulingController {
 	@GetMapping
 	public ResponseEntity getAll() {
 		try {
-			List<Scheduling> entityList = schedulingService.findAllFutureShedulings();
+			List<Scheduling> entityList = schedulingService.findAll();
 
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 
@@ -77,10 +77,8 @@ public class SchedulingController {
 			System.out.printf("\nplace id informado: %s / obj no banco: %s", placeId, filter.getPlace());
 			System.out.println("\nsport: " + filter.getSport());
 			System.out.println("date: " + filter.getScheduledDate());
-			//testes
+			//testes fim
 			List<Scheduling> entityList = schedulingService.findAll(filter);
-			System.out.println("tamanho da entityList: " + entityList.size()); 
-			//fim testes
 			List<SchedulingDTO> dtoList = converterService.schedulingToDtos(entityList);
 			
 			return ResponseEntity.ok().body(dtoList);

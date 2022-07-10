@@ -308,9 +308,9 @@ public class SchedulingServiceTest {
 		list.add(sched02);
 		list.add(sched03);
 		
-		when(repository.findByOrderByScheduledDate()).thenReturn(list);
+		when(repository.findAll()).thenReturn(list);
 		
-		List<Scheduling> returned = service.findAllFutureShedulings();
+		List<Scheduling> returned = service.findAll();
 		
 		assertAll("return only schedulins to today and to the future",
 			() -> assertEquals(2, returned.size()),
@@ -339,9 +339,9 @@ public class SchedulingServiceTest {
 		list.add(sched02);
 		list.add(sched03);
 		
-		when(repository.findByOrderByScheduledDate()).thenReturn(list);
+		when(repository.findAll()).thenReturn(list);
 		
-		List<Scheduling> returned = service.findAllFutureShedulings();
+		List<Scheduling> returned = service.findAll();
 		
 		assertEquals(0, returned.size());
 	}
