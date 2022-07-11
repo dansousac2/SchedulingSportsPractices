@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifpb.dac.ssp.model.Place;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
@@ -74,8 +75,11 @@ public class SchedulingController {
 		try {
 			Scheduling filter = converterService.dtoRequestToSchedulinng(placeId, sportId, date);
 			//testes início
-			System.out.printf("\nplace id informado: %s / obj no banco: %s", placeId, filter.getPlace());
-			System.out.println("\nsport: " + filter.getSport());
+			Place place = filter.getPlace();
+			System.out.println("\nplace name: " + place.getName());
+			System.out.println("is public: " + place.isPublic());
+			System.out.printf("place id informado: %s / obj no banco: %s\n", placeId, place);
+			System.out.println("sport: " + filter.getSport());
 			System.out.println("date: " + filter.getScheduledDate());
 			//testes fim
 			List<Scheduling> entityList = schedulingService.findAll(filter);
