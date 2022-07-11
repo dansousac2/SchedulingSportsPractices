@@ -75,10 +75,10 @@ public class SchedulingController {
 		try {
 			Scheduling filter = converterService.dtoRequestToSchedulinng(placeId, sportId, date);
 			//testes início
-			Place place = filter.getPlace();
-			System.out.println("\nplace name: " + place.getName());
-			System.out.println("is public: " + place.isPublic());
-			System.out.printf("place id informado: %s / obj no banco: %s\n", placeId, place);
+//			Place place = filter.getPlace();
+//			System.out.println("\nplace name: " + place.getName());
+//			System.out.println("is public: " + place.isPublic());
+			System.out.printf("place id informado: %s / obj no banco: %s\n", placeId, filter.getPlace());
 			System.out.println("sport: " + filter.getSport());
 			System.out.println("date: " + filter.getScheduledDate());
 			//testes fim
