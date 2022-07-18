@@ -46,7 +46,7 @@ public class LoginService {
 		User user = new User();
 		
 		try {
-			user = userService.findByRegistration(Integer.parseInt(username)).orElse(null);
+			user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
 		} catch(Exception e) {
 			String json = suapService.findUser(this.suapToken, username);
 			System.out.println("\npassou 01"); //teste
@@ -61,7 +61,7 @@ public class LoginService {
 	}
 
 	private User localLogin(String username, String password) throws NumberFormatException, Exception {
-		User user = userService.findByRegistration(Integer.parseInt(username)).orElse(null);
+		User user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
 		
 		if(user == null || password == null || !password.equals(user.getPassword())) {
 			throw new IllegalArgumentException("Campo username ou password inválido!");

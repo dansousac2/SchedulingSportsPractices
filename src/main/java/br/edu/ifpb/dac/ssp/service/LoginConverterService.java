@@ -36,7 +36,7 @@ public class LoginConverterService {
 		User user = new User();
 		user.setName(name);
 		//TODO refatorar - Integer só suportam valores entre +2147483647 e -2147486648
-		user.setRegistration(Integer.parseInt(registration));
+		user.setRegistration(Long.parseLong(registration));
 		System.out.println("Passou 1:2"); //teste
 		return user;
 	}

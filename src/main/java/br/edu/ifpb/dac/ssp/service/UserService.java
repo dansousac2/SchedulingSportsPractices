@@ -26,7 +26,7 @@ public class UserService {
 		return userRepository.existsById(id);
 	}
 	
-	public boolean existsByRegistration(Integer registration) {
+	public boolean existsByRegistration(Long registration) {
 		return userRepository.existsByRegistration(registration);
 	}
 	
@@ -48,7 +48,7 @@ public class UserService {
 		return userRepository.findByName(name);
 	}
 	
-	public Optional<User> findByRegistration(Integer registration) throws Exception {
+	public Optional<User> findByRegistration(Long registration) throws Exception {
 		if (registration == null) {
 			throw new MissingFieldException("matrícula");
 		}

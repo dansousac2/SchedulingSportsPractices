@@ -30,7 +30,7 @@ public class User implements Serializable {
 	private String email;
 	
 	@Column(name = "USER_REGISTRATION", nullable = false)
-	private Integer registration;
+	private Long registration;
 	
 	@Column(name = "USER_PASSWORD", nullable = false)
 	private String password;
@@ -39,7 +39,7 @@ public class User implements Serializable {
 		
 	}
 	
-	public User(Integer id, String name, String email, Integer registration, String password) {
+	public User(Integer id, String name, String email, Long registration, String password) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -71,11 +71,11 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public Integer getRegistration() {
+	public Long getRegistration() {
 		return registration;
 	}
 
-	public void setRegistration(Integer registration) {
+	public void setRegistration(Long registration) {
 		this.registration = registration;
 	}
 

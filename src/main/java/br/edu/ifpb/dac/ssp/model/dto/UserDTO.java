@@ -20,7 +20,7 @@ public class UserDTO {
 	private String email;
 	
 	@NotNull(message = "É obrigatório informar a matrícula do usuário!")
-	private Integer registration;
+	private Long registration;
 	
 	@NotBlank(message = "É obrigatório informar a senha do usuário!")
 	@Size(min = 7, max = 50, message = "A senha deve possuir no mínimo 7 caracteres!")
@@ -30,14 +30,14 @@ public class UserDTO {
 		
 	}
 	
-	public UserDTO(String name, String email, Integer registration, String password) {
+	public UserDTO(String name, String email, Long registration, String password) {
 		this.name = name;
 		this.email = email;
 		this.registration = registration;
 		this.password = password;
 	}
 	
-	public UserDTO(Integer id, String name, String email, Integer registration, String password) {
+	public UserDTO(Integer id, String name, String email, Long registration, String password) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -66,10 +66,10 @@ public class UserDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Integer getRegistration() {
+	public Long getRegistration() {
 		return registration;
 	}
-	public void setRegistration(Integer registration) {
+	public void setRegistration(Long registration) {
 		this.registration = registration;
 	}
 
