@@ -1,9 +1,11 @@
 package br.edu.ifpb.dac.ssp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
@@ -13,23 +15,33 @@ import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserServiceInterface {
 	
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
+	private PasswordEncoderService passwordEncoderService;
+	
+	@Override
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
 	
+	@Override
 	public boolean existsById(Integer id) {
 		return userRepository.existsById(id);
 	}
 	
+	@Override
 	public boolean existsByRegistration(Long registration) {
 		return userRepository.existsByRegistration(registration);
 	}
 	
+	@Override
 	public User findById(Integer id) throws Exception {
 		if (!existsById(id)) {
 			throw new ObjectNotFoundException("usuário", "id", id);
@@ -37,6 +49,7 @@ public class UserService {
 		return userRepository.getById(id);
 	}
 	
+	@Override
 	public Optional<User> findByName(String name) throws Exception {
 		if (name == null || name.isBlank()) {
 			throw new MissingFieldException("nome");
@@ -48,6 +61,7 @@ public class UserService {
 		return userRepository.findByName(name);
 	}
 	
+	@Override
 	public Optional<User> findByRegistration(Long registration) throws Exception {
 		if (registration == null) {
 			throw new MissingFieldException("matrícula");
@@ -60,6 +74,7 @@ public class UserService {
 		return userRepository.findByRegistration(registration);
 	}
 	
+	@Override
 	public User save(User user) throws Exception {
 		if (user.getName() == null || user.getName().isBlank()) {
 			throw new MissingFieldException("nome", "save");
@@ -68,9 +83,16 @@ public class UserService {
 		if (existsByRegistration(user.getRegistration())) {
 			throw new ObjectAlreadyExistsException("Já existe um usuário com matrícula " + user.getRegistration());
 		}
+		
+		passwordEncoderService.encryptPassword(user);
+		List<Role> roles = new ArrayList<>();
+		roles.add(roleService.findDefault());
+		user.setRoles(roles);
+		
 		return userRepository.save(user);
 	}
 	
+	@Override
 	public User update(User user) throws Exception {
 		if (user.getName() == null || user.getName().isBlank()) {
 			throw new MissingFieldException("nome", "update");
@@ -92,6 +114,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
+	@Override
 	public void delete(User user) throws Exception {
 		if (user.getId() == null) {
 			throw new MissingFieldException("id", "delete");
@@ -102,6 +125,7 @@ public class UserService {
 		userRepository.delete(user);
 	}
 	
+	@Override
 	public void deleteById(Integer id) throws Exception {
 		if (id == null) {
 			throw new MissingFieldException("id", "delete");
