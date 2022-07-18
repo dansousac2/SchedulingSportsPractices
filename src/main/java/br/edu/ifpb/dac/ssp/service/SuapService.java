@@ -86,10 +86,8 @@ public class SuapService implements SuapServiceInterface {
 	@Override
 	public String findUser(String token, String username) {
 		String result = findEmployee(token, username);
-		System.out.println("\nretorno de findEmployee em findUser: " + result); //teste
 		if(result.contains("\"count\":0")) {
 			result = findStudent(token, username);
-			System.out.println("\nretorno de findStudent em findUser: " + result); //teste
 		}
 		return result;
 	}
