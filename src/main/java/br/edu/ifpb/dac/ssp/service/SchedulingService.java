@@ -30,6 +30,8 @@ public class SchedulingService {
 	private SchedulingRepository schedulingRepository;
 	@Autowired
 	private AuthenticationService authenticationService;
+	@Autowired
+	private RoleService roleService;
 	
 	public List<Scheduling> findAll() {
 		List<Scheduling> list = schedulingRepository.findAll();
@@ -79,11 +81,16 @@ public class SchedulingService {
 		return schedulingRepository.getById(id);
 	}
 	
-	public Scheduling save(Scheduling scheduling) {
-
-		scheduling.setCreator(authenticationService.getLoggedUser());
+	public Scheduling save(Scheduling scheduling) throws Exception {
+		User user = authenticationService.getLoggedUser();
 		
-		// Adicionar validação para não permitir o agendamento para local privado, caso o usuário seja estudante
+		if (!scheduling.getPlace().isPublic() && 
+			user.getAuthorities().contains(roleService.findByName("STUDENT"))) {
+			
+			throw new RuleViolationException("Operação inválida! Estudantes só podem agendar práticas para locais públicos");
+		}
+		
+		scheduling.setCreator(user);
 		
 		return schedulingRepository.save(scheduling);
 	}
@@ -93,8 +100,9 @@ public class SchedulingService {
 			throw new ObjectNotFoundException("agendamento", "id", scheduling.getId());
 		} 
 		
-		// Adicionar condição para administrador
-		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
+				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName("ADMIN"))) {
+			
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
 		
@@ -109,7 +117,8 @@ public class SchedulingService {
 		}
 		
 		Scheduling scheduling = findById(id);
-		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
+				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName("ADMIN"))) {
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
 		

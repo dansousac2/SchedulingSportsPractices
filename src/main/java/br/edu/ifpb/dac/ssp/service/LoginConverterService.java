@@ -2,6 +2,7 @@ package br.edu.ifpb.dac.ssp.service;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -13,7 +14,10 @@ import br.edu.ifpb.dac.ssp.model.User;
 
 @Service
 public class LoginConverterService {
-
+	
+	@Autowired
+	private RoleService roleService;
+	
 	public String jsonToToken(String json) {
 		JsonElement jsonElement = JsonParser.parseString(json);
 		String token = jsonElement.getAsJsonObject().get("token").getAsString();
@@ -35,7 +39,14 @@ public class LoginConverterService {
 		User user = new User();
 		user.setName(name);
 		user.setRegistration(Long.parseLong(registration));
-
+		
+		// Separando usuários entre estudantes e servidores de acordo com a matrícula
+		if (registration.length() == 5) {
+			user.getAuthorities().add(roleService.findByName("EMPLOYEE"));
+		} else {
+			user.getAuthorities().add(roleService.findByName("STUDENT"));
+		}
+		
 		return user;
 	}
 

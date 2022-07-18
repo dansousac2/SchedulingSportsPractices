@@ -4,7 +4,7 @@ import br.edu.ifpb.dac.ssp.model.Role;
 
 public interface RoleService {
 	
-	public enum AVAILABLE_ROLES { ADMIN, USER }
+	public enum AVAILABLE_ROLES { ADMIN, USER, STUDENT, EMPLOYEE }
 
 	public void createDefaultValues();
 
