@@ -12,6 +12,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
@@ -19,7 +20,6 @@ import br.edu.ifpb.dac.ssp.exception.RuleViolationException;
 import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
-import br.edu.ifpb.dac.ssp.util.Constants;
 
 @Service
 public class SchedulingValidatorService {
@@ -37,6 +37,15 @@ public class SchedulingValidatorService {
 	
 	@Autowired 
 	private SportService sportService;
+	
+	@Value("${practice.maximum-duration}")
+	private String maximumDurationPracticeTime;
+	
+	@Value("${institution.opening-time}")
+	private String institutionOpeningTime;
+	
+	@Value("${institution.closing-time}")
+	private String institutionClosingTime;
 	
 	public SchedulingValidatorService() {
 		validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -97,24 +106,25 @@ public class SchedulingValidatorService {
 	}
 	
 	public boolean validateScheduledTime(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
-		LocalTime openingTime = dateConverter.stringToTime(Constants.INSTITUTION_OPENING_TIME);
-		LocalTime closingTime = dateConverter.stringToTime(Constants.INSTITUTION_CLOSING_TIME);
+		LocalTime openingTime = dateConverter.stringToTime(this.institutionOpeningTime);
+		LocalTime closingTime = dateConverter.stringToTime(this.institutionClosingTime);
 		
 		if (scheduledStartTime.isBefore(openingTime) || scheduledFinishTime.isBefore(openingTime) ||
 			scheduledStartTime.isAfter(closingTime) || scheduledFinishTime.isAfter(closingTime)) {
-			throw new RuleViolationException("O horário da prática deve ser entre " + Constants.INSTITUTION_OPENING_TIME + " e " + Constants.INSTITUTION_CLOSING_TIME);
+			throw new RuleViolationException("O horário da prática deve ser entre " + this.institutionOpeningTime + " e " + this.institutionClosingTime);
 		}
 		
 		return true;
 	}
 	
 	public boolean validateDurationOfPractice(LocalTime scheduledStartTime, LocalTime scheduledFinishTime) throws Exception {
+		long maxDurationPractice = Long.valueOf(this.maximumDurationPracticeTime);
 		Duration durationOfPractice = Duration.between(scheduledStartTime, scheduledFinishTime);
 		
 		if (durationOfPractice.toMinutes() <= 0) {
 			throw new RuleViolationException("A duração da prática não deve ser igual ou menor que 0 minutos!");
-		} else if (durationOfPractice.toMinutes() > Constants.MAXIMUM_DURATION_PRACTICE_MINUTES) {
-			throw new RuleViolationException("A prática agendada deve ter no máximo " + Constants.MAXIMUM_DURATION_PRACTICE_MINUTES + " minutos!");
+		} else if (durationOfPractice.toMinutes() > maxDurationPractice) {
+			throw new RuleViolationException("A prática agendada deve ter no máximo " + this.maximumDurationPracticeTime + " minutos!");
 		}
 		
 		return true;
