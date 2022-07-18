@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.exception.RuleViolationException;
 import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.User;
@@ -27,8 +28,8 @@ public class SchedulingService {
 
 	@Autowired
 	private SchedulingRepository schedulingRepository;
-//	@Autowired
-//	private AuthenticationService authenticationService;
+	@Autowired
+	private AuthenticationService authenticationService;
 	
 	public List<Scheduling> findAll() {
 		List<Scheduling> list = schedulingRepository.findAll();
@@ -79,8 +80,8 @@ public class SchedulingService {
 	}
 	
 	public Scheduling save(Scheduling scheduling) {
-//		Descomentar quando subirem todas as implementações
-//		scheduling.setCreator(authenticationService.getLoggedUser());
+
+		scheduling.setCreator(authenticationService.getLoggedUser());
 		
 		// Adicionar validação para não permitir o agendamento para local privado, caso o usuário seja estudante
 		
@@ -92,10 +93,10 @@ public class SchedulingService {
 			throw new ObjectNotFoundException("agendamento", "id", scheduling.getId());
 		} 
 		
-		// Se o usuário que está tentando excluir não é o criador, lança exceção
-//		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
-//			// Lança exceção de operação inválida
-//		}
+		// Adicionar condição para administrador
+		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
+		}
 		
 		schedulingRepository.delete(scheduling);
 	}
@@ -108,10 +109,9 @@ public class SchedulingService {
 		}
 		
 		Scheduling scheduling = findById(id);
-		// Se o usuário que está tentando excluir não é o criador, lança exceção
-//		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
-//			// Lança exceção de operação inválida
-//		}
+		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
+		}
 		
 		schedulingRepository.deleteById(id);
 	}
