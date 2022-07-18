@@ -60,7 +60,6 @@ public class PlaceController {
 	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@PostMapping
 	public ResponseEntity save(@RequestBody @Valid PlaceDTO dto) {
-		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			Place entity = converterService.dtoToPlace(dto);
 			entity = placeService.save(entity);
@@ -76,7 +75,6 @@ public class PlaceController {
 	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable Integer id, @RequestBody @Valid PlaceDTO dto) {
-		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			dto.setId(id);
 			Place entity = converterService.dtoToPlace(dto);
@@ -93,7 +91,6 @@ public class PlaceController {
 	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {
-		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			placeService.deleteById(id);
 			
