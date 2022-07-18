@@ -27,6 +27,8 @@ public class SchedulingService {
 
 	@Autowired
 	private SchedulingRepository schedulingRepository;
+//	@Autowired
+//	private AuthenticationService authenticationService;
 	
 	public List<Scheduling> findAll() {
 		List<Scheduling> list = schedulingRepository.findAll();
@@ -77,6 +79,11 @@ public class SchedulingService {
 	}
 	
 	public Scheduling save(Scheduling scheduling) {
+//		Descomentar quando subirem todas as implementações
+//		scheduling.setCreator(authenticationService.getLoggedUser());
+		
+		// Adicionar validação para não permitir o agendamento para local privado, caso o usuário seja estudante
+		
 		return schedulingRepository.save(scheduling);
 	}
 	
@@ -84,6 +91,11 @@ public class SchedulingService {
 		if (!existsById(scheduling.getId())) {
 			throw new ObjectNotFoundException("agendamento", "id", scheduling.getId());
 		} 
+		
+		// Se o usuário que está tentando excluir não é o criador, lança exceção
+//		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+//			// Lança exceção de operação inválida
+//		}
 		
 		schedulingRepository.delete(scheduling);
 	}
@@ -94,6 +106,12 @@ public class SchedulingService {
 		} else if (!existsById(id)) {
 			throw new ObjectNotFoundException("agendamento", "id", id);
 		}
+		
+		Scheduling scheduling = findById(id);
+		// Se o usuário que está tentando excluir não é o criador, lança exceção
+//		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())) {
+//			// Lança exceção de operação inválida
+//		}
 		
 		schedulingRepository.deleteById(id);
 	}

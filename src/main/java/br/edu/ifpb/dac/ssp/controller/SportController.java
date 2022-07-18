@@ -56,7 +56,7 @@ public class SportController {
 	
 	@PostMapping
 	public ResponseEntity save(@RequestBody @Valid SportDTO dto) {
-		
+		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			Sport entity = converterService.dtoToSport(dto);
 			entity = sportService.save(entity);
@@ -71,7 +71,7 @@ public class SportController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable Integer id, @RequestBody @Valid SportDTO dto) {
-		
+		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			dto.setId(id);
 			Sport entity = converterService.dtoToSport(dto);
@@ -87,7 +87,7 @@ public class SportController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {
-		
+		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
 		try {
 			sportService.deleteById(id);
 			
