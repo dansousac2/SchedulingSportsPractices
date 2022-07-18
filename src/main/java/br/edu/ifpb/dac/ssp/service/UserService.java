@@ -15,6 +15,7 @@ import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
 import br.edu.ifpb.dac.ssp.model.Role;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
+import br.edu.ifpb.dac.ssp.service.RoleService.AVAILABLE_ROLES;
 
 @Service
 public class UserService implements UserServiceInterface {
@@ -93,9 +94,9 @@ public class UserService implements UserServiceInterface {
 		String registration = String.valueOf(user.getRegistration());
 		// Separando usuários entre estudantes e servidores de acordo com a matrícula
 		if (registration.length() == 5) {
-			roles.add(roleService.findByName("EMPLOYEE"));
+			roles.add(roleService.findByName(AVAILABLE_ROLES.EMPLOYEE.name()));
 		} else {
-			roles.add(roleService.findByName("STUDENT"));
+			roles.add(roleService.findByName(AVAILABLE_ROLES.STUDENT.name()));
 		}
 		
 		user.setRoles(roles);

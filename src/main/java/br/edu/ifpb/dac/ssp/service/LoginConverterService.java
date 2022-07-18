@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import br.edu.ifpb.dac.ssp.model.User;
+import br.edu.ifpb.dac.ssp.service.RoleService.AVAILABLE_ROLES;
 
 @Service
 public class LoginConverterService {
@@ -42,9 +43,9 @@ public class LoginConverterService {
 		
 		// Separando usuários entre estudantes e servidores de acordo com a matrícula
 		if (registration.length() == 5) {
-			user.getAuthorities().add(roleService.findByName("EMPLOYEE"));
+			user.getAuthorities().add(roleService.findByName(AVAILABLE_ROLES.EMPLOYEE.name()));
 		} else {
-			user.getAuthorities().add(roleService.findByName("STUDENT"));
+			user.getAuthorities().add(roleService.findByName(AVAILABLE_ROLES.STUDENT.name()));
 		}
 		
 		return user;
