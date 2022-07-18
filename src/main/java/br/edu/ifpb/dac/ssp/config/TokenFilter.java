@@ -43,10 +43,19 @@ public class TokenFilter extends OncePerRequestFilter {
 	
 	private void authenticate(String token) {
 		Integer userid = tokenService.getUserId(token);
-		//Também está dando erro
-		User user = userService.findById(userid);
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		// TODO: Organizar melhor depois
+		User user = null;
+		try {
+			user = userService.findById(userid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (!(user == null)) {
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+		}	
 	}
 
 

@@ -97,6 +97,14 @@ public class User implements UserDetails{
 		this.password = password;
 	}
 
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -113,6 +121,7 @@ public class User implements UserDetails{
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
+
 
 	@Override
 	public Collection<Role> getAuthorities() {

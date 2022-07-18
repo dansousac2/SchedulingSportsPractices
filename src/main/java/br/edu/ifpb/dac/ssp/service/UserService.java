@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.BeanDefinitionDsl.Role;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.model.Role;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
 
@@ -87,6 +89,15 @@ public class UserService implements UserServiceInterface {
 		passwordEncoderService.encryptPassword(user);
 		List<Role> roles = new ArrayList<>();
 		roles.add(roleService.findDefault());
+		
+		String registration = String.valueOf(user.getRegistration());
+		// Separando usuários entre estudantes e servidores de acordo com a matrícula
+		if (registration.length() == 5) {
+			roles.add(roleService.findByName("EMPLOYEE"));
+		} else {
+			roles.add(roleService.findByName("STUDENT"));
+		}
+		
 		user.setRoles(roles);
 		
 		return userRepository.save(user);
@@ -134,6 +145,13 @@ public class UserService implements UserServiceInterface {
 		}
 		
 		userRepository.deleteById(id);
+	}
+
+	// Adicionei aqui só porque tava dando erro
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
