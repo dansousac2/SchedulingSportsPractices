@@ -22,6 +22,7 @@ import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.SchedulingRepository;
+import br.edu.ifpb.dac.ssp.service.RoleService.AVAILABLE_ROLES;
 
 @Service
 public class SchedulingService {
@@ -85,7 +86,7 @@ public class SchedulingService {
 		User user = authenticationService.getLoggedUser();
 		
 		if (!scheduling.getPlace().isPublic() && 
-			user.getAuthorities().contains(roleService.findByName("STUDENT"))) {
+			user.getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.STUDENT.name()))) {
 			
 			throw new RuleViolationException("Operação inválida! Estudantes só podem agendar práticas para locais públicos");
 		}
@@ -101,7 +102,7 @@ public class SchedulingService {
 		} 
 		
 		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
-				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName("ADMIN"))) {
+				&& !authenticationService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
 			
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
@@ -118,7 +119,7 @@ public class SchedulingService {
 		
 		Scheduling scheduling = findById(id);
 		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
-				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName("ADMIN"))) {
+				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
 		
