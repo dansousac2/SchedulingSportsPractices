@@ -119,7 +119,7 @@ public class SchedulingService {
 		
 		Scheduling scheduling = findById(id);
 		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
-				&& !scheduling.getCreator().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
+				&& !authenticationService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
 		
