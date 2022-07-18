@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,7 @@ public class SportController {
 		}
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@PostMapping
 	public ResponseEntity save(@RequestBody @Valid SportDTO dto) {
 		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
@@ -69,6 +71,7 @@ public class SportController {
 		}
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@PutMapping("/{id}")
 	public ResponseEntity update(@PathVariable Integer id, @RequestBody @Valid SportDTO dto) {
 		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
@@ -85,6 +88,7 @@ public class SportController {
 		}
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable Integer id) {
 		// Adicionar validação para apenas servidores/administradores terem acesso à essa função
