@@ -41,13 +41,6 @@ public class LoginConverterService {
 		user.setName(name);
 		user.setRegistration(Long.parseLong(registration));
 		
-		// Separando usuários entre estudantes e servidores de acordo com a matrícula
-		if (registration.length() == 5) {
-			user.getAuthorities().add(roleService.findByName(AVAILABLE_ROLES.EMPLOYEE.name()));
-		} else {
-			user.getAuthorities().add(roleService.findByName(AVAILABLE_ROLES.STUDENT.name()));
-		}
-		
 		return user;
 	}
 
