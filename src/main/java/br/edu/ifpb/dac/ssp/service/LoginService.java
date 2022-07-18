@@ -49,13 +49,9 @@ public class LoginService {
 			user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
 		} catch(Exception e) {
 			String json = suapService.findUser(this.suapToken, username);
-			System.out.println("\npassou 01"); //teste
 			user = loginConverter.jsonToUser(json);
-			System.out.println("passou 02");
 			user = userService.save(user);
-			System.out.println("passou 03");
 		}
-		System.out.println("passou do suapLogin"); // teste
 		
 		return user;
 	}

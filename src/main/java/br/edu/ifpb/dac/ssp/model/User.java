@@ -26,13 +26,13 @@ public class User implements Serializable {
 	@Column(name = "USER_NAME", nullable = false)
 	private String name;
 	
-	@Column(name = "USER_EMAIL", nullable = false)
+	@Column(name = "USER_EMAIL", nullable = true)
 	private String email;
 	
 	@Column(name = "USER_REGISTRATION", nullable = false)
 	private Long registration;
 	
-	@Column(name = "USER_PASSWORD", nullable = false)
+	@Column(name = "USER_PASSWORD", nullable = true)
 	private String password;
 	
 	public User() {
