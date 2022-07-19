@@ -33,14 +33,12 @@ public class User implements UserDetails{
 	@Column(name = "USER_NAME", nullable = false)
 	private String name;
 	
+	// para implementação futura.
 	@Column(name = "USER_EMAIL", nullable = true)
 	private String email;
 	
 	@Column(name = "USER_REGISTRATION", nullable = false)
 	private Long registration;
-	
-	@Column(name = "USER_PASSWORD", nullable = true)
-	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Role> roles;
@@ -49,12 +47,11 @@ public class User implements UserDetails{
 		
 	}
 	
-	public User(Integer id, String name, String email, Long registration, String password) {
+	public User(Integer id, String name, String email, Long registration) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.registration = registration;
-		this.password = password;
 	}
 	
 	public Integer getId() {
@@ -87,14 +84,6 @@ public class User implements UserDetails{
 
 	public void setRegistration(Long registration) {
 		this.registration = registration;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public List<Role> getRoles() {
@@ -151,6 +140,11 @@ public class User implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public String getPassword() {
+		return null;
 	}
 	
 

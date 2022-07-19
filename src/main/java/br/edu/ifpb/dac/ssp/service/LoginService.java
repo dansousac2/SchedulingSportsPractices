@@ -3,6 +3,8 @@ package br.edu.ifpb.dac.ssp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -23,19 +25,8 @@ public class LoginService {
 	private String logintype;
 	
 	private String suapToken;
-	
-	public User login(String username, String password) throws NumberFormatException, Exception {
-		switch(logintype) {
-		case "suap":
-			return suapLogin(username, password);
-		case "local":
-			return localLogin(username, password);
-		default:
-			return localLogin(username, password);
-		}
-	}
 
-	private User suapLogin(String username, String password) throws NumberFormatException, Exception {
+	public String suapLogin(String username, String password) throws NumberFormatException, Exception {
 		String jsonToken = suapService.login(username, password);
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		
@@ -53,17 +44,11 @@ public class LoginService {
 			user = userService.save(user);
 		}
 		
-		return user;
+		return suapToken;
 	}
-
-	private User localLogin(String username, String password) throws NumberFormatException, Exception {
-		User user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
-		
-		if(user == null || password == null || !password.equals(user.getPassword())) {
-			throw new IllegalArgumentException("Campo username ou password inválido!");
-		}
-		
-		return user;
+	
+	public User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return (User) authentication.getPrincipal();
 	}
-
 }

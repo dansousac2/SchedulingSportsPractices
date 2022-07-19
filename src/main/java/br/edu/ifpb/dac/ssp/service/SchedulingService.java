@@ -30,7 +30,7 @@ public class SchedulingService {
 	@Autowired
 	private SchedulingRepository schedulingRepository;
 	@Autowired
-	private AuthenticationService authenticationService;
+	private LoginService loginService;
 	@Autowired
 	private RoleService roleService;
 	
@@ -83,7 +83,7 @@ public class SchedulingService {
 	}
 	
 	public Scheduling save(Scheduling scheduling) throws Exception {
-		User user = authenticationService.getLoggedUser();
+		User user = loginService.getLoggedUser();
 		
 		if (!scheduling.getPlace().isPublic() && 
 			user.getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.STUDENT.name()))) {
@@ -101,8 +101,8 @@ public class SchedulingService {
 			throw new ObjectNotFoundException("agendamento", "id", scheduling.getId());
 		} 
 		
-		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
-				&& !authenticationService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
+		if (!scheduling.getCreator().equals(loginService.getLoggedUser())
+				&& !loginService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
 			
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
@@ -118,8 +118,8 @@ public class SchedulingService {
 		}
 		
 		Scheduling scheduling = findById(id);
-		if (!scheduling.getCreator().equals(authenticationService.getLoggedUser())
-				&& !authenticationService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
+		if (!scheduling.getCreator().equals(loginService.getLoggedUser())
+				&& !loginService.getLoggedUser().getAuthorities().contains(roleService.findByName(AVAILABLE_ROLES.ADMIN.name()))) {
 			throw new RuleViolationException("Operação inválida! Apenas o criador do agendamento pode exclui-lo");
 		}
 		

@@ -8,63 +8,37 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import br.edu.ifpb.dac.ssp.service.PasswordEncoderService;
 import br.edu.ifpb.dac.ssp.service.RoleService;
-import br.edu.ifpb.dac.ssp.service.TokenService;
 import br.edu.ifpb.dac.ssp.service.UserService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
-	@Autowired
-	private TokenService tokenService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private PasswordEncoderService passwordEncoderService;
-	
 	@Override
 	@Bean
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
-	
-	@Bean 
-	public TokenFilter jwtTokenFilter() {
-		return new TokenFilter(tokenService, userService);
-	}
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-		
-		//Está dando um erro, mas ainda não identifiquei a origem
-		.userDetailsService(userService)
-		.passwordEncoder(passwordEncoderService);
-	}
-	
+
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		
@@ -93,14 +67,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 		        .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
 		        .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-		        .antMatchers(HttpMethod.POST, "/api/isTokenValid").permitAll()
 		        .antMatchers(HttpMethod.POST, "/api/user").permitAll()
 		        .antMatchers(HttpMethod.DELETE, "/api/user").hasRole(RoleService.AVAILABLE_ROLES.ADMIN.name())
 		        .anyRequest().authenticated()
 		 .and()
-		     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		 .and()
-		     .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		 
 		 http
 		 .logout(
 				 logout ->

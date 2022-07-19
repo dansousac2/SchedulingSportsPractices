@@ -12,9 +12,11 @@ import org.springframework.web.context.WebApplicationContext;
 
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.model.dto.LoginDTO;
+import br.edu.ifpb.dac.ssp.model.dto.TokenDTO;
 import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
 import br.edu.ifpb.dac.ssp.service.LoginService;
 import br.edu.ifpb.dac.ssp.service.UserConverterService;
+import br.edu.ifpb.dac.ssp.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -25,14 +27,19 @@ public class LoginController {
 	private LoginService service;
 	@Autowired
 	private UserConverterService userConverter;
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody LoginDTO dto) {
 		try {
-			User entity = service.login(dto.getUsername(), dto.getPassword());
-			UserDTO dtoToReturn = userConverter.userToDto(entity);
+			String token = service.suapLogin(dto.getUsername(), dto.getPassword());
+			User entity  = userService.findByRegistration(Long.parseLong(dto.getUsername())).get();
+			UserDTO userDTO = userConverter.userToDto(entity);
 			
-			return new ResponseEntity(dtoToReturn, HttpStatus.OK);
+			TokenDTO tokenDTO = new TokenDTO(token, userDTO);
+			
+			return new ResponseEntity(tokenDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
