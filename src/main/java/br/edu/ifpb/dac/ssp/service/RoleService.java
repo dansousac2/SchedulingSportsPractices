@@ -1,7 +1,9 @@
 package br.edu.ifpb.dac.ssp.service;
 
-import br.edu.ifpb.dac.ssp.model.Role;
+import org.springframework.stereotype.Service;
 
+import br.edu.ifpb.dac.ssp.model.Role;
+@Service
 public interface RoleService {
 	
 	public enum AVAILABLE_ROLES { ADMIN, USER, STUDENT, EMPLOYEE }

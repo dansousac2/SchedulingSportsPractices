@@ -2,6 +2,9 @@ package br.edu.ifpb.dac.ssp.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public interface SuapServiceInterface {
 	
 	// URLs usadas

@@ -11,7 +11,8 @@ import org.springframework.web.context.WebApplicationContext;
 import br.edu.ifpb.dac.ssp.model.User;
 
 @Service
-@Scope(value = WebApplicationContext.SCOPE_SESSION)
+// Comentei aqui porque um dos erros que deu foi relacionado à esse campo
+//@Scope(value = WebApplicationContext.SCOPE_SESSION)
 public class LoginService {
 
 	@Autowired
@@ -20,9 +21,6 @@ public class LoginService {
 	private SuapService suapService;
 	@Autowired
 	private LoginConverterService loginConverter;
-	
-	@Value("${app.logintype}")
-	private String logintype;
 	
 	private String suapToken;
 

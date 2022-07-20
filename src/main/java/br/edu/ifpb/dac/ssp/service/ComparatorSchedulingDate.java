@@ -2,6 +2,8 @@ package br.edu.ifpb.dac.ssp.service;
 
 import java.util.Comparator;
 
+import org.springframework.stereotype.Component;
+
 import br.edu.ifpb.dac.ssp.model.Scheduling;
 
 public class ComparatorSchedulingDate implements Comparator<Scheduling> {

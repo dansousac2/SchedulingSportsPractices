@@ -1,21 +1,16 @@
 package br.edu.ifpb.dac.ssp.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.model.Role;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
-import br.edu.ifpb.dac.ssp.service.RoleService.AVAILABLE_ROLES;
 
 @Service
 public class UserService {
