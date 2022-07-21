@@ -1,6 +1,6 @@
 package br.edu.ifpb.dac.ssp.config;
 
-import java.io.IOException;
+import java.io.IOException;	
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,12 +14,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
@@ -27,17 +29,35 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import br.edu.ifpb.dac.ssp.service.RoleService;
+import br.edu.ifpb.dac.ssp.service.TokenService;
+import br.edu.ifpb.dac.ssp.service.UserService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	private UserService userService;
 	
 	@Override
 	@Bean
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
+	
+	@Bean
+	public TokenFilter jwtTokenFilter() {
+		return new TokenFilter(tokenService, userService);
+	}
 
+	@Bean
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+			.userDetailsService(userService);
+	}
+	
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		
@@ -70,7 +90,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		        .antMatchers(HttpMethod.DELETE, "/api/user").hasRole(RoleService.AVAILABLE_ROLES.ADMIN.name())
 		        .anyRequest().authenticated()
 		 .and()
-		     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		 .and()
+		 	.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		 
 		 http
 		 .logout(
@@ -84,15 +106,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						@Override
 						public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
 								Authentication authentication) throws IOException, ServletException {
-							
-							
 						}
 				     })		 
-				     
 				 );
-		 
 	}
-
+	
 }
 
 

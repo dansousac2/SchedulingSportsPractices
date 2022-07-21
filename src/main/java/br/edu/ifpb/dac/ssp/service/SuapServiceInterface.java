@@ -9,12 +9,16 @@ public interface SuapServiceInterface {
 	
 	// URLs usadas
 	public static final String OBTAIN_TOKEN_URL = "https://suap.ifpb.edu.br/api/jwt/obtain_token/";
+	public static final String VERIFY_TOKEN_URL = "https://suap.ifpb.edu.br/api/jwt/verify_token/";
 	public static final String EMPLOYEES_URL = "https://suap.ifpb.edu.br/api/recursos-humanos/servidores/v1/";
 	public static final String STUDENTS_URL = "https://suap.ifpb.edu.br/api/ensino/alunos/v1/";
 	
 	// Campos de login
 	public static final String USERNAME_JSON_FIELD = "username";
 	public static final String PASSWORD_JSON_FIELD = "password";
+	
+	// Campos para verificar token
+	public static final String TOKEN_JSON_FIELD	 = "token";
 	
 	// Dados do header de autenticação
 	public static final String TOKEN_HEADER_NAME = "Authorization";

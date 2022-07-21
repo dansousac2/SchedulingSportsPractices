@@ -131,4 +131,27 @@ public class SuapService implements SuapServiceInterface {
 		return null;
 	}
 
+	public boolean isValidToken(String token) {
+		Map body = Map.of(TOKEN_JSON_FIELD, token);
+
+		String json = loginConverter.mapToJson(body);
+
+		try {
+			HttpRequest url = generatePostUrl(VERIFY_TOKEN_URL, null, json);
+			String result = sendRequestUrl(url);
+			
+			if(result.equals(token)) {
+				return true;
+			}
+
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (InterruptedException e3) {
+			e3.printStackTrace();
+		}
+
+		return false;
+	}
 }

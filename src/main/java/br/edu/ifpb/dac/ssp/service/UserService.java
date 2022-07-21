@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
@@ -13,7 +16,7 @@ import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -111,6 +114,20 @@ public class UserService {
 		}
 		
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		try {
+			User user = findByRegistration(Long.parseLong(username)).get();
+			return user;
+		} catch (Exception e) {
+			throw new UsernameNotFoundException(e.getMessage());
+		}
+	}
+
+	public User findByToken(String token) {
+		return userRepository.findByToken(token);
 	}
 
 }

@@ -42,7 +42,18 @@ public class User implements UserDetails{
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Role> roles;
+	//TODO apenas para teste - remover ao encontrar uma alternativa
+	@Column(name = "USER_TOKEN", nullable = true)
+	private String token;
 	
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public User() {
 		
 	}
