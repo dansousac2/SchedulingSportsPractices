@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,29 +35,25 @@ import br.edu.ifpb.dac.ssp.service.UserService;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration {
 	
 	@Autowired
 	private TokenService tokenService;
 	@Autowired
 	private UserService userService;
-	
-	@Override
-	@Bean
-	protected AuthenticationManager authenticationManager() throws Exception {
-		return super.authenticationManager();
-	}
+	private AuthenticationManager authenticationManager;
 	
 	@Bean
 	public TokenFilter jwtTokenFilter() {
 		return new TokenFilter(tokenService, userService);
 	}
 
+	/*
 	@Bean
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 			.userDetailsService(userService);
-	}
+	} */
 	
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
@@ -79,6 +76,46 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 	
+	@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userService);
+        authenticationManager = authenticationManagerBuilder.build();
+
+        http.csrf().disable().cors().disable().authorizeHttpRequests()
+        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+        .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+        .antMatchers(HttpMethod.DELETE, "/api/user").hasRole(RoleService.AVAILABLE_ROLES.ADMIN.name())
+        .anyRequest().authenticated()
+		 .and()
+		     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		 .and()
+		 	.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        
+        http
+		 .logout(
+				 logout ->
+				     logout
+				     .clearAuthentication(true)
+				     .invalidateHttpSession(true)
+				     .logoutUrl("/api/logout")
+				     .logoutSuccessHandler(new LogoutSuccessHandler() {
+
+						@Override
+						public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+								Authentication authentication) throws IOException, ServletException {
+						}
+				     })		 
+				 );
+        
+        return http.build();
+    }
+
+    
+	/*
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		    .csrf().disable()
@@ -109,7 +146,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						}
 				     })		 
 				 );
-	}
+	}*/
 	
 }
 
