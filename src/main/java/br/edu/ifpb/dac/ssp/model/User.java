@@ -1,14 +1,17 @@
 package br.edu.ifpb.dac.ssp.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -35,6 +38,9 @@ public class User implements Serializable {
 	@Column(name = "USER_PASSWORD", nullable = true)
 	private String password;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Role> roles;
+	
 	public User() {
 		
 	}
@@ -47,6 +53,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
+	public List<Role> getAuthorities() {
+		return roles;
+	}
+
+	public void setAuthorities(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	public Integer getId() {
 		return id;
 	}
