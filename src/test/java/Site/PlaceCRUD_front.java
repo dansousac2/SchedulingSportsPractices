@@ -10,12 +10,18 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+@TestMethodOrder(OrderAnnotation.class)
 class PlaceCRUD_front {
 
 	private static WebDriver driver;
@@ -44,7 +50,8 @@ class PlaceCRUD_front {
 	}
 
 	@Test
-	@DisplayName("criar local no banco - procedimento com sucesso")
+	@DisplayName("criar local no banco - sucesso")
+	@Order(1)
 	void createPlace() {
 		driver.get("http://localhost:3000/createPlace");
 		
@@ -64,7 +71,6 @@ class PlaceCRUD_front {
 		String tableInfo = getElementByTagName("TBODY").getText();
 		
 		assertAll("Testes do front ao criar place",
-				
 				/*aviso de sucesso*/
 				() -> assertEquals("Sucesso", cardTitle),
 				() -> assertEquals("Local criado com Sucesso!", cardMsg),
@@ -77,6 +83,70 @@ class PlaceCRUD_front {
 				() -> assertTrue(tableInfo.contains("Logo na entrada")),
 				() -> assertTrue(tableInfo.contains("12")),
 				() -> assertTrue(tableInfo.contains("Não"))
+		);
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"1", "2", "3", "4", "5", "6", "7"})
+	@DisplayName("criar local no banco - falha por campos em branco e regras de negócio")
+	@Order(2)
+	void createPlaceFail(String s) throws InterruptedException {
+		driver.get("http://localhost:3000/createPlace");
+		
+		final String messageErro;
+		
+		switch (s) {
+		case "1":
+			writerFields(null, "Logo na entrada", "12", false);
+			messageErro = "É obrigatório informar o nome do local!";
+			break;
+		case "2":
+			writerFields("Quadra", null, "12", false);
+			messageErro = "É obrigatório informar um local de referência!";
+			break;
+		case "3":
+			writerFields("Quadra", "Logo na entrada", null, true);
+			messageErro = "É obrigatório informar a capacidade máxima do local!";
+			break;
+		case "4":
+			writerFields("Blo", "Logo na entrada", "12", true); // "Blo" - 3 caracteres
+			messageErro = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais";
+			break;
+		case "5":
+			writerFields("Quadra", "Logo na entrada", "-1", false); // -1 para capacidade
+			messageErro = "A capacidade de participantes deve ser um valor positivo!";
+			break;
+		case "6":
+			writerFields("Quadra", "Logo na entrada", "401", false); // 401 excede a capacidade máxima
+			messageErro = "O valor máximo para capacidade de participantes é 400!";
+			break;
+		case "7":
+			writerFields("Quadra", "Logo na entrada", "12", false); // local já está cadastrado no bancod de dados
+			messageErro = "Já existe um local com nome Quadra";
+			break;
+		default:
+			messageErro = "";
+		}
+		
+		Thread.sleep(1500);
+		
+		// botão salvar
+		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
+		buttonSave.click();
+
+		Thread.sleep(500);
+		
+		// card de sucesso
+		String cardTitle = getElementByClass("toast-title").getText();
+		String cardMsg = getElementByClass("toast-message").getText();
+
+		assertAll("Testes do front ao criar place - campos nulos",
+				/*aviso de falha*/
+				() -> assertEquals("Erro", cardTitle),
+				() -> assertEquals(messageErro, cardMsg),
+				
+				/*a página ainda deve ser a mesma depois do erro*/
+				() -> assertEquals("http://localhost:3000/createPlace", driver.getCurrentUrl().toString())
 		);
 	}
 
