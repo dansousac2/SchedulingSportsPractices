@@ -23,7 +23,9 @@ class PlaceCRUD_front {
 	static void setUp() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver",
 				"D:\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\SchedulingSportsPractices\\src\\test\\java\\files\\chromedriver.exe");
+		
 		driver = new ChromeDriver();
+		
 		// caso não encontre um elemento (em uma busca), espera n segundos (fazendo
 		// novas buscas) antes de lançar erro.
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
@@ -59,7 +61,9 @@ class PlaceCRUD_front {
 		assertAll("Testes do front ao criar place",
 				/* aviso de sucesso */
 				() -> assertTrue(cardTitle.equals("Sucesso")),
-				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!")));
+				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!"))
+				
+		);
 	}
 
 	private void writerFields(String placeName, String referency, String capacityM, boolean isPublic) {
