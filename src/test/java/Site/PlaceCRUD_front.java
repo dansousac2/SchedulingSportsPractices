@@ -1,13 +1,14 @@
 package Site;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -31,7 +32,7 @@ class PlaceCRUD_front {
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 	}
 
-	@BeforeEach
+	@AfterEach
 	void beforeEach() throws InterruptedException {
 		Thread.sleep(1000);
 	}
@@ -59,11 +60,23 @@ class PlaceCRUD_front {
 		String cardTitle = getElementByClass("toast-title").getText();
 		String cardMsg = getElementByClass("toast-message").getText();
 
+		// pega todos os elementos da tabela
+		String tableInfo = getElementByTagName("TBODY").getText();
+		
 		assertAll("Testes do front ao criar place",
-				/* aviso de sucesso */
-				() -> assertTrue(cardTitle.equals("Sucesso")),
-				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!")),
-				() -> assertTrue(driver.getCurrentUrl().toString().equals("http://localhost:3000/listPlaces"))
+				
+				/*aviso de sucesso*/
+				() -> assertEquals("Sucesso", cardTitle),
+				() -> assertEquals("Local criado com Sucesso!", cardMsg),
+				
+				/*se o redirecionamento foi feito à página informada*/
+				() -> assertEquals("http://localhost:3000/listPlaces", driver.getCurrentUrl().toString()),
+				
+				/*elementos retornados na tabela*/
+				() -> assertTrue(tableInfo.contains("Quadra")),
+				() -> assertTrue(tableInfo.contains("Logo na entrada")),
+				() -> assertTrue(tableInfo.contains("12")),
+				() -> assertTrue(tableInfo.contains("Não"))
 		);
 	}
 
@@ -105,5 +118,9 @@ class PlaceCRUD_front {
 
 	private WebElement getElementByXPath(String xPath) {
 		return driver.findElement(By.xpath(xPath));
+	}
+	
+	private WebElement getElementByTagName(String tag) {
+		return driver.findElement(By.tagName(tag));
 	}
 }
