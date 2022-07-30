@@ -18,12 +18,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 class PlaceCRUD_front {
 
 	private static WebDriver driver;
+	private static WebElement buttonSave;
 
 	@BeforeAll
 	static void setUp() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver",
 				"D:\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\SchedulingSportsPractices\\src\\test\\java\\files\\chromedriver.exe");
+		
 		driver = new ChromeDriver();
+		driver.get("http://localhost:3000/createPlace");
+		buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
+		
 		// caso não encontre um elemento (em uma busca), espera n segundos (fazendo
 		// novas buscas) antes de lançar erro.
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
@@ -31,7 +36,6 @@ class PlaceCRUD_front {
 
 	@BeforeEach
 	void beforeEach() throws InterruptedException {
-		driver.get("http://localhost:3000/createPlace");
 		Thread.sleep(1000);
 	}
 
@@ -49,8 +53,7 @@ class PlaceCRUD_front {
 		writerFields("Quadra", "Logo na entrada", "12", false);
 		
 		// botão salvar
-		WebElement element = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		element.click();
+		buttonSave.click();
 
 		// card de sucesso
 		String cardTitle = getElementByClass("toast-title").getText();
@@ -59,7 +62,9 @@ class PlaceCRUD_front {
 		assertAll("Testes do front ao criar place",
 				/* aviso de sucesso */
 				() -> assertTrue(cardTitle.equals("Sucesso")),
-				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!")));
+				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!")),
+				() -> assertTrue(driver.getCurrentUrl().toString().equals("http://localhost:3000/listPlaces"))
+		);
 	}
 
 	private void writerFields(String placeName, String referency, String capacityM, boolean isPublic) {
@@ -98,7 +103,7 @@ class PlaceCRUD_front {
 		return driver.findElement(By.className(className));
 	}
 
-	private WebElement getElementByXPath(String xPath) {
+	private static WebElement getElementByXPath(String xPath) {
 		return driver.findElement(By.xpath(xPath));
 	}
 }
