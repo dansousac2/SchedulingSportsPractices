@@ -33,7 +33,6 @@ class PlaceCRUD_front {
 
 	@BeforeEach
 	void beforeEach() throws InterruptedException {
-		driver.get("http://localhost:3000/createPlace");
 		Thread.sleep(1000);
 	}
 
@@ -46,13 +45,15 @@ class PlaceCRUD_front {
 	@Test
 	@DisplayName("criar local no banco - procedimento com sucesso")
 	void createPlace() {
+		driver.get("http://localhost:3000/createPlace");
+		
 		// Campos de preenchiemtno sendo setados com valores respectivos de:
 		// Local / Referência / Capacidade máxima / é público?
 		writerFields("Quadra", "Logo na entrada", "12", false);
 		
 		// botão salvar
-		WebElement element = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		element.click();
+		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
+		buttonSave.click();
 
 		// card de sucesso
 		String cardTitle = getElementByClass("toast-title").getText();
@@ -61,8 +62,8 @@ class PlaceCRUD_front {
 		assertAll("Testes do front ao criar place",
 				/* aviso de sucesso */
 				() -> assertTrue(cardTitle.equals("Sucesso")),
-				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!"))
-				
+				() -> assertTrue(cardMsg.equals("Local criado com Sucesso!")),
+				() -> assertTrue(driver.getCurrentUrl().toString().equals("http://localhost:3000/listPlaces"))
 		);
 	}
 
