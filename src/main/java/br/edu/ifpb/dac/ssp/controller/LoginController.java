@@ -29,7 +29,7 @@ public class LoginController {
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody LoginDTO dto) {
 		try {
-			User entity = service.login(dto.getUsername(), dto.getPassword());
+			User entity = service.suapLogin(dto.getUsername(), dto.getPassword());
 			UserDTO dtoToReturn = userConverter.userToDto(entity);
 			
 			return new ResponseEntity(dtoToReturn, HttpStatus.OK);

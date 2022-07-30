@@ -1,6 +1,9 @@
 package Site;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +20,8 @@ class OpenSiteTest {
 	static void setUp() {
 		System.setProperty("webdriver.chrome.driver", "D:\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\SchedulingSportsPractices\\src\\test\\java\\files\\chromedriver.exe");
 		driver = new ChromeDriver();
+		// caso não encontre um elemento (em uma busca), espera 10s (fazendo novas buscas) antes de lançar erro.
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); 
 	}
 	
 	@AfterAll
@@ -34,7 +39,12 @@ class OpenSiteTest {
 	@Test
 	@DisplayName("verify title of tab")
 	void title() {
-		assertTrue(driver.getTitle().contentEquals("Sheculing Sport Practices"));
+		String title = driver.getTitle();
+		assertAll("Testes da página de login",
+				() -> assertTrue(title.contentEquals("SAPE")),
+				() -> assertTrue(title.length() == 4)
+		);
 	}
 
+	
 }

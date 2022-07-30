@@ -19,23 +19,9 @@ public class LoginService {
 	@Autowired
 	private LoginConverterService loginConverter;
 	
-	@Value("${app.logintype}")
-	private String logintype;
-	
 	private String suapToken;
 	
-	public User login(String username, String password) throws NumberFormatException, Exception {
-		switch(logintype) {
-		case "suap":
-			return suapLogin(username, password);
-		case "local":
-			return localLogin(username, password);
-		default:
-			return localLogin(username, password);
-		}
-	}
-
-	private User suapLogin(String username, String password) throws NumberFormatException, Exception {
+	public User suapLogin(String username, String password) throws NumberFormatException, Exception {
 		String jsonToken = suapService.login(username, password);
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		
@@ -55,15 +41,4 @@ public class LoginService {
 		
 		return user;
 	}
-
-	private User localLogin(String username, String password) throws NumberFormatException, Exception {
-		User user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
-		
-		if(user == null || password == null || !password.equals(user.getPassword())) {
-			throw new IllegalArgumentException("Campo username ou password inválido!");
-		}
-		
-		return user;
-	}
-
 }
