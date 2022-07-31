@@ -2,6 +2,7 @@ package Site;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
@@ -337,6 +338,29 @@ class PlaceCRUD_front {
 				
 				/*a página ainda deve ser a mesma depois do erro*/
 				() -> assertTrue(driver.getCurrentUrl().contains("http://localhost:3000/updatePlace"))
+		);
+	}
+	
+	@Test
+	@DisplayName("Deletando um local partindo da página de listagem")
+	@Order(5)
+	void deletePlace() throws InterruptedException {
+		driver.get("http://localhost:3000/listPlaces");
+		
+		// id do primeiro local da lista
+		String id = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr/td[1]").getText();
+		
+		// precionar o primeiro botão "excluir" da tabela
+		getElementByXPath("//button[@class='btn btn-danger']").click();
+		
+		// necessário para que a tabela tenha tempo de ser atualizada
+		Thread.sleep(500);
+		
+		String tBody = getElementByTagName("TBODY").getText();
+		System.out.println(tBody);
+		assertAll("Exclusão de local",
+				() -> assertFalse(tBody.contains(id)),
+				() -> assertEquals("http://localhost:3000/listPlaces", driver.getCurrentUrl())
 		);
 	}
 	
