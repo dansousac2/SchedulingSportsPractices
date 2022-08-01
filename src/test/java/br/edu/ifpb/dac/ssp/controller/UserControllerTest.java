@@ -87,7 +87,7 @@ class UserControllerTest {
 		exUserDto.setName("Dansousa");
 		exUserDto.setEmail("dansousa@gmail.com");
 		exUserDto.setPassword("1234567");
-		exUserDto.setRegistration(123456789);
+		exUserDto.setRegistration((long) 123456789);
 		exUserDto.setId(1);
 
 		exUser = userConverter.dtoToUser(exUserDto);
