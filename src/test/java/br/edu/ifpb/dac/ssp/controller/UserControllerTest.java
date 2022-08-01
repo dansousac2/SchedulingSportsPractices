@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -142,7 +143,7 @@ class UserControllerTest {
 	@ValueSource(strings = { "", " \n  ", " \n \t", "null" }) // save invalid - name blanck or null
 	public void saveInvalidNameAfeterJson(String name) {
 		if (name.equals("null")) {
-			UserDTO novo = new UserDTO(null, "dan@gmail.com", 123456, "yep"); // name null - barred in UserService
+			UserDTO novo = new UserDTO(null, "dan@gmail.com", (long) 123456, "yep"); // name null - barred in UserService
 			resp = controller.save(novo);
 		} else {
 			exUserDto.setName(name); // name is blanck - barred in UserService
@@ -162,7 +163,7 @@ class UserControllerTest {
 
 	@Test
 	public void saveInvalidRegistration() { // save invalid - user's registration already exists in DB
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
 
 		resp = controller.save(exUserDto);
 
@@ -172,8 +173,8 @@ class UserControllerTest {
 	@Test
 	public void updateValid() { // update valid - HttpStatus ok and body
 		when(repository.existsById(anyInt())).thenReturn(true); // userService
-		when(repository.existsByRegistration(123456789)).thenReturn(true); // userService
-		when(repository.findByRegistration(123456789)).thenReturn(Optional.of(exUser)); // userService
+		when(repository.existsByRegistration((long) 123456789)).thenReturn(true); // userService
+		when(repository.findByRegistration((long) 123456789)).thenReturn(Optional.of(exUser)); // userService
 		when(repository.save(any(User.class))).thenReturn(exUser);
 
 		resp = controller.update(1, exUserDto);
@@ -203,7 +204,7 @@ class UserControllerTest {
 			resp = controller.update(1, exUserDto);
 			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		} else {
-			resp = controller.update(1, new UserDTO(null, "example@gmail.com", 13579, "password"));
+			resp = controller.update(1, new UserDTO(null, "example@gmail.com", (long) 13579, "password"));
 			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		}
 	}
@@ -219,11 +220,11 @@ class UserControllerTest {
 
 	@Test
 	public void updateInvalidIdNotMatch() { // update invalid - dto's id in DB not match (same registration)
-		User user = new User(2, "Afonso", "affff@gmail.com", 123456789, "passwordloko");
+		User user = new User(2, "Afonso", "affff@gmail.com", (long) 123456789, "passwordloko");
 
 		when(repository.existsById(anyInt())).thenReturn(true);
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
-		when(repository.findByRegistration(123456789)).thenReturn(Optional.of(user));
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
+		when(repository.findByRegistration((long) 123456789)).thenReturn(Optional.of(user));
 
 		resp = controller.update(12, exUserDto);
 
@@ -284,7 +285,7 @@ class UserControllerTest {
 
 	@Test
 	public void getAllValidWithUsers() { // getAll valid - have User on DB
-		User user = new User(2, "Afonso", "affff@gmail.com", 123456710, "passwordloko");
+		User user = new User(2, "Afonso", "affff@gmail.com", (long) 123456710, "passwordloko");
 		List<User> list = new ArrayList<>();
 		list.add(user);
 		list.add(exUser);

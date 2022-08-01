@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -96,17 +97,17 @@ class UserServiceTest {
 	
 	@Test
 	public void findByRegistrationValid() { // registration valid
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
 		
-		assertDoesNotThrow(() -> service.findByRegistration(20201502));
-		verify(repository).findByRegistration(20201502);
+		assertDoesNotThrow(() -> service.findByRegistration((long) 20201502));
+		verify(repository).findByRegistration((long) 20201502);
 	}
 	
 	@Test 
 	public void findByRegistrationInvalidNotFound() { // registration invalid because is not found in DB
-		when(repository.existsByRegistration(anyInt())).thenReturn(false);
+		when(repository.existsByRegistration(anyLong())).thenReturn(false);
 		
-		Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.findByRegistration(123456789));
+		Throwable exc = assertThrows(ObjectNotFoundException.class, () -> service.findByRegistration((long) 123456789));
 		assertEquals("Não foi encontrado usuário com matrícula 123456789", exc.getMessage());
 	}
 	
@@ -121,9 +122,9 @@ class UserServiceTest {
 	@Test
 	public void saveValid() { // save valid
 		exUser.setName("M@ry");
-		exUser.setRegistration(159357);
+		exUser.setRegistration((long) 159357);
 		
-		when(repository.existsByRegistration(anyInt())).thenReturn(false);
+		when(repository.existsByRegistration(anyLong())).thenReturn(false);
 		
 		assertDoesNotThrow(() -> service.save(exUser));
 		verify(repository).save(exUser);
@@ -132,9 +133,9 @@ class UserServiceTest {
 	@Test
 	public void saveInvalidAlwaysInDB() { // save invalid because User is already in DB
 		exUser.setName("M@ry");
-		exUser.setRegistration(159357);
+		exUser.setRegistration((long) 159357);
 		
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
 		
 		Throwable exc = assertThrows(ObjectAlreadyExistsException.class, () -> service.save(exUser));
 		assertEquals("Já existe um usuário com matrícula 159357", exc.getMessage());
@@ -162,12 +163,12 @@ class UserServiceTest {
 		try {
 			exUser.setName("John");
 			exUser.setId(1);
-			exUser.setRegistration(13579);
+			exUser.setRegistration((long) 13579);
 			Optional<User> op = Optional.of(exUser);
 
 			when(repository.existsById(anyInt())).thenReturn(true);
-			when(repository.existsByRegistration(anyInt())).thenReturn(true);
-			when(repository.findByRegistration(anyInt())).thenReturn(op);
+			when(repository.existsByRegistration(anyLong())).thenReturn(true);
+			when(repository.findByRegistration(anyLong())).thenReturn(op);
 			
 			assertDoesNotThrow(() -> service.update(exUser));
 			verify(repository).save(exUser);
@@ -206,17 +207,17 @@ class UserServiceTest {
 	public void updateInvalidIdNotMatch() { // update invalid because User's id not match with the id of User on DB
 		exUser.setName("John Legend"); // object A
 		exUser.setId(1); // pertence to object A in DB
-		exUser.setRegistration(123123); // pertence to object B in DB
+		exUser.setRegistration((long) 123123); // pertence to object B in DB
 		
 		User otherUser = new User();
 		otherUser.setId(2);
 		otherUser.setName("Robbie Williams"); //object B in DB
-		otherUser.setRegistration(123123);
+		otherUser.setRegistration((long) 123123);
 		Optional<User> op = Optional.of(otherUser);
 		
 		when(repository.existsById(anyInt())).thenReturn(true);
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
-		when(repository.findByRegistration(anyInt())).thenReturn(op);
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
+		when(repository.findByRegistration(anyLong())).thenReturn(op);
 		
 		Throwable exc = assertThrows(ObjectAlreadyExistsException.class, () -> service.update(exUser));
 		assertEquals("Já existe um usuário com matrícula 123123", exc.getMessage());

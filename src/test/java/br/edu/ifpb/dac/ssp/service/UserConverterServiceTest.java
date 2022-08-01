@@ -24,14 +24,14 @@ public class UserConverterServiceTest {
 		user.setId(1);
 		user.setName("Maria Souza");
 		user.setEmail("mariasouza@gmail.com");
-		user.setRegistration(1234);
+		user.setRegistration((long) 1234);
 		user.setPassword("122");
 		
 		dto = new UserDTO();
 		dto.setId(1);
 		dto.setName("Maria Souza");
 		dto.setEmail("mariasouza@gmail.com");
-		dto.setRegistration(1234);
+		dto.setRegistration((long) 1234);
 		
 		
 	}
