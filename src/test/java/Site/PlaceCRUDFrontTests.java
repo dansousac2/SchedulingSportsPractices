@@ -27,7 +27,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 @TestMethodOrder(OrderAnnotation.class)
-class PlaceCRUD_front {
+class PlaceCRUDFrontTests {
 
 	private static WebDriver driver;
 

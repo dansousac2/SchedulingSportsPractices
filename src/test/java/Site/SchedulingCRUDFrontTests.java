@@ -11,10 +11,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
@@ -24,19 +24,35 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
+import br.edu.ifpb.dac.ssp.model.Place;
+import br.edu.ifpb.dac.ssp.model.Sport;
+import br.edu.ifpb.dac.ssp.service.PlaceService;
+import br.edu.ifpb.dac.ssp.service.SportService;
+
 @TestMethodOrder(OrderAnnotation.class)
 public class SchedulingCRUDFrontTests {
 
 	private static WebDriver driver;
+	private static SportService sportService;
+	private static PlaceService placeService;
 
 	@BeforeAll
-	static void setUp() throws InterruptedException {
+	static void setUp() throws Exception {
 		System.setProperty("webdriver.chrome.driver",
-				"C:\\Users\\REGIVALDO\\Desktop\\Keilla\\DAC\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\TesteSchedulingSportsPractices\\src\\test\\java\\files\\keilla\\chromedriver.exe");
+				"C:\\Users\\Danilo\\Documents\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\ssp.zip_expanded\\ssp\\src\\test\\java\\files\\chromedriver.exe");
 		
 		driver = new ChromeDriver();
 		
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		
+		Place place = new Place();
+		place.setName("Ginásio");
+		place.setMaximumCapacityParticipants(150);
+		place.setReference("Logo na chegada");
+		placeService.save(place);
+		
+		Sport sport = new Sport();
+		sport.setName("Futebol");
 	}
 	
 	@AfterEach

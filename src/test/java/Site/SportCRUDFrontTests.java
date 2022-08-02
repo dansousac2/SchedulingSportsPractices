@@ -24,14 +24,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-public class FrontSportTests {
+public class SportCRUDFrontTests {
 	
 	private static WebDriver driver;
 
 	@BeforeAll
 	static void setUp() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver",
-				"C:\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\SchedulingSportsPractices\\src\\test\\java\\files\\chromedriver.exe");
+				"C:\\Users\\Danilo\\Documents\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\ssp.zip_expanded\\ssp\\src\\test\\java\\files\\chromedriver.exe");
 		
 		driver = new ChromeDriver();
 		
