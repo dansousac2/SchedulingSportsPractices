@@ -1,11 +1,15 @@
 package Site;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -24,35 +28,21 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.service.PlaceService;
-import br.edu.ifpb.dac.ssp.service.SportService;
-
 @TestMethodOrder(OrderAnnotation.class)
 public class SchedulingCRUDFrontTests {
 
 	private static WebDriver driver;
-	private static SportService sportService;
-	private static PlaceService placeService;
-
+	
 	@BeforeAll
 	static void setUp() throws Exception {
 		System.setProperty("webdriver.chrome.driver",
 				"C:\\Users\\Danilo\\Documents\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\ssp.zip_expanded\\ssp\\src\\test\\java\\files\\chromedriver.exe");
 		
+
 		driver = new ChromeDriver();
 		
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		
-		Place place = new Place();
-		place.setName("Ginásio");
-		place.setMaximumCapacityParticipants(150);
-		place.setReference("Logo na chegada");
-		placeService.save(place);
-		
-		Sport sport = new Sport();
-		sport.setName("Futebol");
 	}
 	
 	@AfterEach
@@ -111,9 +101,9 @@ public class SchedulingCRUDFrontTests {
 		driver.get("http://localhost:3000/createScheduling");
 		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String date = LocalDate.now().plusDays(1).format(dtf);
+		String formattedDate = LocalDate.now().plusDays(1).format(dtf);
 		
-		writerFields(date, "15:00", "16:30", "Ginásio", "Futebol");
+		writerFields(formattedDate, "15:00", "16:30", "Ginásio", "Futebol");
 		
 		WebElement saveButton = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
 		saveButton.click();
@@ -126,6 +116,29 @@ public class SchedulingCRUDFrontTests {
 		assertEquals("Prática agendada com sucesso!", message);
 		
 		assertEquals("http://localhost:3000/listScheduling", driver.getCurrentUrl().toString());
+		
+		// Validações na tela de listagem de agendamento
+		String tableBody = getElementByTagName("TBODY").getText();
+		
+		String date = LocalDate.now().plusDays(1).toString();
+	
+		Pattern p = Pattern.compile(String.format("\\n?.*%s.*15:00.*16:30.*Ginásio.*", date));
+		Matcher m = p.matcher(tableBody);
+		
+		final String lineOnTable;
+		if(m.find()) {
+			lineOnTable = m.group(0);
+		} else {
+			lineOnTable = "";
+		}
+		
+		assertAll("Verificando se elemento salvo está na listagem de agendamentos",
+				() -> assertTrue(lineOnTable.contains(date)),
+				() -> assertTrue(lineOnTable.contains("15:00")),
+				() -> assertTrue(lineOnTable.contains("16:30")),
+				() -> assertTrue(lineOnTable.contains("Ginásio")),
+				() -> assertTrue(lineOnTable.contains("Futebol"))
+		);
 	}
 	
 	@ParameterizedTest
