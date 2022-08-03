@@ -2,7 +2,6 @@ package Site;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
@@ -26,10 +25,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import br.edu.ifpb.dac.ssp.model.Place;
+
 @TestMethodOrder(OrderAnnotation.class)
 class PlaceCRUDFrontTests {
 
 	private static WebDriver driver;
+	private static JavascriptExecutor jse;
+	private static Place place;
 
 	@BeforeAll
 	static void setUp() throws InterruptedException {
@@ -37,6 +40,13 @@ class PlaceCRUDFrontTests {
 				"C:\\Users\\Danilo\\Documents\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\ssp.zip_expanded\\ssp\\src\\test\\java\\files\\chromedriver.exe");
 		
 		driver = new ChromeDriver();
+		jse = (JavascriptExecutor)driver;
+		
+		place = new Place();
+		place.setName("Quadra");
+		place.setReference("Logo na entrada");
+		place.setMaximumCapacityParticipants(100);
+		place.setPublic(false);
 		
 		// caso não encontre um elemento (em uma busca), espera n segundos (fazendo
 		// novas buscas) antes de lançar erro. OBS: o getCurrentURL não se enquadra.
@@ -57,18 +67,20 @@ class PlaceCRUDFrontTests {
 	@Test
 	@DisplayName("criar local no banco - CASO POSITIVO")
 	@Order(1)
-	void createPlace() {
+	void createPlace() throws InterruptedException {
 		driver.get("http://localhost:3000/createPlace");
 		
+		String placeName = place.getName();
+		String placeReference = place.getReference();
+		String placeMaxCapacity = String.valueOf(place.getMaximumCapacityParticipants());
+		boolean placeIsPublic = place.isPublic();
+		
 		// Campos de preenchiemtno sendo setados com valores respectivos de:
-		// Local / Referência / Capacidade máxima / é público?
-		writerFields("Quadra", "Logo na entrada", "12", false);
+		writerFields(placeName, placeReference, placeMaxCapacity, placeIsPublic);
 		
 		// botão salvar
-		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		// resolve problema do botão sem poder ser alcançado no click
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("arguments[0].click()", buttonSave);
+		WebElement buttonSave = getElementByXPath("//button[@class='btn btn-primary']");
+		clickElement(buttonSave);
 
 		// card de sucesso
 		String cardTitle = getElementByClass("toast-title").getText();
@@ -77,16 +89,8 @@ class PlaceCRUDFrontTests {
 		// pega todos os elementos da tabela
 		String tBody = getElementByTagName("TBODY").getText();
 		
-		// criando pattern com id do place em questão para pegar linha da tabela contendo as informações deste place
-		Pattern p = Pattern.compile("\\n?\\d+ Quadra.*");
-		Matcher m = p.matcher(tBody);
-		final String lineOnTable;
-		if(m.find()) {
-			// gerando linhas específica da tabela qeu evidencia os valores deste exato place editado.
-			lineOnTable = m.group(0);
-		} else {
-			lineOnTable = "";
-		}
+		// captura a linha específica que representa o objeto criado
+		String lineOnTable = getSpecificLine(tBody, placeName);
 		
 		assertAll("Testes do front ao criar place",
 				/*aviso de sucesso*/
@@ -97,10 +101,10 @@ class PlaceCRUDFrontTests {
 				() -> assertEquals("http://localhost:3000/listPlaces", driver.getCurrentUrl().toString()),
 				
 				/*elementos retornados na tabela*/
-				() -> assertTrue(lineOnTable.contains("Quadra")),
-				() -> assertTrue(lineOnTable.contains("Logo na entrada")),
-				() -> assertTrue(lineOnTable.contains("12")),
-				() -> assertTrue(lineOnTable.contains("Não"))
+				() -> assertTrue(lineOnTable.contains(placeName)),
+				() -> assertTrue(lineOnTable.contains(placeReference)),
+				() -> assertTrue(lineOnTable.contains(placeMaxCapacity)),
+				() -> assertTrue(lineOnTable.contains((placeIsPublic) ? "Sim" : "Não"))
 		);
 	}
 	
@@ -111,36 +115,45 @@ class PlaceCRUDFrontTests {
 	void createPlaceFail(String s) throws InterruptedException {
 		driver.get("http://localhost:3000/createPlace");
 		
+		String placeName = place.getName();
+		String placeReference = place.getReference();
+		String placeMaxCapacity = String.valueOf(place.getMaximumCapacityParticipants());
+		boolean placeIsPublic = place.isPublic();
+		
 		final String messageErro;
 		
 		switch (s) {
 		case "1":
-			writerFields(null, "Logo na entrada", "12", false);
+			writerFields(null, placeReference, placeMaxCapacity, placeIsPublic);
 			messageErro = "É obrigatório informar o nome do local!";
 			break;
 		case "2":
-			writerFields("Quadra", null, "12", false);
+			writerFields(placeName, null, placeMaxCapacity, placeIsPublic);
 			messageErro = "É obrigatório informar um local de referência!";
 			break;
 		case "3":
-			writerFields("Quadra", "Logo na entrada", null, true);
+			writerFields(placeName, placeReference, null, placeIsPublic);
 			messageErro = "É obrigatório informar a capacidade máxima do local!";
 			break;
 		case "4":
-			writerFields("Blo", "Logo na entrada", "12", true); // "Blo" - 3 caracteres
+			// "Blo" - 3 caracteres
+			writerFields("Blo", placeReference, placeMaxCapacity, placeIsPublic);
 			messageErro = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais";
 			break;
 		case "5":
-			writerFields("Quadra", "Logo na entrada", "-1", false); // -1 para capacidade
+			// capacidade não positiva
+			writerFields(placeName, placeReference, "0", placeIsPublic);
 			messageErro = "A capacidade de participantes deve ser um valor positivo!";
 			break;
 		case "6":
-			writerFields("Quadra", "Logo na entrada", "401", false); // 401 excede a capacidade máxima
+			// 401 excede a capacidade máxima
+			writerFields(placeName, placeReference, "401", placeIsPublic); 
 			messageErro = "O valor máximo para capacidade de participantes é 400!";
 			break;
 		case "7":
-			writerFields("Quadra", "Logo na entrada", "12", false); // local já está cadastrado no bancod de dados
-			messageErro = "Já existe um local com nome Quadra";
+			// local já está cadastrado no bancod de dados
+			writerFields(placeName, placeReference, placeMaxCapacity, placeIsPublic);
+			messageErro = "Já existe um local com nome " + placeName ;
 			break;
 		default:
 			messageErro = "";
@@ -149,13 +162,8 @@ class PlaceCRUDFrontTests {
 		Thread.sleep(1500);
 		
 		// botão salvar
-		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		try {
-			buttonSave.click();
-		} catch (Exception e) {
-			JavascriptExecutor jse = (JavascriptExecutor)driver;
-			jse.executeScript("arguments[0].click()", buttonSave);
-		}
+		WebElement buttonSave = getElementByXPath("//button[@class='btn btn-primary']");
+		clickElement(buttonSave);
 
 		Thread.sleep(500);
 		
@@ -164,7 +172,7 @@ class PlaceCRUDFrontTests {
 		String cardMsg = getElementByClass("toast-message").getText();
 
 		assertAll("Testes do front ao criar place - mesangem de campos",
-				/*aviso de falha*/
+				/*aviso de falha para cada card*/
 				() -> assertEquals("Erro", cardTitle),
 				() -> assertEquals(messageErro, cardMsg),
 				
@@ -177,45 +185,45 @@ class PlaceCRUDFrontTests {
 	@DisplayName("Atualizar local - CASO POSITIVO - verificando se dados chegaram nos campos corretamente e botão cancelar")
 	@Order(3)
 	void updatePlaceValid() throws InterruptedException {
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		driver.get("http://localhost:3000/listPlaces");
+
+		// pegando informações da primeira linha da tabela à mostra para usuário
+		String PlaceName = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[2]").getText();
+		String placeReference = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[3]").getText();
+		String PlaceCapacity = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[4]").getText();
+		String placeIsPublicString = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[5]").getText();
+		boolean placeIsPublic = placeIsPublicString.equals("Sim");
 		
-		
-		// elementos da tabela (primeira linha)
-		String name = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[2]").getText();
-		String reference = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[3]").getText();
-		String capacity = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[4]").getText();
-		String isPublicString = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr[1]/td[5]").getText();
-		boolean isPublic = isPublicString.equals("Sim");
-		
-		// outro modo de usar o xPath - pega o primeiro elemento com a classe especificada - botão atualizar
-		getElementByXPath("//button[@class='btn btn-warning']").click();
+		// botão atualizar do primeiro elemento
+		WebElement updateButton = getElementByXPath("//button[@class='btn btn-warning']");
+		clickElement(updateButton);
 		
 		WebElement nameWE = getElementById("lab01");
 		WebElement referenceWE = getElementById("lab02");
 		WebElement capacityWE = getElementById("lab03");
 		WebElement isPublicWE = getElementByClass("form-check-input");
 		
+		// campo já possui valor. Pegando valor que não é editável
 		String placeId = getElementById("lab00").getAttribute("value");
 		
 		assertAll("Elemento devem estar nos campus da página de edição",
 				/*no campo ID deve conter apenas números*/
 				() -> assertTrue(placeId.matches("^\\d+$")),
-				/*conferindo campos: nome, referência, capacidade, e se é público respectivamente*/
-				() -> assertEquals(nameWE.getAttribute("value"), name),
-				() -> assertEquals(referenceWE.getAttribute("value"), reference),
-				() -> assertEquals(capacityWE.getAttribute("value"), capacity),
-				/*a página deve ser a de edição*/
+				/*conferindo campos: nome, referência e capacidade. Por padrão a caixa de 'isPublic' não fica marcada*/
+				() -> assertEquals(nameWE.getAttribute("value"), PlaceName),
+				() -> assertEquals(referenceWE.getAttribute("value"), placeReference),
+				() -> assertEquals(capacityWE.getAttribute("value"), PlaceCapacity),
+				/*a página deve ser a de edição. A url contém ao final a id do place que está sendo editado*/
 				() -> assertTrue(driver.getCurrentUrl().contains("http://localhost:3000/updatePlace/"))
 		);
 		
 		Thread.sleep(1500);
 		
-		// novos valores dos atributos
+		// novos valores dos atributos. Modificamos tudo mesno o ID, pois é inacessível
 		String newName = "Sala de Reuniões";
 		String newReference = "Próximo ao refeitório";
 		String newCapacity = "8";
-		boolean newIsPublic = !isPublic;
+		boolean newIsPublic = !placeIsPublic;
 		
 		nameWE.clear();
 		nameWE.sendKeys(newName);
@@ -225,33 +233,20 @@ class PlaceCRUDFrontTests {
 		capacityWE.sendKeys(newCapacity);
 		// inverte o valor bolleano atual de isPublic
 		if(newIsPublic) {
-//			isPublicWE.click();
-			jse.executeScript("arguments[0].click()", isPublicWE);
+			clickElement(isPublicWE);
 		}
 		
 		Thread.sleep(1500);
 		
 		// clicando no botão de Atualizar
 		WebElement buttonUpdate = getElementByXPath("//button[@class='btn btn-primary']");
-		try {
-			buttonUpdate.click();
-		} catch (Exception e) {
-			jse.executeScript("arguments[0].click()", buttonUpdate);
-		}
+		clickElement(buttonUpdate);
 
 		// pegando todas as tuplas da tabela
 		String tBody = getElementByTagName("TBODY").getText();
 		
-		// criando pattern com id do place em questão para pegar linha da tabela contendo as informações deste place
-		Pattern p = Pattern.compile(String.format("\\n?%s.*", placeId));
-		Matcher m = p.matcher(tBody);
-		final String lineOnTable;
-		if(m.find()) {
-			// gerando linhas específica da tabela qeu evidencia os valores deste exato place editado.
-			lineOnTable = m.group(0);
-		} else {
-			lineOnTable = "";
-		}
+		// pegando linha específica do objeto que foi atualizado
+		String lineOnTable = getSpecificLine(tBody, placeId);
 		
 		assertAll("Verificando valores após edição de todos, assim como verifica card",
 				() -> assertEquals("Sucesso", getElementByClass("toast-title").getText()),
@@ -266,19 +261,20 @@ class PlaceCRUDFrontTests {
 		Thread.sleep(1500);
 		
 		/*clicando no botão cancelar ao carregar a página de update*/
-		// clicando no botão de Atualizar já na página de listagem
-		getElementByXPath("//button[@class='btn btn-warning']").click();
 		
-		Thread.sleep(1000);
+		// clicando no botão de Atualizar da página de listagem
+		WebElement updateButton02 = getElementByXPath("//button[@class='btn btn-warning']");
+		clickElement(updateButton02);
 		
-		// a página atual deve ser a de edição
+		Thread.sleep(500);
+		
+		// a página atual deve ser a de edição. No final da Url há o Id do place.
 		assertTrue(driver.getCurrentUrl().contains("http://localhost:3000/updatePlace/"));
 		
 		WebElement buttonCancel = getElementByXPath("//button[@class='btn btn-danger']");
-		// resolve problema do botão sem poder ser alcançado no click
-		jse.executeScript("arguments[0].click()", buttonCancel);
+		clickElement(buttonCancel);
 		
-		Thread.sleep(1000);
+		Thread.sleep(500);
 		
 		// a página deve ser a de listagem dos locais
 		assertEquals("http://localhost:3000/listPlaces", driver.getCurrentUrl());
@@ -289,65 +285,65 @@ class PlaceCRUDFrontTests {
 	@DisplayName("atualizar local - CASO NEGATIVO por campos em branco e regras de negócio")
 	@Order(4)
 	void updatePlaceInvalid(String s) throws InterruptedException {
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		String updatedName = "Biblioteca mesa01";
+		String updatedReference = "Segundo Andar";
+		String updatedMaxCapacity = "2";
+		
 		driver.get("http://localhost:3000/listPlaces");
 		
 		Thread.sleep(500);
 		
-		// botão atualizar da página de listagem
-		getElementByXPath("//button[@class='btn btn-warning']").click();
+		// botão atualizar da página de listagem - primeiro da lista
+		WebElement updateButton = getElementByXPath("//button[@class='btn btn-warning']");
+		clickElement(updateButton);
 		
-		final String messageErro;
+		final String erroMessage;
 		
 		switch (s) {
 		case "1":
-			writerFieldsUpdate(null, "Segundo Andar", "2", true);
-			messageErro = "É obrigatório informar o nome do local!";
+			writerFieldsUpdate(null, updatedReference, updatedMaxCapacity, true);
+			erroMessage = "É obrigatório informar o nome do local!";
 			break;
 		case "2":
-			writerFieldsUpdate("Biblioteca mesa01", null, "2", false);
-			messageErro = "É obrigatório informar um local de referência!";
+			writerFieldsUpdate(updatedName, null, updatedMaxCapacity, false);
+			erroMessage = "É obrigatório informar um local de referência!";
 			break;
 		case "3":
-			writerFieldsUpdate("Biblioteca mesa01", "Segundo Andar", null, true);
-			messageErro = "É obrigatório informar a capacidade máxima do local!";
+			writerFieldsUpdate(updatedName, updatedReference, null, true);
+			erroMessage = "É obrigatório informar a capacidade máxima do local!";
 			break;
 		case "4":
-			writerFieldsUpdate("Bib", "Segundo Andar", "2", true); // "Bib" - 3 caracteres
-			messageErro = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais";
+			writerFieldsUpdate("Bib", updatedReference, updatedMaxCapacity, true); // "Bib" - 3 caracteres
+			erroMessage = "Nome inválido! Deve possuir mais que 3 caracteres e não possuir caracteres especiais";
 			break;
 		case "5":
-			writerFieldsUpdate("Biblioteca mesa01", "Segundo Andar", "-1", true); // -1 para capacidade
-			messageErro = "A capacidade de participantes deve ser um valor positivo!";
+			writerFieldsUpdate(updatedName, updatedReference, "-1", true); // -1 para capacidade
+			erroMessage = "A capacidade de participantes deve ser um valor positivo!";
 			break;
 		case "6":
-			writerFieldsUpdate("Biblioteca mesa01", "Segundo Andar", "401", true); // 401 excede a capacidade máxima
-			messageErro = "O valor máximo para capacidade de participantes é 400!";
+			writerFieldsUpdate(updatedName, updatedReference, "401", true); // 401 excede a capacidade máxima
+			erroMessage = "O valor máximo para capacidade de participantes é 400!";
 			break;
 		default:
-			messageErro = "";
+			erroMessage = "";
 		}
 		
 		Thread.sleep(1500);
 		
-		// selecionando botão de Atualizar
-		WebElement buttonUpdate = getElementByXPath("//button[@class='btn btn-primary']");
-		try {
-			buttonUpdate.click();
-		} catch (Exception e) {
-			jse.executeScript("arguments[0].click()", buttonUpdate);
-		}
+		// botão de Atualizar da página de atualizar
+		WebElement updateButton02 = getElementByXPath("//button[@class='btn btn-primary']");
+		clickElement(updateButton02);
 		
 		Thread.sleep(500);
 		
-		// card de sucesso
+		// card de erro
 		String cardTitle = getElementByClass("toast-title").getText();
 		String cardMsg = getElementByClass("toast-message").getText();
 
 		assertAll("Testes do front ao atualizar place - mensagem de campos",
 				/*aviso de falha*/
 				() -> assertEquals("Erro", cardTitle),
-				() -> assertEquals(messageErro, cardMsg),
+				() -> assertEquals(erroMessage, cardMsg),
 				
 				/*a página ainda deve ser a mesma depois do erro*/
 				() -> assertTrue(driver.getCurrentUrl().contains("http://localhost:3000/updatePlace"))
@@ -358,28 +354,46 @@ class PlaceCRUDFrontTests {
 	@DisplayName("Deletando um local partindo da página de listagem")
 	@Order(5)
 	void deletePlace() throws InterruptedException {
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		driver.get("http://localhost:3000/listPlaces");
 		
 		// id do primeiro local da lista
 		String id = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr/td[1]").getText();
 		
 		// precionar o primeiro botão "excluir" da tabela
-		WebElement we = getElementByXPath("//button[@class='btn btn-danger']");
-		try {
-			we.click();
-		} catch (Exception e) {
-			jse.executeScript("arguments[0].click()", we);
-		}
+		WebElement buttonExclude = getElementByXPath("//button[@class='btn btn-danger']");
+		clickElement(buttonExclude);
+		
 		// necessário para que a tabela tenha tempo de ser atualizada
 		Thread.sleep(500);
 		
 		String tBody = getElementByTagName("TBODY").getText();
-		System.out.println(tBody);
+		String lineWithId = getSpecificLine(tBody, id);
+		
 		assertAll("Exclusão de local",
-				() -> assertFalse(tBody.contains(id)),
+				() -> assertTrue(lineWithId.isEmpty()),
 				() -> assertEquals("http://localhost:3000/listPlaces", driver.getCurrentUrl())
 		);
+	}
+	
+	private String getSpecificLine(String tBody, String idOrName) {
+		Pattern pattern;
+		Matcher matcher;
+		String lineOnTable = "";
+		
+		// se conter apenas dígitos
+		if(idOrName.matches("^\\d+$")) {
+			pattern = Pattern.compile(String.format("\\n?%s.*", idOrName));
+		} else {
+			pattern = Pattern.compile(String.format("\\n?\\d+ %s.*", idOrName));
+		}
+		
+		matcher = pattern.matcher(tBody);
+
+		if(matcher.find()) { // método find é NECESSÁRIO para iniciar a busca da parte especificada pelo regex.
+			lineOnTable = matcher.group(0); // captura toda a expressão
+		}
+		
+		return lineOnTable;
 	}
 	
 	private void writerFieldsUpdate(String placeName, String reference, String capacityM, boolean isPublic) {
@@ -413,6 +427,14 @@ class PlaceCRUDFrontTests {
 			}
 		}
 	}
+	
+	private void clickElement(WebElement we) {
+		try {
+			we.click();
+		} catch (Exception e) {
+			jse.executeScript("arguments[0].click()", we);
+		}
+	}
 
 	// Método criado devido a um bug encontrado ao usar clear() do WebElement
 	private void clearField(WebElement element) {
@@ -444,7 +466,7 @@ class PlaceCRUDFrontTests {
 		// caixa "é público?"
 		if(isPublic) {
 			element = getElementById("flexCheckDefault");
-			element.click();
+			clickElement(element);
 		}
 	}
 
