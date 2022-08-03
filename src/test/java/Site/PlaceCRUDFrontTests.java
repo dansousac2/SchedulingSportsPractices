@@ -34,7 +34,7 @@ class PlaceCRUDFrontTests {
 	@BeforeAll
 	static void setUp() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver",
-				"D:\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\SchedulingSportsPractices\\src\\test\\java\\files\\chromedriver.exe");
+				"C:\\Users\\Danilo\\Documents\\workspace-spring-tool-suite-4-4.14.0.RELEASE\\ssp.zip_expanded\\ssp\\src\\test\\java\\files\\chromedriver.exe");
 		
 		driver = new ChromeDriver();
 		
@@ -66,7 +66,9 @@ class PlaceCRUDFrontTests {
 		
 		// botão salvar
 		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		buttonSave.click();
+		// resolve problema do botão sem poder ser alcançado no click
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("arguments[0].click()", buttonSave);
 
 		// card de sucesso
 		String cardTitle = getElementByClass("toast-title").getText();
@@ -148,7 +150,12 @@ class PlaceCRUDFrontTests {
 		
 		// botão salvar
 		WebElement buttonSave = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/button[1]");
-		buttonSave.click();
+		try {
+			buttonSave.click();
+		} catch (Exception e) {
+			JavascriptExecutor jse = (JavascriptExecutor)driver;
+			jse.executeScript("arguments[0].click()", buttonSave);
+		}
 
 		Thread.sleep(500);
 		
@@ -170,6 +177,7 @@ class PlaceCRUDFrontTests {
 	@DisplayName("Atualizar local - CASO POSITIVO - verificando se dados chegaram nos campos corretamente e botão cancelar")
 	@Order(3)
 	void updatePlaceValid() throws InterruptedException {
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		driver.get("http://localhost:3000/listPlaces");
 		
 		
@@ -186,7 +194,7 @@ class PlaceCRUDFrontTests {
 		WebElement nameWE = getElementById("lab01");
 		WebElement referenceWE = getElementById("lab02");
 		WebElement capacityWE = getElementById("lab03");
-		WebElement isPublicWE = getElementById("flexCheckDefault");
+		WebElement isPublicWE = getElementByClass("form-check-input");
 		
 		String placeId = getElementById("lab00").getAttribute("value");
 		
@@ -217,17 +225,19 @@ class PlaceCRUDFrontTests {
 		capacityWE.sendKeys(newCapacity);
 		// inverte o valor bolleano atual de isPublic
 		if(newIsPublic) {
-			isPublicWE.click();
+//			isPublicWE.click();
+			jse.executeScript("arguments[0].click()", isPublicWE);
 		}
 		
 		Thread.sleep(1500);
 		
 		// clicando no botão de Atualizar
 		WebElement buttonUpdate = getElementByXPath("//button[@class='btn btn-primary']");
-		
-		// resolve problema do botão sem poder ser alcançado no click
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("arguments[0].click()", buttonUpdate);
+		try {
+			buttonUpdate.click();
+		} catch (Exception e) {
+			jse.executeScript("arguments[0].click()", buttonUpdate);
+		}
 
 		// pegando todas as tuplas da tabela
 		String tBody = getElementByTagName("TBODY").getText();
@@ -279,6 +289,7 @@ class PlaceCRUDFrontTests {
 	@DisplayName("atualizar local - CASO NEGATIVO por campos em branco e regras de negócio")
 	@Order(4)
 	void updatePlaceInvalid(String s) throws InterruptedException {
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		driver.get("http://localhost:3000/listPlaces");
 		
 		Thread.sleep(500);
@@ -321,9 +332,11 @@ class PlaceCRUDFrontTests {
 		
 		// selecionando botão de Atualizar
 		WebElement buttonUpdate = getElementByXPath("//button[@class='btn btn-primary']");
-		// resolve problema do botão sem poder ser alcançado para click
-		JavascriptExecutor jse = (JavascriptExecutor)driver;
-		jse.executeScript("arguments[0].click()", buttonUpdate);
+		try {
+			buttonUpdate.click();
+		} catch (Exception e) {
+			jse.executeScript("arguments[0].click()", buttonUpdate);
+		}
 		
 		Thread.sleep(500);
 		
@@ -345,14 +358,19 @@ class PlaceCRUDFrontTests {
 	@DisplayName("Deletando um local partindo da página de listagem")
 	@Order(5)
 	void deletePlace() throws InterruptedException {
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
 		driver.get("http://localhost:3000/listPlaces");
 		
 		// id do primeiro local da lista
 		String id = getElementByXPath("//*[@id=\"root\"]/div/div[2]/header/fieldset/table/tbody/tr/td[1]").getText();
 		
 		// precionar o primeiro botão "excluir" da tabela
-		getElementByXPath("//button[@class='btn btn-danger']").click();
-		
+		WebElement we = getElementByXPath("//button[@class='btn btn-danger']");
+		try {
+			we.click();
+		} catch (Exception e) {
+			jse.executeScript("arguments[0].click()", we);
+		}
 		// necessário para que a tabela tenha tempo de ser atualizada
 		Thread.sleep(500);
 		
@@ -386,7 +404,13 @@ class PlaceCRUDFrontTests {
 		}
 		
 		if(isPublic) {
-			getElementById("flexCheckDefault").click();
+			JavascriptExecutor jse = (JavascriptExecutor)driver;
+			WebElement we = getElementById("flexCheckDefault");
+			try {
+				we.click();
+			} catch (Exception e) {
+				jse.executeScript("arguments[0].click()", we);
+			}
 		}
 	}
 

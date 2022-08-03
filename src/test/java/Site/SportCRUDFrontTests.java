@@ -3,6 +3,7 @@ package Site;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
@@ -24,6 +27,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+@TestMethodOrder(OrderAnnotation.class)
 public class SportCRUDFrontTests {
 	
 	private static WebDriver driver;
@@ -228,7 +232,7 @@ public class SportCRUDFrontTests {
 		assertEquals("Erro", title);
 		assertEquals(errorMessage, message);
 		
-		assertEquals("http://localhost:3000/updateSport/1", driver.getCurrentUrl().toString());
+		assertNotEquals("http://localhost:3000/listSports", driver.getCurrentUrl().toString());
 		
 		
 
