@@ -12,9 +12,12 @@ import org.springframework.web.context.WebApplicationContext;
 
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.model.dto.LoginDTO;
+import br.edu.ifpb.dac.ssp.model.dto.TokenDTO;
 import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
 import br.edu.ifpb.dac.ssp.service.LoginService;
+import br.edu.ifpb.dac.ssp.service.TokenService;
 import br.edu.ifpb.dac.ssp.service.UserConverterService;
+import br.edu.ifpb.dac.ssp.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -22,18 +25,36 @@ import br.edu.ifpb.dac.ssp.service.UserConverterService;
 public class LoginController {
 	
 	@Autowired
-	private LoginService service;
+	private LoginService loginService;
 	@Autowired
 	private UserConverterService userConverter;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private TokenService tokenService;
 
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody LoginDTO dto) {
 		try {
-			User entity = service.suapLogin(dto.getUsername(), dto.getPassword());
-			UserDTO dtoToReturn = userConverter.userToDto(entity);
+			String token = loginService.login(dto.getUsername(), dto.getPassword());
+			User entity = userService.findByRegistration(Long.parseLong(dto.getUsername())).get();
+			UserDTO userDto = userConverter.userToDto(entity);
 			
-			return new ResponseEntity(dtoToReturn, HttpStatus.OK);
+			TokenDTO tokenDto = new TokenDTO(token, userDto);
+			
+			return new ResponseEntity(tokenDto, HttpStatus.OK);
 		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@PostMapping("/isValidToken")
+	public ResponseEntity isValidToken(@RequestBody TokenDTO tokenDto) {
+		try {
+			boolean isValidToken = tokenService.isValid(tokenDto.getToken());
+			
+			return new ResponseEntity(isValidToken, HttpStatus.OK);
+		} catch(Exception e){
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}

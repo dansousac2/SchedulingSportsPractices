@@ -1,22 +1,29 @@
 package br.edu.ifpb.dac.ssp.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
 import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
 import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.model.Role;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.repository.UserRepository;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private PasswordEncoderService passwordEncoderService;
 	
 	public List<User> findAll() {
 		return userRepository.findAll();
@@ -68,6 +75,9 @@ public class UserService {
 		if (existsByRegistration(user.getRegistration())) {
 			throw new ObjectAlreadyExistsException("Já existe um usuário com matrícula " + user.getRegistration());
 		}
+		
+		passwordEncoderService.encriptyPassword(user);
+		
 		return userRepository.save(user);
 	}
 	
@@ -110,6 +120,16 @@ public class UserService {
 		}
 		
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		try {
+			User user = findByRegistration(Long.parseLong(username)).get();
+			return user;
+		} catch (Exception e) {
+			throw new UsernameNotFoundException("Não pode ser encontrado nenhum usuário com matrícula :" + username);
+		}
 	}
 
 }

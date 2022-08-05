@@ -65,7 +65,7 @@ public class SchedulingController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	//TODO realizar testes deste método
+	
 	@GetMapping("/useFilter")
 	public ResponseEntity getAllWithFilter(
 			@RequestParam(required = false) Integer placeId,

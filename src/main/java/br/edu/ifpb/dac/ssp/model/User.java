@@ -1,11 +1,10 @@
 package br.edu.ifpb.dac.ssp.model;
 
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,9 +14,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Table(name = "USER", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_REGISTRATION"})})
 @Entity
-public class User implements Serializable {
+public class User implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -52,12 +53,8 @@ public class User implements Serializable {
 		this.registration = registration;
 		this.password = password;
 	}
-	
-	public List<Role> getAuthorities() {
-		return roles;
-	}
 
-	public void setAuthorities(List<Role> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 
@@ -117,6 +114,35 @@ public class User implements Serializable {
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	@Override
+	public Collection<Role> getAuthorities() {
+		return roles;
+	}
 	
+	@Override
+	public String getUsername() {
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
 }

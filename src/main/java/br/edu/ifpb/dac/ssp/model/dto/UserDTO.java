@@ -54,7 +54,7 @@ public class UserDTO {
 	public String getName() {
 		return name;
 	}
-	//TODO confirmar se ficará assim mesmo.
+	
 	public void setName(String name) {
 		if(name != null) {
 			this.name = name.trim();

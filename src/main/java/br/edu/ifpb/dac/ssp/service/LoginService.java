@@ -3,6 +3,10 @@ package br.edu.ifpb.dac.ssp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -18,10 +22,35 @@ public class LoginService {
 	private SuapService suapService;
 	@Autowired
 	private LoginConverterService loginConverter;
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	private String suapToken;
 	
-	public User suapLogin(String username, String password) throws NumberFormatException, Exception {
+	// LOCAL
+	public String login(String username, String password) throws NumberFormatException, Exception {
+		
+		User user = suapLogin(username, password);
+		
+		// lança exceção em caso de falha
+		Authentication authentication =
+				authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(username, password));
+		
+		return tokenService.generate(user);
+	}
+
+	// retorna usuário logado no contexto do Spring Security
+	public User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		return (User) authentication.getPrincipal();
+	}
+	
+	// SUAP
+	private User suapLogin(String username, String password) throws NumberFormatException, Exception {
 		String jsonToken = suapService.login(username, password);
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		
@@ -32,10 +61,11 @@ public class LoginService {
 		User user = new User();
 		
 		try {
-			user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
+			user = userService.findByRegistration(Long.parseLong(username)).get();
 		} catch(Exception e) {
 			String json = suapService.findUser(this.suapToken, username);
 			user = loginConverter.jsonToUser(json);
+			user.setPassword(password);
 			user = userService.save(user);
 		}
 		

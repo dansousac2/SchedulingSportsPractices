@@ -8,14 +8,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import br.edu.ifpb.dac.ssp.service.RoleServiceInterface;
+import br.edu.ifpb.dac.ssp.service.RoleService;
 
 @SpringBootApplication
 @EnableWebMvc
 public class SchedulingSportPracticesApplication implements WebMvcConfigurer, CommandLineRunner {
 
 	@Autowired
-	private RoleServiceInterface roleService;
+	private RoleService roleService;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SchedulingSportPracticesApplication.class, args);
@@ -31,6 +31,5 @@ public class SchedulingSportPracticesApplication implements WebMvcConfigurer, Co
 	@Override
 	public void run(String... args) throws Exception {
 		roleService.createDefaultValues();
-		
 	}
 }
