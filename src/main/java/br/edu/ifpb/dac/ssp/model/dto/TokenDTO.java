@@ -1,7 +1,5 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
-import br.edu.ifpb.dac.ssp.model.User;
-
 public class TokenDTO {
 	
 	private String token;

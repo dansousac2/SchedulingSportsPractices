@@ -27,8 +27,14 @@ public class SuapService implements SuapServiceInterface {
 
 		try {
 			HttpRequest url = generatePostUrl(OBTAIN_TOKEN_URL, null, json);
-			return sendRequestUrl(url);
-
+			String returnedTokenRequest = sendRequestUrl(url);
+			
+			if(returnedTokenRequest.contains("non_field_errors")) {
+				return null;
+			}
+			
+			return returnedTokenRequest;
+					
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (IOException e2) {

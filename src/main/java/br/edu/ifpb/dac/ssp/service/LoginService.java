@@ -55,7 +55,7 @@ public class LoginService {
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		
 		if(this.suapToken == null) {
-			throw new IllegalArgumentException("Campo username ou password inválido!");
+			throw new IllegalArgumentException("Campo matrícula ou senha inválido!");
 		}
 		
 		User user = new User();

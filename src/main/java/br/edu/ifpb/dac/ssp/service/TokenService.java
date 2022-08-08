@@ -2,10 +2,13 @@ package br.edu.ifpb.dac.ssp.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Service;
+
 import br.edu.ifpb.dac.ssp.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 
+@Service
 public interface TokenService {
 	
 	String generate(User user);

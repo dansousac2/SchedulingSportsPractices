@@ -23,6 +23,10 @@ public class LoginConverterService {
 	private RoleService roleService;
 
 	public String jsonToToken(String json) {
+		if(json == null) {
+			return null;
+		}
+		
 		JsonElement jsonElement = JsonParser.parseString(json);
 		String token = jsonElement.getAsJsonObject().get("token").getAsString();
 		return token;
