@@ -25,7 +25,7 @@ public class SportService {
 	public boolean existsById(Integer id) {
 		return sportRepository.existsById(id);
 	}
-	//TODO Sport.existsByName - excluir?
+
 	public boolean existsByName(String name) {
 		return sportRepository.existsByName(name);
 	}

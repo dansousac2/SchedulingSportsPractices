@@ -15,6 +15,10 @@ import br.edu.ifpb.dac.ssp.model.User;
 public class LoginConverterService {
 
 	public String jsonToToken(String json) {
+		if(json == null) {
+			return null;
+		}
+		
 		JsonElement jsonElement = JsonParser.parseString(json);
 		String token = jsonElement.getAsJsonObject().get("token").getAsString();
 		return token;
@@ -28,16 +32,14 @@ public class LoginConverterService {
 											.getAsJsonArray()
 											.get(0)
 											.getAsJsonObject();
-		System.out.println("Passou 1:1"); //teste
+		
 		String name = jsonObject.get("nome").getAsString();
 		String registration = jsonObject.get("matricula").getAsString();
-		System.out.println("nome encontrado: " + name); //teste
-		System.out.println("matricula encontrada: " + registration); //teste
 		User user = new User();
 		user.setName(name);
 		//TODO refatorar - Integer só suportam valores entre +2147483647 e -2147486648
 		user.setRegistration(Integer.parseInt(registration));
-		System.out.println("Passou 1:2"); //teste
+
 		return user;
 	}
 

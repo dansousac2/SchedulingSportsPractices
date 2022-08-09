@@ -263,7 +263,6 @@ public class SchedulingControllerTest {
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 	}
 	
-	//TODO mostrar teste refatorado PlaceName => PlaceId
 	@Test
 	public void testGetAllConfirmedByPlaceAndSportValid() {
 		try {

@@ -287,7 +287,7 @@ public class SchedulingServiceTest {
 			System.out.println(e.getMessage());
 		}
 	}
-	//TODO mostrar novo teste - getAll by schedulingDate (este e o próximo)
+
 	@Test
 	@DisplayName("get all by date scheduling - valid")
 	void getAllByDateValid() {
