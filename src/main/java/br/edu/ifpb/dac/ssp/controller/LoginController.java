@@ -29,10 +29,9 @@ public class LoginController {
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody LoginDTO dto) {
 		try {
-			User entity = service.login(dto.getUsername(), dto.getPassword());
-			UserDTO dtoToReturn = userConverter.userToDto(entity);
+			String token = service.login(dto.getUsername(), dto.getPassword());
 			
-			return new ResponseEntity(dtoToReturn, HttpStatus.OK);
+			return new ResponseEntity(token, HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}

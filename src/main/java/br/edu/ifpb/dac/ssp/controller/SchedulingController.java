@@ -156,7 +156,7 @@ public class SchedulingController {
 	}
 	
 	@PatchMapping("/participation/add/{id}")
-	public ResponseEntity addParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
+	public ResponseEntity addParticipant(@PathVariable Integer id, @RequestBody Long userRegistration) {
 		try {
 			User user = userService.findByRegistration(userRegistration).orElse(null);
 
@@ -171,7 +171,7 @@ public class SchedulingController {
 	}
 	
 	@PatchMapping("/participation/remove/{id}")
-	public ResponseEntity removeParticipant(@PathVariable Integer id, @RequestBody Integer userRegistration) {
+	public ResponseEntity removeParticipant(@PathVariable Integer id, @RequestBody Long userRegistration) {
 		try {
 			User user = userService.findByRegistration(userRegistration).orElse(null);
 

@@ -19,8 +19,6 @@ public class UserConverterService {
 			entity.setName(dto.getName());
 			entity.setEmail(dto.getEmail());
 			entity.setRegistration(dto.getRegistration());
-			entity.setPassword(dto.getPassword());
-			
 			
 			return entity;
 		}

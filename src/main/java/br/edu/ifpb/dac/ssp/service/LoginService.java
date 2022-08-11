@@ -1,8 +1,10 @@
 package br.edu.ifpb.dac.ssp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -18,10 +20,12 @@ public class LoginService {
 	private SuapService suapService;
 	@Autowired
 	private LoginConverterService loginConverter;
+	@Autowired
+	private TokenService tokenService;
 	
 	private String suapToken;
 
-	public User login(String username, String password) throws NumberFormatException, Exception {
+	public String login(String username, String password) throws NumberFormatException, Exception {
 		String jsonToken = suapService.login(username, password);
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		
@@ -32,14 +36,18 @@ public class LoginService {
 		User user = new User();
 		
 		try {
-			user = userService.findByRegistration(Integer.parseInt(username)).orElse(null);
+			user = userService.findByRegistration(Long.parseLong(username)).orElse(null);
 		} catch(Exception e) {
 			String json = suapService.findUser(this.suapToken, username);
 			user = loginConverter.jsonToUser(json);
 			user = userService.save(user);
 		}
 		
-		return user;
+		return tokenService.generate(user);
 	}
 
+	public User getLoggedUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return (User) authentication.getPrincipal();
+	}
 }
