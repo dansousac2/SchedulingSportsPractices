@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ifpb.dac.ssp.model.Role;
 import br.edu.ifpb.dac.ssp.model.User;
 import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
 
@@ -33,6 +34,7 @@ public class UserConverterService {
 			dto.setName(entity.getName());
 			dto.setEmail(entity.getEmail());
 			dto.setRegistration(entity.getRegistration());
+			dto.setRoles((List<Role>) entity.getAuthorities());
 			
 			return dto;
 		}

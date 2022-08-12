@@ -1,11 +1,15 @@
 package br.edu.ifpb.dac.ssp.model.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import br.edu.ifpb.dac.ssp.model.Role;
 
 public class UserDTO {
 	
@@ -21,6 +25,8 @@ public class UserDTO {
 	
 	@NotNull(message = "É obrigatório informar a matrícula do usuário!")
 	private Long registration;
+	
+	private List<Role> roles;
 	
 	public UserDTO() {
 		
@@ -65,4 +71,13 @@ public class UserDTO {
 	public void setRegistration(Long registration) {
 		this.registration = registration;
 	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	
 }
