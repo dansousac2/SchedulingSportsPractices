@@ -1,7 +1,12 @@
 package br.edu.ifpb.dac.ssp.config;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -13,11 +18,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import br.edu.ifpb.dac.ssp.service.RoleService.AVALIABLE_ROLES;
 import br.edu.ifpb.dac.ssp.service.TokenService;
 import br.edu.ifpb.dac.ssp.service.UserService;
 
@@ -75,7 +85,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/actuator/**/").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/login").permitAll()
 		.antMatchers(HttpMethod.POST, "/api/isValidToken").permitAll()
-		.antMatchers(HttpMethod.GET, "/api/user").permitAll() /*teste*/
-		.anyRequest().authenticated();
+		.antMatchers(HttpMethod.DELETE, "/api/user").hasRole(AVALIABLE_ROLES.ADMIN.name())
+		.anyRequest().authenticated()
+		.and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		
+		http.logout(logout -> logout
+								.clearAuthentication(true)
+								.invalidateHttpSession(true)
+								.logoutUrl("/api/logout")
+								.logoutSuccessHandler(new LogoutSuccessHandler() {
+									@Override
+									public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+											throws IOException, ServletException {
+										// Não faz nada em caso de logout positivo.
+									}
+								})
+		);
+		
 	}
 }
