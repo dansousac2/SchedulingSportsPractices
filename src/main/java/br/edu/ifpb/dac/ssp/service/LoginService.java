@@ -25,6 +25,10 @@ public class LoginService {
 	private String suapToken;
 
 	public String login(String username, String password) throws NumberFormatException, Exception {
+		if(username == null || password == null || password.isEmpty()) {
+			throw new IllegalArgumentException("Campo username ou password inválido!");
+		}
+			
 		String jsonToken = suapService.login(username, password);
 		this.suapToken = loginConverter.jsonToToken(jsonToken);
 		

@@ -71,7 +71,7 @@ public class TokenServiceImpl implements TokenService{
 			Claims claims = getClaims(token);
 			LocalDateTime expirationTime = claims.getExpiration().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 			
-			return LocalDateTime.now().isAfter(expirationTime);
+			return LocalDateTime.now().isBefore(expirationTime);
 		} catch (Exception e) {
 			return false;
 		}

@@ -5,6 +5,10 @@ public class TokenDTO {
 	private String token;
 	private UserDTO user;
 
+	public TokenDTO() {
+		
+	}
+	
 	public TokenDTO(String token, UserDTO userDto) {
 		this.token = token;
 		this.user = userDto;

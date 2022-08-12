@@ -47,4 +47,15 @@ public class LoginController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
+	
+	@PostMapping("/isValidToken")
+	public ResponseEntity isValidToken(@RequestBody TokenDTO tokenDto) {
+		try {
+			boolean isValidToken = tokenService.isValid(tokenDto.getToken());
+			
+			return new ResponseEntity(isValidToken, HttpStatus.OK);
+		} catch(Exception e){
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
 }
