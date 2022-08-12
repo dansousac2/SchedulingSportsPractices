@@ -42,15 +42,16 @@ public class LoginConverterService {
 		
 		String name = jsonObject.get("nome").getAsString();
 		String registration = jsonObject.get("matricula").getAsString();
-		String cargoEmprego = jsonObject.get("cargo_emprego").getAsString();
 		
 		List<Role> roles = new ArrayList<>();
 		roles.add(roleService.findDefault());
 		
-		if(cargoEmprego == null) {
-			roles.add(roleService.findByName(AVALIABLE_ROLES.STUDENT.name()));
-		} else {
+		try {
+			// lança exceção se não encontrar o usuário servidor no SUAP
+			String cargoEmprego = jsonObject.get("cargo_emprego").getAsString();
 			roles.add(roleService.findByName(AVALIABLE_ROLES.EMPLOYEE.name()));
+		} catch (Exception e) {
+			roles.add(roleService.findByName(AVALIABLE_ROLES.STUDENT.name()));
 		}
 		
 		User user = new User();
