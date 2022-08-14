@@ -7,8 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import br.edu.ifpb.dac.ssp.model.User;
-import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
+import br.edu.ifpb.dac.ssp.business.service.UserConverterService;
+import br.edu.ifpb.dac.ssp.model.entity.User;
+import br.edu.ifpb.dac.ssp.presentation.dto.UserDTO;
 
 public class UserConverterServiceTest {
 	

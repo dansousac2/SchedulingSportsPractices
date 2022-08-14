@@ -8,9 +8,10 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeAll;
 
-import br.edu.ifpb.dac.ssp.exception.*;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.repository.SportRepository;
+import br.edu.ifpb.dac.ssp.business.service.SportService;
+import br.edu.ifpb.dac.ssp.model.entity.Sport;
+import br.edu.ifpb.dac.ssp.model.repository.SportRepository;
+import br.edu.ifpb.dac.ssp.presentation.exception.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;

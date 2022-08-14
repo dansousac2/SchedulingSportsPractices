@@ -29,13 +29,18 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.exception.RuleViolationException;
-import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Scheduling;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
+import br.edu.ifpb.dac.ssp.business.service.DateConverterService;
+import br.edu.ifpb.dac.ssp.business.service.PlaceService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingValidatorService;
+import br.edu.ifpb.dac.ssp.business.service.SportService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.entity.Scheduling;
+import br.edu.ifpb.dac.ssp.model.entity.Sport;
+import br.edu.ifpb.dac.ssp.presentation.dto.SchedulingDTO;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.presentation.exception.RuleViolationException;
+import br.edu.ifpb.dac.ssp.presentation.exception.TimeAlreadyScheduledException;
 
 public class SchedulingValidatorServiceTest {
 	

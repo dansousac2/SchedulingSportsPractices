@@ -40,13 +40,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
-import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
-import br.edu.ifpb.dac.ssp.model.User;
-import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
-import br.edu.ifpb.dac.ssp.repository.UserRepository;
-import br.edu.ifpb.dac.ssp.service.UserConverterService;
-import br.edu.ifpb.dac.ssp.service.UserService;
+import br.edu.ifpb.dac.ssp.business.service.UserConverterService;
+import br.edu.ifpb.dac.ssp.business.service.UserService;
+import br.edu.ifpb.dac.ssp.model.entity.User;
+import br.edu.ifpb.dac.ssp.model.repository.UserRepository;
+import br.edu.ifpb.dac.ssp.presentation.controller.UserController;
+import br.edu.ifpb.dac.ssp.presentation.dto.UserDTO;
+import br.edu.ifpb.dac.ssp.presentation.exception.MissingFieldException;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectAlreadyExistsException;
 
 class UserControllerTest {
 

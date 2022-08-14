@@ -34,13 +34,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Example;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import br.edu.ifpb.dac.ssp.exception.MissingFieldException;
-import br.edu.ifpb.dac.ssp.exception.ObjectAlreadyExistsException;
-import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Scheduling;
-import br.edu.ifpb.dac.ssp.model.User;
-import br.edu.ifpb.dac.ssp.repository.SchedulingRepository;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.entity.Scheduling;
+import br.edu.ifpb.dac.ssp.model.entity.User;
+import br.edu.ifpb.dac.ssp.model.repository.SchedulingRepository;
+import br.edu.ifpb.dac.ssp.presentation.exception.MissingFieldException;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectAlreadyExistsException;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectNotFoundException;
 
 public class SchedulingServiceTest {
 

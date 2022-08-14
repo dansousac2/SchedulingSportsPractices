@@ -1,7 +1,5 @@
 package br.edu.ifpb.dac.ssp.service;
 
-import br.edu.ifpb.dac.ssp.service.PlaceService;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,7 +14,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import br.edu.ifpb.dac.ssp.exception.*;
+import br.edu.ifpb.dac.ssp.business.service.PlaceService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.repository.PlaceRepository;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -27,8 +28,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
+import br.edu.ifpb.dac.ssp.presentation.exception.*;
 
 public class PlaceServiceTest {
 

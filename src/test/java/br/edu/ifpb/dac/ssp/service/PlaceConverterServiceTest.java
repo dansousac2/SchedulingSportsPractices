@@ -7,8 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
+import br.edu.ifpb.dac.ssp.business.service.PlaceConverterService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.presentation.dto.PlaceDTO;
 
 public class PlaceConverterServiceTest {
 

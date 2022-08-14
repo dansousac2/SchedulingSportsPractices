@@ -21,10 +21,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Scheduling;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
+import br.edu.ifpb.dac.ssp.business.service.DateConverterService;
+import br.edu.ifpb.dac.ssp.business.service.PlaceService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingConverterService;
+import br.edu.ifpb.dac.ssp.business.service.SportService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.entity.Scheduling;
+import br.edu.ifpb.dac.ssp.model.entity.Sport;
+import br.edu.ifpb.dac.ssp.presentation.dto.SchedulingDTO;
 
 public class SchedulingConverterServiceTest {
 

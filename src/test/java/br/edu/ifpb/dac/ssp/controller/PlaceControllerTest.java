@@ -20,12 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.dto.PlaceDTO;
-import br.edu.ifpb.dac.ssp.repository.PlaceRepository;
-import br.edu.ifpb.dac.ssp.service.PlaceConverterService;
-import br.edu.ifpb.dac.ssp.service.PlaceService;
+import br.edu.ifpb.dac.ssp.business.service.PlaceConverterService;
+import br.edu.ifpb.dac.ssp.business.service.PlaceService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.repository.PlaceRepository;
+import br.edu.ifpb.dac.ssp.presentation.controller.PlaceController;
+import br.edu.ifpb.dac.ssp.presentation.dto.PlaceDTO;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectNotFoundException;
 
 
 class PlaceControllerTest {

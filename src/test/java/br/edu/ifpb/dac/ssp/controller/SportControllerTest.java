@@ -20,12 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.model.dto.SportDTO;
-import br.edu.ifpb.dac.ssp.repository.SportRepository;
-import br.edu.ifpb.dac.ssp.service.SportConverterService;
-import br.edu.ifpb.dac.ssp.service.SportService;
+import br.edu.ifpb.dac.ssp.business.service.SportConverterService;
+import br.edu.ifpb.dac.ssp.business.service.SportService;
+import br.edu.ifpb.dac.ssp.model.entity.Sport;
+import br.edu.ifpb.dac.ssp.model.repository.SportRepository;
+import br.edu.ifpb.dac.ssp.presentation.controller.SportController;
+import br.edu.ifpb.dac.ssp.presentation.dto.SportDTO;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectNotFoundException;
 
 
 class SportControllerTest {

@@ -30,20 +30,21 @@ import org.mockito.Spy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import br.edu.ifpb.dac.ssp.exception.ObjectNotFoundException;
-import br.edu.ifpb.dac.ssp.exception.RuleViolationException;
-import br.edu.ifpb.dac.ssp.exception.TimeAlreadyScheduledException;
-import br.edu.ifpb.dac.ssp.model.Place;
-import br.edu.ifpb.dac.ssp.model.Scheduling;
-import br.edu.ifpb.dac.ssp.model.Sport;
-import br.edu.ifpb.dac.ssp.model.User;
-import br.edu.ifpb.dac.ssp.model.dto.SchedulingDTO;
-import br.edu.ifpb.dac.ssp.model.dto.UserDTO;
-import br.edu.ifpb.dac.ssp.service.SchedulingConverterService;
-import br.edu.ifpb.dac.ssp.service.SchedulingService;
-import br.edu.ifpb.dac.ssp.service.SchedulingValidatorService;
-import br.edu.ifpb.dac.ssp.service.UserConverterService;
-import br.edu.ifpb.dac.ssp.service.UserService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingConverterService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingService;
+import br.edu.ifpb.dac.ssp.business.service.SchedulingValidatorService;
+import br.edu.ifpb.dac.ssp.business.service.UserConverterService;
+import br.edu.ifpb.dac.ssp.business.service.UserService;
+import br.edu.ifpb.dac.ssp.model.entity.Place;
+import br.edu.ifpb.dac.ssp.model.entity.Scheduling;
+import br.edu.ifpb.dac.ssp.model.entity.Sport;
+import br.edu.ifpb.dac.ssp.model.entity.User;
+import br.edu.ifpb.dac.ssp.presentation.controller.SchedulingController;
+import br.edu.ifpb.dac.ssp.presentation.dto.SchedulingDTO;
+import br.edu.ifpb.dac.ssp.presentation.dto.UserDTO;
+import br.edu.ifpb.dac.ssp.presentation.exception.ObjectNotFoundException;
+import br.edu.ifpb.dac.ssp.presentation.exception.RuleViolationException;
+import br.edu.ifpb.dac.ssp.presentation.exception.TimeAlreadyScheduledException;
 import br.edu.ifpb.dac.ssp.util.Constants;
 
 public class SchedulingControllerTest {
