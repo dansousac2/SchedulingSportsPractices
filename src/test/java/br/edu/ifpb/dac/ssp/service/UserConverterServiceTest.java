@@ -25,16 +25,14 @@ public class UserConverterServiceTest {
 		user.setId(1);
 		user.setName("Maria Souza");
 		user.setEmail("mariasouza@gmail.com");
-		user.setRegistration(1234);
-		user.setPassword("122");
+		user.setRegistration(Long.valueOf(1234));
 		
 		dto = new UserDTO();
 		dto.setId(1);
 		dto.setName("Maria Souza");
 		dto.setEmail("mariasouza@gmail.com");
-		dto.setRegistration(1234);
-		
-		
+		dto.setRegistration(Long.valueOf(1234));
+			
 	}
 	
 	
@@ -45,8 +43,7 @@ public class UserConverterServiceTest {
 				() -> assertEquals(userConverted.getId(), dto.getId()),
 				() -> assertEquals(userConverted.getName(), dto.getName()),
 				() -> assertEquals(userConverted.getEmail(), dto.getEmail()),
-				() -> assertEquals(userConverted.getRegistration(), dto.getRegistration()),
-				() -> assertEquals(userConverted.getPassword(), dto.getPassword())
+				() -> assertEquals(userConverted.getRegistration(), dto.getRegistration())
 		);
 	}
 	
@@ -58,8 +55,7 @@ public class UserConverterServiceTest {
 				() -> assertEquals(dtoConverted.getId(), user.getId()),
 				() -> assertEquals(dtoConverted.getName(), user.getName()),
 				() -> assertEquals(dtoConverted.getEmail(), user.getEmail()),
-				() -> assertEquals(dtoConverted.getRegistration(), user.getRegistration()),
-				() -> assertEquals(dtoConverted.getPassword(), null));		
+				() -> assertEquals(dtoConverted.getRegistration(), user.getRegistration()));		
 	}
 	
 	@Test

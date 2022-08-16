@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -358,17 +359,17 @@ public class SchedulingControllerTest {
 	@Test
 	public void testAddAndRemoveParticipantValid() {
 		try {
-			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
+			when(userService.findByRegistration(anyLong())).thenReturn(Optional.of(user));
 			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 			when(schedulingService.removeSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 		} catch (Exception e) {
 			fail();
 		}
 	
-		response = controller.addParticipant(1, 123);
+		response = controller.addParticipant(1, Long.valueOf(123));
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());	
 		
-		response = controller.removeParticipant(1, 123);
+		response = controller.removeParticipant(1, Long.valueOf(123));
 		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());	
 	}
 	
@@ -377,18 +378,18 @@ public class SchedulingControllerTest {
 		String errorMessage = "Não foi encontrado usuário com matrícula 123";
 		
 		try {
-			when(userService.findByRegistration(anyInt())).thenThrow(new ObjectNotFoundException("usuário", "matrícula", 123));
+			when(userService.findByRegistration(anyLong())).thenThrow(new ObjectNotFoundException("usuário", "matrícula", 123));
 			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenReturn(true);
 		} catch (Exception e) {
 			fail();
 		}
 		
-		response = controller.addParticipant(1, 123);
+		response = controller.addParticipant(1, Long.valueOf(123));
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals(errorMessage, response.getBody()));
 		
-		response = controller.removeParticipant(1, 123);
+		response = controller.removeParticipant(1, Long.valueOf(123));
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals(errorMessage, response.getBody()));
@@ -405,7 +406,7 @@ public class SchedulingControllerTest {
 		String errorMessage = "Não foi encontrado agendamento com id 1";
 		
 		try {
-			when(userService.findByRegistration(anyInt())).thenReturn(Optional.of(user));
+			when(userService.findByRegistration(anyLong())).thenReturn(Optional.of(user));
 			
 			when(schedulingService.addSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
 			when(schedulingService.removeSchedulingParticipant(anyInt(), any(User.class))).thenCallRealMethod();
@@ -416,12 +417,12 @@ public class SchedulingControllerTest {
 			fail();
 		}
 		
-		response = controller.addParticipant(1, 123);
+		response = controller.addParticipant(1, Long.valueOf(123));
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals(errorMessage, response.getBody()));
 		
-		response = controller.removeParticipant(1, 123);
+		response = controller.removeParticipant(1, Long.valueOf(123));
 		assertAll("Asserting HttpStatus and body content",
 				() -> assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()),
 				() -> assertEquals(errorMessage, response.getBody()));

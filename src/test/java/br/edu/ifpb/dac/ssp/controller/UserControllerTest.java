@@ -4,14 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.never;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -23,9 +21,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,8 +42,7 @@ import br.edu.ifpb.dac.ssp.model.entity.User;
 import br.edu.ifpb.dac.ssp.model.repository.UserRepository;
 import br.edu.ifpb.dac.ssp.presentation.controller.UserController;
 import br.edu.ifpb.dac.ssp.presentation.dto.UserDTO;
-import br.edu.ifpb.dac.ssp.presentation.exception.MissingFieldException;
-import br.edu.ifpb.dac.ssp.presentation.exception.ObjectAlreadyExistsException;
+
 
 class UserControllerTest {
 
@@ -87,8 +82,7 @@ class UserControllerTest {
 		exUserDto = new UserDTO();
 		exUserDto.setName("Dansousa");
 		exUserDto.setEmail("dansousa@gmail.com");
-		exUserDto.setPassword("1234567");
-		exUserDto.setRegistration(123456789);
+		exUserDto.setRegistration(Long.valueOf(123456789));
 		exUserDto.setId(1);
 
 		exUser = userConverter.dtoToUser(exUserDto);
@@ -106,7 +100,6 @@ class UserControllerTest {
 		assertAll("Verify if atributes between Dto an Entity are equals",
 				() -> assertEquals(exUserDto.getName(), captured.getName()),
 				() -> assertEquals(exUserDto.getEmail(), captured.getEmail()),
-				() -> assertEquals(exUserDto.getPassword(), captured.getPassword()),
 				() -> assertEquals(exUserDto.getRegistration(), captured.getRegistration()));
 
 		when(repository.save(any(User.class))).thenReturn(exUser);
@@ -116,7 +109,6 @@ class UserControllerTest {
 		assertAll("HttpStatus and body", () -> assertEquals(HttpStatus.CREATED, resp.getStatusCode()),
 				() -> assertEquals(UserDTO.class, resp.getBody().getClass()),
 				() -> assertNotEquals(exUserDto, resp.getBody()));
-
 	}
 
 	@ParameterizedTest
@@ -143,7 +135,7 @@ class UserControllerTest {
 	@ValueSource(strings = { "", " \n  ", " \n \t", "null" }) // save invalid - name blanck or null
 	public void saveInvalidNameAfeterJson(String name) {
 		if (name.equals("null")) {
-			UserDTO novo = new UserDTO(null, "dan@gmail.com", 123456, "yep"); // name null - barred in UserService
+			UserDTO novo = new UserDTO(null, "dan@gmail.com", Long.valueOf(123456)); // name null - barred in UserService
 			resp = controller.save(novo);
 		} else {
 			exUserDto.setName(name); // name is blanck - barred in UserService
@@ -163,7 +155,7 @@ class UserControllerTest {
 
 	@Test
 	public void saveInvalidRegistration() { // save invalid - user's registration already exists in DB
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
 
 		resp = controller.save(exUserDto);
 
@@ -173,8 +165,8 @@ class UserControllerTest {
 	@Test
 	public void updateValid() { // update valid - HttpStatus ok and body
 		when(repository.existsById(anyInt())).thenReturn(true); // userService
-		when(repository.existsByRegistration(123456789)).thenReturn(true); // userService
-		when(repository.findByRegistration(123456789)).thenReturn(Optional.of(exUser)); // userService
+		when(repository.existsByRegistration(Long.valueOf(123456789))).thenReturn(true); // userService
+		when(repository.findByRegistration(Long.valueOf(123456789))).thenReturn(Optional.of(exUser)); // userService
 		when(repository.save(any(User.class))).thenReturn(exUser);
 
 		resp = controller.update(1, exUserDto);
@@ -204,7 +196,7 @@ class UserControllerTest {
 			resp = controller.update(1, exUserDto);
 			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		} else {
-			resp = controller.update(1, new UserDTO(null, "example@gmail.com", 13579, "password"));
+			resp = controller.update(1, new UserDTO(null, "example@gmail.com", Long.valueOf(13579)));
 			assertEquals("Não foi possível usar update, o campo nome está faltando!", resp.getBody());
 		}
 	}
@@ -220,11 +212,11 @@ class UserControllerTest {
 
 	@Test
 	public void updateInvalidIdNotMatch() { // update invalid - dto's id in DB not match (same registration)
-		User user = new User(2, "Afonso", "affff@gmail.com", 123456789, "passwordloko");
+		User user = new User(2, "Afonso", "affff@gmail.com", Long.valueOf(123456789));
 
 		when(repository.existsById(anyInt())).thenReturn(true);
-		when(repository.existsByRegistration(anyInt())).thenReturn(true);
-		when(repository.findByRegistration(123456789)).thenReturn(Optional.of(user));
+		when(repository.existsByRegistration(anyLong())).thenReturn(true);
+		when(repository.findByRegistration(Long.valueOf(123456789))).thenReturn(Optional.of(user));
 
 		resp = controller.update(12, exUserDto);
 
@@ -285,7 +277,7 @@ class UserControllerTest {
 
 	@Test
 	public void getAllValidWithUsers() { // getAll valid - have User on DB
-		User user = new User(2, "Afonso", "affff@gmail.com", 123456710, "passwordloko");
+		User user = new User(2, "Afonso", "affff@gmail.com", Long.valueOf(123456710));
 		List<User> list = new ArrayList<>();
 		list.add(user);
 		list.add(exUser);

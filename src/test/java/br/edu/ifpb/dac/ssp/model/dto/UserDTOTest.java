@@ -76,25 +76,4 @@ class UserDTOTest {
 		
 		assertNotEquals(0, violations.size(), "VALID EMAIL FOUND<" + s + ">");
 	}
-	
-	@ParameterizedTest
-	@ValueSource(strings = {"1234567", "1a  5b ", "      a", " &¨*   "}) // valid
-	public void userPasswordValid(String s) {
-		dto.setPassword(s);
-		violations = validator.validateProperty(dto, "password");
-		
-		if(violations.size() > 0) {
-			System.out.println(s + " => " + violations.stream().findFirst().get().getMessage());	
-		}
-		assertEquals(0, violations.size(), "INVALID PASSWORD FOUND<" + s + ">");
-	}
-	
-	@ParameterizedTest
-	@ValueSource(strings = {"123456", "", "    ", "  \n ", "   \t "}) // invalid
-	public void userPasswordInvalid(String s) {
-		dto.setPassword(s);
-		violations = validator.validateProperty(dto, "password");
-		
-		assertNotEquals(0, violations.size(), "VALID PASSWORD FOUND<" + s + ">");
-	}
 }
